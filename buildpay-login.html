@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buildpay — Inloggen</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0A1628;
+    --blue: #1A4FAB;
+    --blue-mid: #2563EB;
+    --blue-light: #EFF6FF;
+    --accent: #3B82F6;
+    --sky: #DBEAFE;
+    --white: #FFFFFF;
+    --off-white: #F8FAFC;
+    --slate: #64748B;
+    --slate-light: #94A3B8;
+    --border: #E2E8F0;
+    --success: #10B981;
+    --error: #EF4444;
+    --client: #2563EB;
+    --contractor: #0F766E;
+    --architect: #D97706;
+    --architect-light: #FFFBEB;
+    --admin: #7C3AED;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--off-white);
+    display: flex;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* LEFT PANEL */
+  .left-panel {
+    width: 480px;
+    flex-shrink: 0;
+    background: var(--navy);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .left-panel::before {
+    content: '';
+    position: absolute;
+    top: -100px; left: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(37,99,235,0.3) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .left-panel::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; right: -80px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(124,58,237,0.2) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .panel-logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.8rem; font-weight: 800;
+    color: var(--white);
+    letter-spacing: -0.03em;
+    text-decoration: none;
+    position: relative; z-index: 1;
+  }
+  .panel-logo span { color: #60A5FA; }
+
+  .panel-middle {
+    position: relative; z-index: 1;
+  }
+
+  .panel-tagline {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem; font-weight: 800;
+    color: var(--white); line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.25rem;
+  }
+  .panel-tagline .hl { color: #60A5FA; }
+
+  .panel-desc {
+    font-size: 0.9rem; color: rgba(255,255,255,0.5);
+    line-height: 1.7; max-width: 320px;
+    margin-bottom: 2.5rem;
+  }
+
+  .role-pills {
+    display: flex; flex-direction: column; gap: 0.75rem;
+  }
+
+  .role-pill {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.04);
+    transition: background 0.2s, border-color 0.2s;
+    cursor: default;
+  }
+  .role-pill:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.15);
+  }
+
+  .role-pill-icon {
+    width: 2.5rem; height: 2.5rem; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; flex-shrink: 0;
+  }
+  .icon-client { background: rgba(37,99,235,0.25); }
+  .icon-contractor { background: rgba(15,118,110,0.25); }
+  .icon-architect { background: rgba(217,119,6,0.25); }
+  .icon-admin { background: rgba(124,58,237,0.25); }
+
+  .role-pill-info {}
+  .role-pill-name {
+    font-size: 0.875rem; font-weight: 600; color: var(--white);
+  }
+  .role-pill-desc {
+    font-size: 0.75rem; color: rgba(255,255,255,0.4); margin-top: 0.1rem;
+  }
+
+  .panel-footer {
+    position: relative; z-index: 1;
+    font-size: 0.75rem; color: rgba(255,255,255,0.25);
+    line-height: 1.6;
+  }
+
+  /* RIGHT PANEL */
+  .right-panel {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+  }
+
+  .login-box {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  /* LANG TOGGLE */
+  .lang-row {
+    display: flex; justify-content: flex-end; margin-bottom: 2rem;
+  }
+  .lang-toggle {
+    display: flex; gap: 0; border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
+  }
+  .lang-opt {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.75rem; font-weight: 500;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    background: none; border: none; cursor: pointer;
+    color: var(--slate-light);
+    font-family: 'Inter', sans-serif;
+    transition: background 0.15s, color 0.15s;
+  }
+  .lang-opt.active {
+    background: var(--navy); color: var(--white);
+  }
+
+  .login-header { margin-bottom: 2rem; }
+  .login-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.75rem; font-weight: 800;
+    color: var(--navy); letter-spacing: -0.02em;
+    margin-bottom: 0.4rem;
+  }
+  .login-sub { font-size: 0.9rem; color: var(--slate); }
+
+  /* ROLE SELECTOR */
+  .role-selector {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem; margin-bottom: 1.75rem;
+  }
+
+  .role-tab {
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 0.75rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--white);
+    position: relative;
+    overflow: hidden;
+  }
+  .role-tab::before {
+    content: '';
+    position: absolute; inset: 0;
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .role-tab:hover { border-color: var(--accent); }
+
+  .role-tab.active-client {
+    border-color: var(--client);
+    background: #EFF6FF;
+  }
+  .role-tab.active-contractor {
+    border-color: var(--contractor);
+    background: #F0FDFA;
+  }
+  .role-tab.active-admin {
+    border-color: var(--admin);
+    background: #F5F3FF;
+  }
+  .role-tab.active-architect {
+    border-color: var(--architect);
+    background: var(--architect-light);
+  }
+
+  .role-tab-icon { font-size: 1.4rem; margin-bottom: 0.4rem; }
+  .role-tab-label {
+    font-size: 0.75rem; font-weight: 600;
+    color: var(--slate);
+    display: block; letter-spacing: 0.01em;
+  }
+  .role-tab.active-client .role-tab-label { color: var(--client); }
+  .role-tab.active-contractor .role-tab-label { color: var(--contractor); }
+  .role-tab.active-admin .role-tab-label { color: var(--admin); }
+  .role-tab.active-architect .role-tab-label { color: var(--architect); }
+
+  .role-check {
+    position: absolute; top: 0.4rem; right: 0.4rem;
+    width: 1rem; height: 1rem; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.55rem; font-weight: 700; color: var(--white);
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .active-client .role-check { background: var(--client); opacity: 1; }
+  .active-contractor .role-check { background: var(--contractor); opacity: 1; }
+  .active-admin .role-check { background: var(--admin); opacity: 1; }
+  .active-architect .role-check { background: var(--architect); opacity: 1; }
+
+  /* FORM */
+  .form-group { margin-bottom: 1.1rem; }
+  .form-label {
+    display: block;
+    font-size: 0.8rem; font-weight: 500;
+    color: var(--navy); margin-bottom: 0.4rem;
+  }
+
+  .input-wrap { position: relative; }
+  .input-icon {
+    position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%);
+    font-size: 0.9rem; pointer-events: none;
+    color: var(--slate-light);
+  }
+
+  input[type="email"],
+  input[type="password"],
+  input[type="text"] {
+    width: 100%;
+    padding: 0.75rem 0.9rem 0.75rem 2.5rem;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.9rem; font-family: 'Inter', sans-serif;
+    color: var(--navy);
+    background: var(--white);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+  input:focus {
+    border-color: var(--blue-mid);
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+  }
+  input::placeholder { color: var(--slate-light); }
+
+  .input-wrap .toggle-pw {
+    position: absolute; right: 0.9rem; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer;
+    font-size: 0.85rem; color: var(--slate-light);
+    transition: color 0.2s;
+  }
+  .toggle-pw:hover { color: var(--navy); }
+
+  .form-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 1.5rem; margin-top: -0.25rem;
+  }
+  .remember-wrap {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.8rem; color: var(--slate); cursor: pointer;
+  }
+  .remember-wrap input[type="checkbox"] {
+    width: 1rem; height: 1rem; padding: 0;
+    accent-color: var(--blue-mid);
+  }
+  .forgot-link {
+    font-size: 0.8rem; color: var(--blue-mid);
+    text-decoration: none; font-weight: 500;
+    transition: color 0.2s;
+  }
+  .forgot-link:hover { color: var(--blue); }
+
+  /* ADMIN CODE FIELD */
+  .admin-field {
+    display: none; margin-bottom: 1.1rem;
+  }
+  .admin-field.visible { display: block; }
+
+  .admin-badge {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: #F5F3FF; border: 1px solid #DDD6FE;
+    border-radius: 6px; padding: 0.35rem 0.75rem;
+    font-size: 0.75rem; font-weight: 600; color: var(--admin);
+    margin-bottom: 0.75rem;
+  }
+
+  /* SUBMIT BTN */
+  .btn-login {
+    width: 100%;
+    padding: 0.85rem;
+    border: none; border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem; font-weight: 600;
+    color: var(--white); cursor: pointer;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    position: relative; overflow: hidden;
+  }
+  .btn-login.role-client { background: var(--client); }
+  .btn-login.role-client:hover { background: #1D4ED8; box-shadow: 0 4px 20px rgba(37,99,235,0.35); transform: translateY(-1px); }
+  .btn-login.role-contractor { background: var(--contractor); }
+  .btn-login.role-contractor:hover { background: #0D6460; box-shadow: 0 4px 20px rgba(15,118,110,0.35); transform: translateY(-1px); }
+  .btn-login.role-admin { background: var(--admin); }
+  .btn-login.role-architect { background: var(--architect); }
+  .btn-login.role-architect:hover { background: #B45309; box-shadow: 0 4px 20px rgba(217,119,6,0.35); transform: translateY(-1px); }
+  .btn-login.role-admin:hover { background: #6D28D9; box-shadow: 0 4px 20px rgba(124,58,237,0.35); transform: translateY(-1px); }
+
+  .btn-login:active { transform: translateY(0); }
+
+  /* DIVIDER */
+  .divider {
+    display: flex; align-items: center; gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .divider-line { flex: 1; height: 1px; background: var(--border); }
+  .divider-text { font-size: 0.75rem; color: var(--slate-light); white-space: nowrap; }
+
+  /* REGISTER LINK */
+  .register-row {
+    text-align: center;
+    font-size: 0.85rem; color: var(--slate);
+  }
+  .register-row a {
+    color: var(--blue-mid); font-weight: 500;
+    text-decoration: none; transition: color 0.2s;
+  }
+  .register-row a:hover { color: var(--blue); }
+
+  /* ERROR / SUCCESS */
+  .alert {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.825rem; font-weight: 500;
+    margin-bottom: 1.25rem;
+    display: none; align-items: center; gap: 0.5rem;
+  }
+  .alert.error { background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; display: flex; }
+  .alert.success { background: #F0FDF4; border: 1px solid #BBF7D0; color: #166534; display: flex; }
+
+  /* LOADING STATE */
+  .btn-login .spinner {
+    display: none;
+    width: 1rem; height: 1rem;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: var(--white);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: 0 auto;
+  }
+  .btn-login.loading .btn-text { display: none; }
+  .btn-login.loading .spinner { display: block; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* LANGUAGE */
+  body.lang-en [data-nl] { display: none; }
+  body.lang-nl [data-en] { display: none; }
+
+  /* RESPONSIVE */
+  @media (max-width: 860px) {
+    .left-panel { display: none; }
+    .right-panel { padding: 2rem 1.5rem; align-items: flex-start; padding-top: 3rem; }
+    .login-box { max-width: 100%; }
+  }
+</style>
+</head>
+<body class="lang-nl">
+
+<!-- LEFT PANEL -->
+<div class="left-panel">
+  <a href="buildpay-landing.html" class="panel-logo">Build<span>pay</span></a>
+
+  <div class="panel-middle">
+    <div class="panel-tagline">
+      Your money,<br><span class="hl">held</span> until<br>it's earned.
+    </div>
+    <p class="panel-desc">
+      <span data-nl>Veilig samenwerken aan bouwprojecten. Klant, aannemer en architect op één platform — betalingen vrijgegeven na goedkeuring.</span>
+      <span data-en>Collaborate safely on construction projects. Client, contractor and architect on one platform — payments released after approval.</span>
+    </p>
+    <div class="role-pills">
+      <div class="role-pill">
+        <div class="role-pill-icon icon-client">🏠</div>
+        <div class="role-pill-info">
+          <div class="role-pill-name"><span data-nl>Klant</span><span data-en>Client</span></div>
+          <div class="role-pill-desc"><span data-nl>Volg je verbouwing, keur milestones goed</span><span data-en>Track your renovation, approve milestones</span></div>
+        </div>
+      </div>
+      <div class="role-pill">
+        <div class="role-pill-icon icon-contractor">🔨</div>
+        <div class="role-pill-info">
+          <div class="role-pill-name"><span data-nl>Aannemer</span><span data-en>Contractor</span></div>
+          <div class="role-pill-desc"><span data-nl>Beheer projecten, ontvang betalingen</span><span data-en>Manage projects, receive payments</span></div>
+        </div>
+      </div>
+      <div class="role-pill">
+        <div class="role-pill-icon icon-architect">📐</div>
+        <div class="role-pill-info">
+          <div class="role-pill-name"><span data-nl>Architect</span><span data-en>Architect</span></div>
+          <div class="role-pill-desc"><span data-nl>Valideer milestones, begeleid projecten</span><span data-en>Validate milestones, guide projects</span></div>
+        </div>
+      </div>
+      <div class="role-pill">
+        <div class="role-pill-icon icon-admin">⚙️</div>
+        <div class="role-pill-info">
+          <div class="role-pill-name">Admin</div>
+          <div class="role-pill-desc"><span data-nl>Platformbeheer & escrow toezicht</span><span data-en>Platform management & escrow oversight</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-footer">
+    © 2025 Buildpay · buildpay.nl<br>
+    <span data-nl>Veilig betalen via erkende betaalinstelling</span>
+    <span data-en>Secure payments via licensed payment institution</span>
+  </div>
+</div>
+
+<!-- RIGHT PANEL -->
+<div class="right-panel">
+  <div class="login-box">
+
+    <!-- LANG -->
+    <div class="lang-row">
+      <div class="lang-toggle">
+        <button class="lang-opt active" onclick="setLang('nl')" id="btn-nl">NL</button>
+        <button class="lang-opt" onclick="setLang('en')" id="btn-en">EN</button>
+      </div>
+    </div>
+
+    <!-- HEADER -->
+    <div class="login-header">
+      <div class="login-title">
+        <span data-nl>Welkom terug</span>
+        <span data-en>Welcome back</span>
+      </div>
+      <p class="login-sub">
+        <span data-nl>Log in op je Buildpay account</span>
+        <span data-en>Sign in to your Buildpay account</span>
+      </p>
+    </div>
+
+    <!-- ROLE SELECTOR -->
+    <div class="role-selector">
+      <div class="role-tab active-client" onclick="selectRole('client')" id="tab-client">
+        <div class="role-check">✓</div>
+        <div class="role-tab-icon">🏠</div>
+        <span class="role-tab-label"><span data-nl>Klant</span><span data-en>Client</span></span>
+      </div>
+      <div class="role-tab" onclick="selectRole('contractor')" id="tab-contractor">
+        <div class="role-check">✓</div>
+        <div class="role-tab-icon">🔨</div>
+        <span class="role-tab-label"><span data-nl>Aannemer</span><span data-en>Contractor</span></span>
+      </div>
+      <div class="role-tab" onclick="selectRole('architect')" id="tab-architect">
+        <div class="role-check">✓</div>
+        <div class="role-tab-icon">📐</div>
+        <span class="role-tab-label"><span data-nl>Architect</span><span data-en>Architect</span></span>
+      </div>
+      <div class="role-tab" onclick="selectRole('admin')" id="tab-admin">
+        <div class="role-check">✓</div>
+        <div class="role-tab-icon">⚙️</div>
+        <span class="role-tab-label">Admin</span>
+      </div>
+    </div>
+
+    <!-- ALERT -->
+    <div class="alert" id="alert-box">
+      <span id="alert-icon">⚠️</span>
+      <span id="alert-msg"></span>
+    </div>
+
+    <!-- FORM -->
+    <form onsubmit="handleLogin(event)">
+
+      <!-- ARCHITECT BADGE -->
+      <div class="admin-field" id="arch-badge-wrap">
+        <div class="admin-badge" style="background:#FFFBEB;border-color:#FDE68A;color:#D97706;">📐 <span data-nl>Architect — valideer milestones & begeleid projecten</span><span data-en>Architect — validate milestones & guide projects</span></div>
+      </div>
+
+      <!-- ADMIN BADGE -->
+      <div class="admin-field" id="admin-badge-wrap">
+        <div class="admin-badge">🔐 <span data-nl>Beveiligde beheerderstoegang</span><span data-en>Secure administrator access</span></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          <span data-nl>E-mailadres</span><span data-en>Email address</span>
+        </label>
+        <div class="input-wrap">
+          <span class="input-icon">✉️</span>
+          <input type="email" id="email-input" placeholder="naam@voorbeeld.nl" required autocomplete="email">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          <span data-nl>Wachtwoord</span><span data-en>Password</span>
+        </label>
+        <div class="input-wrap">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="pw-input" placeholder="••••••••" required autocomplete="current-password">
+          <button type="button" class="toggle-pw" onclick="togglePw()">👁</button>
+        </div>
+      </div>
+
+      <!-- ADMIN 2FA -->
+      <div class="admin-field" id="admin-code-wrap">
+        <label class="form-label">
+          <span data-nl>Beheerderspincode</span><span data-en>Admin PIN code</span>
+        </label>
+        <div class="input-wrap">
+          <span class="input-icon">🛡️</span>
+          <input type="text" id="admin-code" placeholder="6-cijferige code" maxlength="6" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label class="remember-wrap">
+          <input type="checkbox" id="remember">
+          <span data-nl>Onthoud mij</span><span data-en>Remember me</span>
+        </label>
+        <a href="#" class="forgot-link">
+          <span data-nl>Wachtwoord vergeten?</span><span data-en>Forgot password?</span>
+        </a>
+      </div>
+
+      <button type="submit" class="btn-login role-client" id="login-btn">
+        <span class="btn-text">
+          <span data-nl>Inloggen als Klant</span><span data-en>Sign in as Client</span>
+        </span>
+        <div class="spinner"></div>
+      </button>
+
+    </form>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span class="divider-text"><span data-nl>Nog geen account?</span><span data-en>No account yet?</span></span>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="register-row">
+      <span data-nl>Registreer als </span><span data-en>Register as </span>
+      <a href="#"><span data-nl>klant</span><span data-en>client</span></a>
+      <span> · </span>
+      <a href="#"><span data-nl>aannemer</span><span data-en>contractor</span></a>
+      <span> · </span>
+      <a href="#"><span data-nl>architect</span><span data-en>architect</span></a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let currentRole = 'client';
+
+  const roleLabels = {
+    nl: { client: 'Klant', contractor: 'Aannemer', architect: 'Architect', admin: 'Admin' },
+    en: { client: 'Client', contractor: 'Contractor', architect: 'Architect', admin: 'Admin' }
+  };
+
+  function selectRole(role) {
+    currentRole = role;
+
+    // Clear tab styles
+    ['client', 'contractor', 'admin'].forEach(r => {
+      const tab = document.getElementById('tab-' + r);
+      tab.className = 'role-tab';
+    });
+
+    // Set active tab
+    document.getElementById('tab-' + role).classList.add('active-' + role);
+
+    // Update button
+    const btn = document.getElementById('login-btn');
+    btn.className = 'btn-login role-' + role;
+
+    // Update button text
+    const lang = document.body.classList.contains('lang-en') ? 'en' : 'nl';
+    updateBtnText(role, lang);
+
+    // Show/hide admin fields
+    const isAdmin = role === 'admin';
+    document.getElementById('admin-badge-wrap').classList.toggle('visible', isAdmin);
+    document.getElementById('admin-code-wrap').classList.toggle('visible', isAdmin);
+
+    // Show/hide architect badge
+    const archBadge = document.getElementById('arch-badge-wrap');
+    if (archBadge) archBadge.classList.toggle('visible', role === 'architect');
+
+    // Clear alert
+    hideAlert();
+  }
+
+  function updateBtnText(role, lang) {
+    const nlEl = document.querySelector('#login-btn .btn-text [data-nl]');
+    const enEl = document.querySelector('#login-btn .btn-text [data-en]');
+    if (nlEl) nlEl.textContent = 'Inloggen als ' + (roleLabels.nl[role] || role);
+    if (enEl) enEl.textContent = 'Sign in as ' + (roleLabels.en[role] || role);
+  }
+
+  function togglePw() {
+    const input = document.getElementById('pw-input');
+    input.type = input.type === 'password' ? 'text' : 'password';
+  }
+
+  function showAlert(msg, type) {
+    const box = document.getElementById('alert-box');
+    const msgEl = document.getElementById('alert-msg');
+    const icon = document.getElementById('alert-icon');
+    box.className = 'alert ' + type;
+    icon.textContent = type === 'error' ? '⚠️' : '✅';
+    msgEl.textContent = msg;
+  }
+
+  function hideAlert() {
+    document.getElementById('alert-box').className = 'alert';
+  }
+
+  function handleLogin(e) {
+    e.preventDefault();
+    const btn = document.getElementById('login-btn');
+    const lang = document.body.classList.contains('lang-en') ? 'en' : 'nl';
+
+    // Admin PIN check — only for admin role
+    if (currentRole === 'admin') {
+      const code = document.getElementById('admin-code').value;
+      if (code.length < 6) {
+        showAlert(
+          lang === 'nl' ? 'Vul een geldige 6-cijferige beheerderspincode in.' : 'Please enter a valid 6-digit admin PIN.',
+          'error'
+        );
+        return;
+      }
+    }
+
+    // Loading state
+    btn.classList.add('loading');
+    hideAlert();
+
+    // Simulate login
+    setTimeout(() => {
+      btn.classList.remove('loading');
+      const successMsg = {
+        nl: { client: 'Welkom! Je wordt doorgestuurd naar je dashboard.', contractor: 'Welkom terug! Je wordt doorgestuurd naar je projecten.', architect: 'Welkom! Je wordt doorgestuurd naar je projectenoverzicht.', admin: 'Beheerderstoegang verleend. Doorsturen...' },
+        en: { client: 'Welcome! Redirecting to your dashboard.', contractor: 'Welcome back! Redirecting to your projects.', architect: 'Welcome! Redirecting to your project overview.', admin: 'Admin access granted. Redirecting...' }
+      };
+      showAlert(successMsg[lang][currentRole], 'success');
+    }, 1800);
+  }
+
+  function setLang(lang) {
+    document.body.className = 'lang-' + lang;
+    document.getElementById('btn-nl').classList.toggle('active', lang === 'nl');
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    updateBtnText(currentRole, lang);
+  }
+</script>
+
+</body>
+</html>

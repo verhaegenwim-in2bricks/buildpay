@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buildpay — Architect Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#0A1628;--blue-mid:#2563EB;--blue-light:#EFF6FF;--accent:#3B82F6;
+    --arch:#0D9488;--arch-mid:#0F766E;--arch-light:#F0FDFA;--arch-border:#99F6E4;
+    --white:#FFFFFF;--off-white:#F8FAFC;--slate:#64748B;--slate-light:#94A3B8;
+    --border:#E2E8F0;--success:#10B981;--success-light:#D1FAE5;
+    --warning:#F59E0B;--warning-light:#FEF3C7;--error:#EF4444;--error-light:#FEE2E2;
+    --sidebar-w:240px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}html,body{height:100%;}
+  body{font-family:'DM Sans',sans-serif;background:var(--off-white);color:var(--navy);display:flex;min-height:100vh;}
+
+  /* SIDEBAR */
+  .sidebar{width:var(--sidebar-w);background:var(--navy);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:50;overflow-y:auto;}
+  .sidebar-logo{padding:1.75rem 1.5rem 1.25rem;font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--white);letter-spacing:-0.03em;text-decoration:none;display:block;border-bottom:1px solid rgba(255,255,255,0.07);margin-bottom:0.5rem;}
+  .sidebar-logo span{color:#2DD4BF;}
+  .sidebar-user{padding:0.75rem 1.5rem 1rem;display:flex;align-items:center;gap:0.75rem;border-bottom:1px solid rgba(255,255,255,0.07);margin-bottom:0.75rem;}
+  .user-avatar{width:2rem;height:2rem;border-radius:50%;background:linear-gradient(135deg,#0D9488,#0F766E);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:var(--white);flex-shrink:0;}
+  .user-name{font-size:0.8rem;font-weight:600;color:var(--white);}
+  .user-role{font-size:0.7rem;color:rgba(255,255,255,0.35);display:flex;align-items:center;gap:0.3rem;margin-top:0.05rem;}
+  .role-dot{width:5px;height:5px;border-radius:50%;background:#2DD4BF;}
+  .sidebar-section-label{font-size:0.65rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.25);padding:0.5rem 1.5rem 0.35rem;}
+  .nav-item{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;font-size:0.85rem;font-weight:500;color:rgba(255,255,255,0.5);cursor:pointer;transition:all 0.15s;border-left:2px solid transparent;text-decoration:none;}
+  .nav-item:hover{color:var(--white);background:rgba(255,255,255,0.05);}
+  .nav-item.active{color:var(--white);background:rgba(13,148,136,0.2);border-left-color:#2DD4BF;}
+  .nav-icon{font-size:1rem;width:1.1rem;text-align:center;}
+  .nav-badge{margin-left:auto;background:var(--arch);color:var(--white);font-size:0.6rem;font-weight:700;padding:0.15rem 0.4rem;border-radius:100px;}
+  .nav-badge.warn{background:var(--warning);}
+  .nav-badge.err{background:var(--error);}
+  .sidebar-bottom{margin-top:auto;padding:1rem 1.5rem;border-top:1px solid rgba(255,255,255,0.07);}
+  .logout-btn{display:flex;align-items:center;gap:0.75rem;font-size:0.82rem;color:rgba(255,255,255,0.35);cursor:pointer;transition:color 0.2s;background:none;border:none;font-family:'DM Sans',sans-serif;padding:0;width:100%;}
+  .logout-btn:hover{color:rgba(255,255,255,0.7);}
+
+  /* MAIN */
+  .main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+  .topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 2rem;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:40;}
+  .topbar-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--navy);}
+  .topbar-right{display:flex;align-items:center;gap:1rem;}
+  .notif-btn{position:relative;background:none;border:none;cursor:pointer;font-size:1.1rem;padding:0.3rem;}
+  .notif-dot{position:absolute;top:0;right:0;width:8px;height:8px;border-radius:50%;background:var(--error);border:2px solid var(--white);}
+  .lang-mini{display:flex;gap:0;border:1px solid var(--border);border-radius:5px;overflow:hidden;}
+  .lang-mini button{padding:0.25rem 0.6rem;font-size:0.7rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;background:none;border:none;cursor:pointer;color:var(--slate-light);font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+  .lang-mini button.active{background:var(--navy);color:var(--white);}
+  .arch-badge{display:flex;align-items:center;gap:0.4rem;background:var(--arch-light);border:1px solid var(--arch-border);border-radius:100px;padding:0.25rem 0.75rem;font-size:0.72rem;font-weight:600;color:var(--arch-mid);}
+
+  /* PAGES */
+  .page{display:none;padding:2rem;}
+  .page.active{display:block;animation:fadeIn 0.25s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes pulse-ring{0%{box-shadow:0 0 0 3px rgba(13,148,136,0.4);}100%{box-shadow:0 0 0 7px rgba(13,148,136,0);}}
+
+  /* COMPONENTS */
+  .card{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+  .card-head{padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
+  .card-head-title{font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;color:var(--navy);}
+  .card-body{padding:1.5rem;}
+  .card-head-action{font-size:0.78rem;color:var(--arch);font-weight:500;cursor:pointer;background:none;border:none;font-family:'DM Sans',sans-serif;}
+
+  .status-pill{font-size:0.68rem;font-weight:600;padding:0.25rem 0.6rem;border-radius:100px;white-space:nowrap;}
+  .pill-active{background:var(--blue-light);color:var(--blue-mid);}
+  .pill-done{background:var(--success-light);color:#065F46;}
+  .pill-pending{background:var(--warning-light);color:#92400E;}
+  .pill-blocked{background:var(--error-light);color:#991B1B;}
+  .pill-arch{background:var(--arch-light);color:var(--arch-mid);}
+
+  .btn-arch{background:var(--arch);color:var(--white);border:none;border-radius:7px;padding:0.6rem 1.25rem;font-size:0.85rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;white-space:nowrap;}
+  .btn-arch:hover{background:var(--arch-mid);transform:translateY(-1px);}
+  .btn-arch-sm{background:var(--arch);color:var(--white);border:none;border-radius:6px;padding:0.4rem 0.85rem;font-size:0.75rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s;}
+  .btn-arch-sm:hover{background:var(--arch-mid);}
+  .btn-outline-sm{background:none;color:var(--slate);border:1px solid var(--border);border-radius:6px;padding:0.4rem 0.85rem;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+  .btn-outline-sm:hover{border-color:var(--arch);color:var(--arch);}
+  .btn-block-sm{background:none;color:var(--error);border:1px solid var(--error-light);border-radius:6px;padding:0.4rem 0.85rem;font-size:0.75rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+  .btn-block-sm:hover{background:var(--error-light);}
+
+  /* KPI */
+  .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;}
+  .kpi-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;transition:box-shadow 0.2s;}
+  .kpi-card:hover{box-shadow:0 4px 20px rgba(0,0,0,0.07);}
+  .kpi-label{font-size:0.75rem;font-weight:500;color:var(--slate);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.5rem;}
+  .kpi-value{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--navy);letter-spacing:-0.02em;}
+  .kpi-sub{font-size:0.75rem;color:var(--slate-light);margin-top:0.2rem;}
+  .kpi-trend{display:inline-flex;align-items:center;gap:0.25rem;font-size:0.72rem;font-weight:600;padding:0.15rem 0.45rem;border-radius:4px;margin-top:0.3rem;}
+  .trend-up{background:var(--success-light);color:#065F46;}
+  .trend-warn{background:var(--warning-light);color:#92400E;}
+  .trend-arch{background:var(--arch-light);color:var(--arch-mid);}
+
+  /* LAYOUT */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;}
+  .main-side{display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;margin-bottom:1.5rem;}
+
+  /* WELCOME */
+  .welcome-bar{background:linear-gradient(135deg,#042F2E 0%,#0A1628 100%);border-radius:12px;padding:1.75rem 2rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden;}
+  .welcome-bar::before{content:'';position:absolute;right:-60px;bottom:-60px;width:250px;height:250px;background:radial-gradient(circle,rgba(13,148,136,0.25) 0%,transparent 70%);}
+  .welcome-text h2{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--white);margin-bottom:0.25rem;}
+  .welcome-text p{font-size:0.875rem;color:rgba(255,255,255,0.5);}
+
+  /* PROJECT CARDS — MULTI VIEW */
+  .project-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem;}
+  .project-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1.25rem;cursor:pointer;transition:all 0.2s;position:relative;}
+  .project-card:hover{border-color:var(--arch);box-shadow:0 4px 20px rgba(13,148,136,0.1);transform:translateY(-2px);}
+  .project-card.has-action{border-color:var(--warning);}
+  .project-card-icon{font-size:1.5rem;margin-bottom:0.75rem;}
+  .project-card-name{font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;color:var(--navy);margin-bottom:0.2rem;}
+  .project-card-meta{font-size:0.75rem;color:var(--slate);margin-bottom:0.85rem;}
+  .project-card-progress{height:4px;background:var(--border);border-radius:100px;overflow:hidden;margin-bottom:0.35rem;}
+  .project-card-fill{height:100%;border-radius:100px;background:linear-gradient(to right,var(--arch),#2DD4BF);}
+  .project-card-pct{font-size:0.7rem;color:var(--slate);text-align:right;}
+  .project-card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid var(--border);}
+  .action-dot{position:absolute;top:0.75rem;right:0.75rem;width:8px;height:8px;border-radius:50%;background:var(--warning);animation:pulse-warn 2s infinite;}
+  @keyframes pulse-warn{0%,100%{opacity:1;}50%{opacity:0.4;}}
+
+  /* MILESTONE VALIDATION */
+  .ms-validate-card{border:1.5px solid var(--border);border-radius:12px;padding:1.25rem;margin-bottom:0.85rem;background:var(--white);transition:border-color 0.2s;}
+  .ms-validate-card.needs-action{border-color:var(--warning);background:var(--warning-light);}
+  .ms-validate-card.arch-approved{border-color:var(--arch);background:var(--arch-light);}
+  .ms-validate-card.blocked{border-color:var(--error);background:var(--error-light);}
+  .ms-validate-card.done{border-color:var(--success);background:var(--success-light);}
+  .ms-val-head{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.85rem;}
+  .ms-val-num{width:1.75rem;height:1.75rem;border-radius:6px;background:var(--navy);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:800;flex-shrink:0;}
+  .ms-val-card.arch-approved .ms-val-num{background:var(--arch);}
+  .ms-val-card.done .ms-val-num{background:var(--success);}
+  .ms-val-name{font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;color:var(--navy);flex:1;}
+  .ms-val-meta{display:flex;gap:0.75rem;margin-bottom:0.85rem;flex-wrap:wrap;}
+  .ms-val-meta-item{font-size:0.75rem;color:var(--slate);}
+  .ms-val-meta-item strong{color:var(--navy);}
+
+  /* PROOF GALLERY */
+  .proof-gallery{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.85rem;}
+  .proof-item{width:70px;height:70px;border-radius:8px;background:var(--off-white);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.4rem;cursor:pointer;transition:all 0.15s;}
+  .proof-item:hover{border-color:var(--arch);transform:scale(1.05);}
+
+  /* APPROVAL FLOW */
+  .approval-flow{display:flex;gap:0;margin-bottom:0.85rem;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .approval-step{flex:1;padding:0.6rem 0.75rem;text-align:center;background:var(--off-white);}
+  .approval-step+.approval-step{border-left:1px solid var(--border);}
+  .approval-step.done{background:var(--success-light);}
+  .approval-step.active{background:var(--arch-light);}
+  .approval-step.pending-step{background:var(--off-white);}
+  .approval-step-label{font-size:0.65rem;color:var(--slate-light);text-transform:uppercase;letter-spacing:0.08em;}
+  .approval-step-status{font-size:0.75rem;font-weight:600;margin-top:0.15rem;}
+  .approval-step.done .approval-step-status{color:var(--success);}
+  .approval-step.active .approval-step-status{color:var(--arch-mid);}
+  .approval-step.pending-step .approval-step-status{color:var(--slate-light);}
+
+  .ms-val-actions{display:flex;gap:0.5rem;flex-wrap:wrap;}
+
+  /* CHAT */
+  .chat-sidebar{display:flex;flex-direction:column;height:500px;}
+  .chat-tabs{display:flex;border-bottom:1px solid var(--border);}
+  .chat-tab{flex:1;padding:0.75rem;font-size:0.8rem;font-weight:600;text-align:center;cursor:pointer;color:var(--slate);border-bottom:2px solid transparent;transition:all 0.15s;}
+  .chat-tab.active{color:var(--arch);border-bottom-color:var(--arch);}
+  .chat-messages{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:0.75rem;}
+  .chat-messages::-webkit-scrollbar{width:4px;}
+  .chat-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:100px;}
+  .msg{display:flex;gap:0.6rem;align-items:flex-end;}
+  .msg.mine{flex-direction:row-reverse;}
+  .msg-avatar{width:1.75rem;height:1.75rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;color:var(--white);flex-shrink:0;}
+  .av-arch{background:linear-gradient(135deg,var(--arch),var(--arch-mid));}
+  .av-client{background:linear-gradient(135deg,#3B82F6,#1D4ED8);}
+  .av-contractor{background:linear-gradient(135deg,#10B981,#047857);}
+  .msg-wrap{display:flex;flex-direction:column;}
+  .msg.mine .msg-wrap{align-items:flex-end;}
+  .msg-bubble{max-width:78%;padding:0.6rem 0.9rem;border-radius:12px;font-size:0.82rem;line-height:1.5;}
+  .msg.mine .msg-bubble{background:var(--arch);color:var(--white);border-bottom-right-radius:3px;}
+  .msg:not(.mine) .msg-bubble{background:var(--off-white);color:var(--navy);border:1px solid var(--border);border-bottom-left-radius:3px;}
+  .msg-time{font-size:0.65rem;color:var(--slate-light);margin-top:0.2rem;padding:0 0.25rem;}
+  .chat-input-wrap{padding:0.75rem 1rem;border-top:1px solid var(--border);display:flex;gap:0.5rem;align-items:center;}
+  .chat-input{flex:1;padding:0.6rem 0.9rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.85rem;font-family:'DM Sans',sans-serif;color:var(--navy);outline:none;transition:border-color 0.2s;}
+  .chat-input:focus{border-color:var(--arch);}
+  .chat-send{width:2.25rem;height:2.25rem;background:var(--arch);color:var(--white);border:none;border-radius:8px;cursor:pointer;font-size:0.9rem;transition:background 0.2s;display:flex;align-items:center;justify-content:center;}
+  .chat-send:hover{background:var(--arch-mid);}
+
+  /* DOCS */
+  .doc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:0.75rem;}
+  .doc-card{border:1px solid var(--border);border-radius:10px;padding:1rem;cursor:pointer;transition:all 0.15s;background:var(--white);display:flex;flex-direction:column;gap:0.6rem;}
+  .doc-card:hover{border-color:var(--arch);box-shadow:0 2px 12px rgba(13,148,136,0.1);}
+  .doc-card-icon{width:2.25rem;height:2.25rem;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+  .doc-pdf{background:#FEE2E2;}.doc-img{background:var(--success-light);}.doc-dwg{background:#DBEAFE;}.doc-arch{background:var(--arch-light);}
+  .doc-card-name{font-size:0.8rem;font-weight:600;color:var(--navy);line-height:1.3;}
+  .doc-card-meta{font-size:0.68rem;color:var(--slate-light);}
+  .doc-card-tag{font-size:0.65rem;font-weight:600;color:var(--arch-mid);margin-top:auto;}
+
+  /* CONFLICT */
+  .conflict-card{border:1.5px solid var(--error-light);border-radius:12px;padding:1.25rem;background:#FFFBFB;margin-bottom:0.85rem;}
+  .conflict-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.85rem;}
+  .conflict-title{font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;color:var(--navy);}
+  .conflict-desc{font-size:0.8rem;color:var(--slate);line-height:1.6;margin-bottom:0.85rem;}
+  .conflict-parties{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.85rem;}
+  .conflict-party{background:var(--off-white);border:1px solid var(--border);border-radius:8px;padding:0.75rem;}
+  .conflict-party-role{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--slate-light);margin-bottom:0.2rem;}
+  .conflict-party-name{font-size:0.82rem;font-weight:600;color:var(--navy);}
+  .conflict-party-claim{font-size:0.75rem;color:var(--slate);margin-top:0.3rem;line-height:1.5;}
+  .conflict-actions{display:flex;gap:0.5rem;flex-wrap:wrap;}
+  .btn-escalate{padding:0.4rem 0.85rem;background:var(--error);color:var(--white);border:none;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
+  .btn-mediate{padding:0.4rem 0.85rem;background:var(--warning);color:var(--white);border:none;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
+
+  /* ACTIVITY */
+  .activity-item{display:flex;gap:0.75rem;align-items:flex-start;padding:0.65rem 0;border-bottom:1px solid var(--border);}
+  .activity-item:last-child{border-bottom:none;}
+  .activity-icon{width:1.75rem;height:1.75rem;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;flex-shrink:0;}
+  .activity-text{font-size:0.78rem;font-weight:600;color:var(--navy);}
+  .activity-sub{font-size:0.7rem;color:var(--slate-light);margin-top:0.1rem;}
+
+  /* MINI BAR */
+  .mini-bar{height:4px;background:var(--border);border-radius:100px;overflow:hidden;margin-bottom:0.2rem;}
+  .mini-fill{height:100%;border-radius:100px;background:linear-gradient(to right,var(--arch),#2DD4BF);}
+
+  /* ESCROW TABLE */
+  .data-table{width:100%;border-collapse:collapse;}
+  .data-table th{text-align:left;padding:0.7rem 1rem;font-size:0.7rem;font-weight:600;color:var(--slate);text-transform:uppercase;letter-spacing:0.08em;border-bottom:1px solid var(--border);background:var(--off-white);}
+  .data-table td{padding:0.8rem 1rem;font-size:0.82rem;color:var(--navy);border-bottom:1px solid var(--border);vertical-align:middle;}
+  .data-table tr:last-child td{border-bottom:none;}
+  .data-table tr:hover td{background:var(--off-white);}
+
+  /* LANG */
+  body.lang-en [data-nl]{display:none;}
+  body.lang-nl [data-en]{display:none;}
+
+  @media(max-width:900px){
+    .sidebar{transform:translateX(-100%);}
+    .main{margin-left:0;}
+    .kpi-row,.project-grid{grid-template-columns:repeat(2,1fr);}
+    .two-col,.main-side{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body class="lang-nl">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <a href="buildpay-landing.html" class="sidebar-logo">Build<span>pay</span></a>
+  <div class="sidebar-user">
+    <div class="user-avatar">SV</div>
+    <div>
+      <div class="user-name">Sophie Vermeersch</div>
+      <div class="user-role"><span class="role-dot"></span><span data-nl>Architect</span><span data-en>Architect</span></div>
+    </div>
+  </div>
+  <div class="sidebar-section-label"><span data-nl>Navigatie</span><span data-en>Navigation</span></div>
+  <a class="nav-item active" onclick="showPage('overview')" href="#"><span class="nav-icon">📐</span><span data-nl>Overzicht</span><span data-en>Overview</span></a>
+  <a class="nav-item" onclick="showPage('milestones')" href="#"><span class="nav-icon">✅</span><span data-nl>Milestone validatie</span><span data-en>Milestone validation</span><span class="nav-badge warn">2</span></a>
+  <a class="nav-item" onclick="showPage('documents')" href="#"><span class="nav-icon">📁</span><span data-nl>Plannen & documenten</span><span data-en>Plans & documents</span></a>
+  <a class="nav-item" onclick="showPage('chat')" href="#"><span class="nav-icon">💬</span><span data-nl>Berichten</span><span data-en>Messages</span><span class="nav-badge">4</span></a>
+  <a class="nav-item" onclick="showPage('conflicts')" href="#"><span class="nav-icon">⚠️</span><span data-nl>Conflictbeheer</span><span data-en>Conflict management</span><span class="nav-badge err">1</span></a>
+  <a class="nav-item" onclick="showPage('escrow')" href="#"><span class="nav-icon">🔒</span><span data-nl>Escrow overzicht</span><span data-en>Escrow overview</span></a>
+  <div class="sidebar-bottom">
+    <button class="logout-btn" onclick="window.location='buildpay-login.html'"><span>🚪</span><span data-nl>Uitloggen</span><span data-en>Log out</span></button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="page-title"><span data-nl>Overzicht</span><span data-en>Overview</span></div>
+    <div class="topbar-right">
+      <div class="arch-badge">📐 <span data-nl>Architect</span><span data-en>Architect</span></div>
+      <button class="notif-btn">🔔<span class="notif-dot"></span></button>
+      <div class="lang-mini">
+        <button class="active" onclick="setLang('nl')" id="btn-nl">NL</button>
+        <button onclick="setLang('en')" id="btn-en">EN</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== OVERVIEW ===== -->
+  <div class="page active" id="page-overview">
+    <div class="welcome-bar">
+      <div class="welcome-text">
+        <h2>📐 <span data-nl>Goedemiddag, Sophie</span><span data-en>Good afternoon, Sophie</span></h2>
+        <p><span data-nl>5 actieve projecten · 2 milestones wachten op jouw validatie · 1 open conflict</span><span data-en>5 active projects · 2 milestones awaiting your validation · 1 open conflict</span></p>
+      </div>
+      <div style="display:flex;gap:0.75rem;position:relative;z-index:1;">
+        <button class="btn-arch" onclick="showPage('milestones')"><span data-nl>Milestones valideren →</span><span data-en>Validate milestones →</span></button>
+        <button class="btn-outline-sm" style="color:rgba(255,255,255,0.6);border-color:rgba(255,255,255,0.2);" onclick="showPage('conflicts')"><span data-nl>Conflict bekijken</span><span data-en>View conflict</span></button>
+      </div>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-label"><span data-nl>Actieve projecten</span><span data-en>Active projects</span></div><div class="kpi-value">5</div><div class="kpi-sub"><span data-nl>2 afgerond dit jaar</span><span data-en>2 completed this year</span></div></div>
+      <div class="kpi-card"><div class="kpi-label"><span data-nl>Wacht validatie</span><span data-en>Awaiting validation</span></div><div class="kpi-value">2</div><div class="kpi-trend trend-warn"><span data-nl>Actie vereist</span><span data-en>Action required</span></div></div>
+      <div class="kpi-card"><div class="kpi-label"><span data-nl>Totaal in escrow</span><span data-en>Total in escrow</span></div><div class="kpi-value">€ 312K</div><div class="kpi-trend trend-arch"><span data-nl>Veilig</span><span data-en>Secure</span></div></div>
+      <div class="kpi-card"><div class="kpi-label"><span data-nl>Open conflicten</span><span data-en>Open conflicts</span></div><div class="kpi-value">1</div><div class="kpi-trend" style="background:var(--error-light);color:#991B1B;"><span data-nl>Escalatie mogelijk</span><span data-en>Escalation possible</span></div></div>
+    </div>
+
+    <!-- Project grid -->
+    <div style="margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;">
+      <div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--navy);"><span data-nl>Mijn projecten</span><span data-en>My projects</span></div>
+      <button class="btn-arch-sm">+ <span data-nl>Project toevoegen</span><span data-en>Add project</span></button>
+    </div>
+
+    <div class="project-grid">
+      <div class="project-card has-action" onclick="showPage('milestones')">
+        <div class="action-dot"></div>
+        <div class="project-card-icon">🍳</div>
+        <div class="project-card-name"><span data-nl>Keuken Van Damme</span><span data-en>Kitchen Van Damme</span></div>
+        <div class="project-card-meta"><span data-nl>Klant: Marie Van Damme · Aannemer: De Bouwers BV</span><span data-en>Client: Marie Van Damme · Contractor: De Bouwers BV</span></div>
+        <div class="project-card-progress"><div class="project-card-fill" style="width:42%"></div></div>
+        <div class="project-card-pct">42% · MS 2/3</div>
+        <div class="project-card-footer">
+          <span class="status-pill pill-pending"><span data-nl>Wacht validatie</span><span data-en>Awaiting validation</span></span>
+          <span style="font-size:0.78rem;font-weight:700;color:var(--navy);">€ 48.500</span>
+        </div>
+      </div>
+
+      <div class="project-card has-action" onclick="showPage('milestones')">
+        <div class="action-dot"></div>
+        <div class="project-card-icon">🏢</div>
+        <div class="project-card-name"><span data-nl>Kantoor Pieters NV</span><span data-en>Office Pieters NV</span></div>
+        <div class="project-card-meta"><span data-nl>Klant: Pieters NV · Aannemer: Vandebroeck BV</span><span data-en>Client: Pieters NV · Contractor: Vandebroeck BV</span></div>
+        <div class="project-card-progress"><div class="project-card-fill" style="width:60%"></div></div>
+        <div class="project-card-pct">60% · MS 3/5</div>
+        <div class="project-card-footer">
+          <span class="status-pill pill-pending"><span data-nl>Wacht validatie</span><span data-en>Awaiting validation</span></span>
+          <span style="font-size:0.78rem;font-weight:700;color:var(--navy);">€ 75.000</span>
+        </div>
+      </div>
+
+      <div class="project-card" onclick="showPage('overview')">
+        <div class="project-card-icon">🚿</div>
+        <div class="project-card-name"><span data-nl>Badkamer Janssen</span><span data-en>Bathroom Janssen</span></div>
+        <div class="project-card-meta"><span data-nl>Klant: Tom Janssen · Aannemer: Sanitair Pro</span><span data-en>Client: Tom Janssen · Contractor: Sanitair Pro</span></div>
+        <div class="project-card-progress"><div class="project-card-fill" style="width:20%"></div></div>
+        <div class="project-card-pct">20% · MS 1/4</div>
+        <div class="project-card-footer">
+          <span class="status-pill pill-active"><span data-nl>In uitvoering</span><span data-en>In progress</span></span>
+          <span style="font-size:0.78rem;font-weight:700;color:var(--navy);">€ 22.000</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-card-icon">🏡</div>
+        <div class="project-card-name"><span data-nl>Villa Martens</span><span data-en>Villa Martens</span></div>
+        <div class="project-card-meta"><span data-nl>Klant: Luc Martens · Aannemer: BouwGroep NL</span><span data-en>Client: Luc Martens · Contractor: BouwGroep NL</span></div>
+        <div class="project-card-progress"><div class="project-card-fill" style="width:28%;background:linear-gradient(to right,var(--error),#F87171);"></div></div>
+        <div class="project-card-pct">28% · MS 2/6</div>
+        <div class="project-card-footer">
+          <span class="status-pill pill-blocked"><span data-nl>Conflict</span><span data-en>Conflict</span></span>
+          <span style="font-size:0.78rem;font-weight:700;color:var(--navy);">€ 142.000</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-card-icon">🏗️</div>
+        <div class="project-card-name"><span data-nl>Appartement Declercq</span><span data-en>Apartment Declercq</span></div>
+        <div class="project-card-meta"><span data-nl>Klant: H. Declercq · Aannemer: RenovaPro</span><span data-en>Client: H. Declercq · Contractor: RenovaPro</span></div>
+        <div class="project-card-progress"><div class="project-card-fill" style="width:0%"></div></div>
+        <div class="project-card-pct">0% · <span data-nl>Start 1 apr</span><span data-en>Start Apr 1</span></div>
+        <div class="project-card-footer">
+          <span class="status-pill" style="background:var(--off-white);color:var(--slate-light);"><span data-nl>Gepland</span><span data-en>Planned</span></span>
+          <span style="font-size:0.78rem;font-weight:700;color:var(--navy);">€ 38.500</span>
+        </div>
+      </div>
+
+      <div class="project-card" style="border-style:dashed;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;min-height:180px;" onclick="alert('Nieuw project toevoegen')">
+        <div style="font-size:1.5rem;margin-bottom:0.5rem;">➕</div>
+        <div style="font-size:0.82rem;font-weight:600;color:var(--slate);"><span data-nl>Nieuw project</span><span data-en>New project</span></div>
+      </div>
+    </div>
+
+    <!-- Activity -->
+    <div class="main-side">
+      <div class="card">
+        <div class="card-head"><div class="card-head-title"><span data-nl>Recente activiteit</span><span data-en>Recent activity</span></div></div>
+        <div class="card-body" style="padding:0.5rem 1.5rem;">
+          <div class="activity-item"><div class="activity-icon" style="background:var(--warning-light);">⏳</div><div><div class="activity-text"><span data-nl>Milestone 2 ingediend door De Bouwers BV</span><span data-en>Milestone 2 submitted by De Bouwers BV</span></div><div class="activity-sub"><span data-nl>Keuken Van Damme · jouw validatie vereist · vandaag 09:15</span><span data-en>Kitchen Van Damme · your validation required · today 09:15</span></div></div></div>
+          <div class="activity-item"><div class="activity-icon" style="background:var(--warning-light);">⏳</div><div><div class="activity-text"><span data-nl>Milestone 3 ingediend door Vandebroeck BV</span><span data-en>Milestone 3 submitted by Vandebroeck BV</span></div><div class="activity-sub"><span data-nl>Kantoor Pieters · jouw validatie vereist · gisteren 16:30</span><span data-en>Office Pieters · your validation required · yesterday 16:30</span></div></div></div>
+          <div class="activity-item"><div class="activity-icon" style="background:var(--error-light);">⚠️</div><div><div class="activity-text"><span data-nl>Conflict geopend door klant</span><span data-en>Conflict opened by client</span></div><div class="activity-sub"><span data-nl>Villa Martens · waterlek gemeld · 23 mrt</span><span data-en>Villa Martens · water leak reported · Mar 23</span></div></div></div>
+          <div class="activity-item"><div class="activity-icon" style="background:var(--success-light);">✅</div><div><div class="activity-text"><span data-nl>Milestone 1 goedgekeurd</span><span data-en>Milestone 1 approved</span></div><div class="activity-sub"><span data-nl>Badkamer Janssen · € 4.500 vrijgegeven · 20 mrt</span><span data-en>Bathroom Janssen · € 4,500 released · Mar 20</span></div></div></div>
+          <div class="activity-item"><div class="activity-icon" style="background:var(--arch-light);">📐</div><div><div class="activity-text"><span data-nl>Plannen geüpload voor appartement Declercq</span><span data-en>Plans uploaded for apartment Declercq</span></div><div class="activity-sub">18 mrt 2025</div></div></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.5rem;">
+        <div class="card">
+          <div class="card-head"><div class="card-head-title"><span data-nl>Jouw rol uitgelegd</span><span data-en>Your role explained</span></div></div>
+          <div class="card-body" style="padding:1rem 1.25rem;">
+            <div style="display:flex;flex-direction:column;gap:0.75rem;">
+              <div style="display:flex;gap:0.6rem;align-items:flex-start;">
+                <div style="width:1.5rem;height:1.5rem;border-radius:5px;background:var(--arch-light);display:flex;align-items:center;justify-content:center;font-size:0.75rem;flex-shrink:0;">1</div>
+                <div style="font-size:0.78rem;color:var(--slate);line-height:1.5;"><strong style="color:var(--navy);" data-nl>Technisch valideren</strong><strong style="color:var(--navy);" data-en>Technical validation</strong><br><span data-nl>Jij keurt milestones goed vanuit technisch oogpunt</span><span data-en>You approve milestones from a technical perspective</span></div>
+              </div>
+              <div style="display:flex;gap:0.6rem;align-items:flex-start;">
+                <div style="width:1.5rem;height:1.5rem;border-radius:5px;background:var(--arch-light);display:flex;align-items:center;justify-content:center;font-size:0.75rem;flex-shrink:0;">2</div>
+                <div style="font-size:0.78rem;color:var(--slate);line-height:1.5;"><strong style="color:var(--navy);" data-nl>Klant informeren</strong><strong style="color:var(--navy);" data-en>Inform client</strong><br><span data-nl>Na jouw goedkeuring kan de klant definitief vrijgeven</span><span data-en>After your approval, the client can release funds</span></div>
+              </div>
+              <div style="display:flex;gap:0.6rem;align-items:flex-start;">
+                <div style="width:1.5rem;height:1.5rem;border-radius:5px;background:var(--error-light);display:flex;align-items:center;justify-content:center;font-size:0.75rem;flex-shrink:0;">⚠</div>
+                <div style="font-size:0.78rem;color:var(--slate);line-height:1.5;"><strong style="color:var(--navy);" data-nl>Blokkeren</strong><strong style="color:var(--navy);" data-en>Block</strong><br><span data-nl>Indien niet conform plannen blokkeer je de milestone</span><span data-en>If not per plans, you block the milestone</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-head-title"><span data-nl>Goedkeuringsflow</span><span data-en>Approval flow</span></div></div>
+          <div class="card-body" style="padding:1rem 1.25rem;">
+            <div style="display:flex;flex-direction:column;gap:0.4rem;font-size:0.78rem;">
+              <div style="display:flex;align-items:center;gap:0.5rem;"><div style="width:1.25rem;height:1.25rem;border-radius:4px;background:linear-gradient(135deg,#10B981,#047857);display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:var(--white);">1</div><span><span data-nl>Aannemer dient in + bewijs</span><span data-en>Contractor submits + proof</span></span></div>
+              <div style="padding-left:0.6rem;color:var(--slate-light);">↓</div>
+              <div style="display:flex;align-items:center;gap:0.5rem;"><div style="width:1.25rem;height:1.25rem;border-radius:4px;background:linear-gradient(135deg,var(--arch),var(--arch-mid));display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:var(--white);">2</div><span style="font-weight:600;color:var(--arch-mid);"><span data-nl>Architect valideert technisch</span><span data-en>Architect validates technically</span></span></div>
+              <div style="padding-left:0.6rem;color:var(--slate-light);">↓</div>
+              <div style="display:flex;align-items:center;gap:0.5rem;"><div style="width:1.25rem;height:1.25rem;border-radius:4px;background:linear-gradient(135deg,#3B82F6,#1D4ED8);display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:var(--white);">3</div><span><span data-nl>Klant keurt goed + vrijgave</span><span data-en>Client approves + release</span></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MILESTONES ===== -->
+  <div class="page" id="page-milestones">
+    <div style="margin-bottom:1.5rem;">
+      <h2 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--navy);">✅ <span data-nl>Milestone validatie</span><span data-en>Milestone validation</span></h2>
+      <p style="font-size:0.85rem;color:var(--slate);margin-top:0.25rem;"><span data-nl>Beoordeel het werk technisch voordat de klant betaalt</span><span data-en>Technically assess the work before the client pays</span></p>
+    </div>
+
+    <!-- Project 1 — Keuken -->
+    <div style="margin-bottom:2rem;">
+      <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;">
+        <span style="font-size:1.1rem;">🍳</span>
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--navy);"><span data-nl>Keuken Van Damme</span><span data-en>Kitchen Van Damme</span></div>
+          <div style="font-size:0.75rem;color:var(--slate);">De Bouwers BV · € 48.500</div>
+        </div>
+      </div>
+
+      <!-- MS 1 done -->
+      <div class="ms-validate-card done">
+        <div class="ms-val-head">
+          <div class="ms-val-num" style="background:var(--success);">1</div>
+          <div class="ms-val-name"><span data-nl>Sloopwerk & voorbereiding</span><span data-en>Demolition & preparation</span></div>
+          <span class="status-pill pill-done"><span data-nl>Vrijgegeven</span><span data-en>Released</span></span>
+        </div>
+        <div class="ms-val-meta">
+          <div class="ms-val-meta-item"><strong>€ 8.500</strong></div>
+          <div class="ms-val-meta-item"><span data-nl>Vrijgegeven op</span><span data-en>Released on</span> 18 mrt 2025</div>
+          <div class="ms-val-meta-item">✓ <span data-nl>Door architect gevalideerd</span><span data-en>Validated by architect</span></div>
+        </div>
+      </div>
+
+      <!-- MS 2 needs action -->
+      <div class="ms-validate-card needs-action">
+        <div class="ms-val-head">
+          <div class="ms-val-num">2</div>
+          <div class="ms-val-name"><span data-nl>Ruwbouw & technische installaties</span><span data-en>Structure & technical installations</span></div>
+          <span class="status-pill pill-pending"><span data-nl>Wacht op jou</span><span data-en>Awaiting you</span></span>
+        </div>
+        <div class="ms-val-meta">
+          <div class="ms-val-meta-item"><strong>€ 18.500</strong></div>
+          <div class="ms-val-meta-item"><span data-nl>Ingediend</span><span data-en>Submitted</span>: 24 mrt 2025</div>
+          <div class="ms-val-meta-item">⏳ <span data-nl>Jouw validatie vereist</span><span data-en>Your validation required</span></div>
+        </div>
+
+        <div style="margin-bottom:0.85rem;">
+          <div style="font-size:0.72rem;font-weight:600;color:var(--slate);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.5rem;"><span data-nl>Ingediend bewijs</span><span data-en>Submitted proof</span></div>
+          <div class="proof-gallery">
+            <div class="proof-item">📸</div>
+            <div class="proof-item">📸</div>
+            <div class="proof-item">📸</div>
+            <div class="proof-item">📄</div>
+            <div class="proof-item">📄</div>
+            <div class="proof-item" style="font-size:0.7rem;font-weight:600;color:var(--arch-mid);">+3</div>
+          </div>
+        </div>
+
+        <div class="approval-flow" style="margin-bottom:0.85rem;">
+          <div class="approval-step done"><div class="approval-step-label"><span data-nl>Aannemer</span><span data-en>Contractor</span></div><div class="approval-step-status">✓ <span data-nl>Ingediend</span><span data-en>Submitted</span></div></div>
+          <div class="approval-step active"><div class="approval-step-label"><span data-nl>Architect</span><span data-en>Architect</span></div><div class="approval-step-status">⏳ <span data-nl>Jij</span><span data-en>You</span></div></div>
+          <div class="approval-step pending-step"><div class="approval-step-label"><span data-nl>Klant</span><span data-en>Client</span></div><div class="approval-step-status"><span data-nl>Wacht</span><span data-en>Pending</span></div></div>
+          <div class="approval-step pending-step"><div class="approval-step-label"><span data-nl>Vrijgave</span><span data-en>Release</span></div><div class="approval-step-status"><span data-nl>Wacht</span><span data-en>Pending</span></div></div>
+        </div>
+
+        <div style="background:rgba(255,255,255,0.7);border:1px solid var(--border);border-radius:8px;padding:0.75rem;margin-bottom:0.85rem;">
+          <div style="font-size:0.72rem;font-weight:600;color:var(--slate);margin-bottom:0.4rem;"><span data-nl>Jouw technische beoordeling (optioneel)</span><span data-en>Your technical assessment (optional)</span></div>
+          <textarea style="width:100%;border:none;background:transparent;font-size:0.8rem;font-family:'DM Sans',sans-serif;color:var(--navy);resize:none;outline:none;min-height:60px;" placeholder="Voeg technische opmerkingen toe..."></textarea>
+        </div>
+
+        <div class="ms-val-actions">
+          <button class="btn-arch-sm" onclick="validateMilestone(this,'approved')">✓ <span data-nl>Technisch goedkeuren</span><span data-en>Technically approve</span></button>
+          <button class="btn-block-sm" onclick="validateMilestone(this,'blocked')">⛔ <span data-nl>Blokkeren — niet conform</span><span data-en>Block — not compliant</span></button>
+          <button class="btn-outline-sm" onclick="showPage('chat')">💬 <span data-nl>Vraag stellen aan aannemer</span><span data-en>Ask contractor</span></button>
+          <button class="btn-outline-sm">📐 <span data-nl>Plan vergelijken</span><span data-en>Compare plans</span></button>
+        </div>
+      </div>
+
+      <!-- MS 3 pending -->
+      <div class="ms-validate-card">
+        <div class="ms-val-head">
+          <div class="ms-val-num">3</div>
+          <div class="ms-val-name"><span data-nl>Afwerking & eindoplevering</span><span data-en>Finishing & final delivery</span></div>
+          <span class="status-pill" style="background:var(--off-white);color:var(--slate-light);"><span data-nl>Nog niet ingediend</span><span data-en>Not yet submitted</span></span>
+        </div>
+        <div class="ms-val-meta">
+          <div class="ms-val-meta-item"><strong>€ 21.500</strong></div>
+          <div class="ms-val-meta-item"><span data-nl>Gepland: 1 juni 2025</span><span data-en>Planned: June 1, 2025</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 2 — Kantoor -->
+    <div style="margin-bottom:2rem;">
+      <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;">
+        <span style="font-size:1.1rem;">🏢</span>
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--navy);"><span data-nl>Kantoor Pieters NV</span><span data-en>Office Pieters NV</span></div>
+          <div style="font-size:0.75rem;color:var(--slate);">Vandebroeck BV · € 75.000</div>
+        </div>
+      </div>
+
+      <div class="ms-validate-card needs-action">
+        <div class="ms-val-head">
+          <div class="ms-val-num">3</div>
+          <div class="ms-val-name"><span data-nl>Elektriciteit & data-installatie</span><span data-en>Electricity & data installation</span></div>
+          <span class="status-pill pill-pending"><span data-nl>Wacht op jou</span><span data-en>Awaiting you</span></span>
+        </div>
+        <div class="ms-val-meta">
+          <div class="ms-val-meta-item"><strong>€ 22.500</strong></div>
+          <div class="ms-val-meta-item"><span data-nl>Ingediend</span><span data-en>Submitted</span>: 23 mrt 2025</div>
+        </div>
+        <div class="proof-gallery" style="margin-bottom:0.85rem;">
+          <div class="proof-item">📸</div>
+          <div class="proof-item">📄</div>
+          <div class="proof-item">📄</div>
+        </div>
+        <div class="approval-flow" style="margin-bottom:0.85rem;">
+          <div class="approval-step done"><div class="approval-step-label"><span data-nl>Aannemer</span><span data-en>Contractor</span></div><div class="approval-step-status">✓ <span data-nl>Ingediend</span><span data-en>Submitted</span></div></div>
+          <div class="approval-step active"><div class="approval-step-label"><span data-nl>Architect</span><span data-en>Architect</span></div><div class="approval-step-status">⏳ <span data-nl>Jij</span><span data-en>You</span></div></div>
+          <div class="approval-step pending-step"><div class="approval-step-label"><span data-nl>Klant</span><span data-en>Client</span></div><div class="approval-step-status"><span data-nl>Wacht</span><span data-en>Pending</span></div></div>
+          <div class="approval-step pending-step"><div class="approval-step-label"><span data-nl>Vrijgave</span><span data-en>Release</span></div><div class="approval-step-status"><span data-nl>Wacht</span><span data-en>Pending</span></div></div>
+        </div>
+        <div class="ms-val-actions">
+          <button class="btn-arch-sm" onclick="validateMilestone(this,'approved')">✓ <span data-nl>Technisch goedkeuren</span><span data-en>Technically approve</span></button>
+          <button class="btn-block-sm" onclick="validateMilestone(this,'blocked')">⛔ <span data-nl>Blokkeren</span><span data-en>Block</span></button>
+          <button class="btn-outline-sm" onclick="showPage('chat')">💬 <span data-nl>Berichten</span><span data-en>Messages</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DOCUMENTS ===== -->
+  <div class="page" id="page-documents">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+      <div>
+        <h2 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--navy);">📁 <span data-nl>Plannen & documenten</span><span data-en>Plans & documents</span></h2>
+        <p style="font-size:0.85rem;color:var(--slate);margin-top:0.25rem;"><span data-nl>Alle technische plannen, bestekken en keuringsattesten</span><span data-en>All technical plans, specifications and inspection certificates</span></p>
+      </div>
+      <button class="btn-arch">📤 <span data-nl>Uploaden</span><span data-en>Upload</span></button>
+    </div>
+
+    <!-- Per project -->
+    <div style="display:flex;flex-direction:column;gap:2rem;">
+      <div>
+        <div style="font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;color:var(--navy);margin-bottom:0.85rem;">🍳 <span data-nl>Keuken Van Damme</span><span data-en>Kitchen Van Damme</span></div>
+        <div class="doc-grid">
+          <div class="doc-card"><div class="doc-card-icon doc-arch">📐</div><div class="doc-card-name"><span data-nl>Keukenplan grondplan.dwg</span><span data-en>Kitchen floor plan.dwg</span></div><div class="doc-card-meta">2.4 MB · 5 feb</div><div class="doc-card-tag">📐 <span data-nl>Architectuurplan</span><span data-en>Architecture plan</span></div></div>
+          <div class="doc-card"><div class="doc-card-icon doc-pdf">📄</div><div class="doc-card-name"><span data-nl>Bestek keuken v2.pdf</span><span data-en>Kitchen specification v2.pdf</span></div><div class="doc-card-meta">580 KB · 10 feb</div><div class="doc-card-tag">📋 <span data-nl>Bestek</span><span data-en>Specification</span></div></div>
+          <div class="doc-card"><div class="doc-card-icon doc-pdf">📄</div><div class="doc-card-name"><span data-nl>Elektrische keuring AREI.pdf</span><span data-en>Electrical inspection AREI.pdf</span></div><div class="doc-card-meta">180 KB · 23 mrt</div><div class="doc-card-tag">✓ <span data-nl>Keuringsattest</span><span data-en>Inspection certificate</span></div></div>
+          <div class="doc-card"><div class="doc-card-icon doc-img">📸</div><div class="doc-card-name"><span data-nl>Werfbezoek foto's MS2</span><span data-en>Site visit photos MS2</span></div><div class="doc-card-meta">12.4 MB · 22 mrt</div><div class="doc-card-tag">📷 <span data-nl>Werfbezoek</span><span data-en>Site visit</span></div></div>
+          <div class="doc-card"><div class="doc-card-icon doc-pdf">📄</div><div class="doc-card-name"><span data-nl>Offerte De Bouwers BV.pdf</span><span data-en>Quote De Bouwers BV.pdf</span></div><div class="doc-card-meta">245 KB · 8 jan</div><div class="doc-card-tag">💰 <span data-nl>Offerte</span><span data-en>Quote</span></div></div>
+          <div class="doc-card"><div class="doc-card-icon doc-pdf">📄</div><div class="doc-card-name"><span data-nl>Aannemingscontract.pdf</span><span data-en>Construction contract.pdf</span></div><div class="doc-card-meta">320 KB · 15 jan</div><div class="doc-card-tag">📝 <span data-nl>Contract</span><span data-en>Contract</span></div></div>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;color:var(--navy);margin-bottom:0.85rem;">🏢 <span data-nl>Kantoor Pieters NV</span><span data-en>Office Pieters NV</span></div>
+        <div class="doc-grid">
+          <div class="doc-card"><div class="doc-card-icon doc-arch">📐</div><div class="doc-card-name"><span data-nl>Kantoorplan alle verdiepingen.dwg</span><span data-en>Office plan all floors.dwg</span></div><div class="doc-card-meta">8.2 MB · 12 jan</div><div class="doc-card-tag">📐 <span data-nl>Architectuurplan</span><span data-en>Architecture plan</span></div></div>
+          <div class="doc-card"><div class="doc-card-icon doc-pdf">📄</div><div class="doc-card-name"><span data-nl>Elektriciteitsschema.pdf</span><span data-en>Electrical diagram.pdf</span></div><div class="doc-card-meta">1.2 MB · 20 jan</div><div class="doc-card-tag">⚡ <span data-nl>Technisch schema</span><span data-en>Technical diagram</span></div></div>
+          <div class="doc-card"><div class="doc-card-icon doc-img">📸</div><div class="doc-card-name"><span data-nl>Werfbezoek foto's MS3</span><span data-en>Site visit photos MS3</span></div><div class="doc-card-meta">9.8 MB · 21 mrt</div><div class="doc-card-tag">📷 <span data-nl>Werfbezoek</span><span data-en>Site visit</span></div></div>
+          <div class="doc-card" style="border-style:dashed;align-items:center;justify-content:center;text-align:center;min-height:130px;"><div style="font-size:1.3rem;">📤</div><div style="font-size:0.78rem;font-weight:600;color:var(--slate);margin-top:0.4rem;"><span data-nl>Plan uploaden</span><span data-en>Upload plan</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CHAT ===== -->
+  <div class="page" id="page-chat">
+    <div style="margin-bottom:1.5rem;">
+      <h2 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--navy);">💬 <span data-nl>Berichten</span><span data-en>Messages</span></h2>
+      <p style="font-size:0.85rem;color:var(--slate);margin-top:0.25rem;"><span data-nl>Communiceer apart met klant en aannemer per project</span><span data-en>Communicate separately with client and contractor per project</span></p>
+    </div>
+
+    <div class="two-col">
+      <!-- Chat with contractor -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-head-title">🔨 <span data-nl>Aannemer — Keuken Van Damme</span><span data-en>Contractor — Kitchen Van Damme</span></div>
+          <select style="font-size:0.75rem;padding:0.25rem 0.5rem;border:1px solid var(--border);border-radius:5px;font-family:'DM Sans',sans-serif;color:var(--slate);background:var(--white);cursor:pointer;">
+            <option><span data-nl>Keuken Van Damme</span><span data-en>Kitchen Van Damme</span></option>
+            <option><span data-nl>Kantoor Pieters</span><span data-en>Office Pieters</span></option>
+          </select>
+        </div>
+        <div class="chat-sidebar">
+          <div class="chat-messages" id="contractor-chat">
+            <div class="msg"><div class="msg-avatar av-contractor">DB</div><div class="msg-wrap"><div class="msg-bubble"><span data-nl>Goedemiddag Sophie! MS2 is ingediend. Alle leidingen zijn getest en keuringsattest is bijgevoegd.</span><span data-en>Good afternoon Sophie! MS2 has been submitted. All pipes tested and inspection certificate attached.</span></div><div class="msg-time"><span data-nl>vandaag 09:15</span><span data-en>today 09:15</span></div></div></div>
+            <div class="msg mine"><div class="msg-avatar av-arch">SV</div><div class="msg-wrap"><div class="msg-bubble"><span data-nl>Bedankt! Ik bekijk het bewijs vandaag. Zijn de vloertegels al besteld voor MS3?</span><span data-en>Thanks! I'll review the proof today. Have the floor tiles been ordered for MS3?</span></div><div class="msg-time"><span data-nl>vandaag 09:45</span><span data-en>today 09:45</span></div></div></div>
+            <div class="msg"><div class="msg-avatar av-contractor">DB</div><div class="msg-wrap"><div class="msg-bubble"><span data-nl>Ja, levering verwacht op 28 maart. Dan kunnen we direct starten met MS3.</span><span data-en>Yes, delivery expected March 28. Then we can start MS3 immediately.</span></div><div class="msg-time"><span data-nl>vandaag 10:12</span><span data-en>today 10:12</span></div></div></div>
+          </div>
+          <div class="chat-input-wrap">
+            <input class="chat-input" type="text" id="contractor-chat-input" placeholder="Bericht aan aannemer...">
+            <button class="chat-send" onclick="sendMsg('contractor')">➤</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat with client -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-head-title">🏠 <span data-nl>Klant — Keuken Van Damme</span><span data-en>Client — Kitchen Van Damme</span></div>
+          <select style="font-size:0.75rem;padding:0.25rem 0.5rem;border:1px solid var(--border);border-radius:5px;font-family:'DM Sans',sans-serif;color:var(--slate);background:var(--white);cursor:pointer;">
+            <option><span data-nl>Keuken Van Damme</span><span data-en>Kitchen Van Damme</span></option>
+            <option><span data-nl>Kantoor Pieters</span><span data-en>Office Pieters</span></option>
+          </select>
+        </div>
+        <div class="chat-sidebar">
+          <div class="chat-messages" id="client-chat">
+            <div class="msg"><div class="msg-avatar av-client">MV</div><div class="msg-wrap"><div class="msg-bubble"><span data-nl>Sophie, ik heb de foto's van MS2 gezien. Ziet er goed uit! Wanneer kan ik goedkeuren?</span><span data-en>Sophie, I've seen the photos for MS2. Looks good! When can I approve?</span></div><div class="msg-time"><span data-nl>vandaag 10:30</span><span data-en>today 10:30</span></div></div></div>
+            <div class="msg mine"><div class="msg-avatar av-arch">SV</div><div class="msg-wrap"><div class="msg-bubble"><span data-nl>Ik valideer het technisch vandaag. Als alles conform de plannen is, kan jij daarna goedkeuren en het bedrag vrijgeven.</span><span data-en>I'll technically validate it today. If everything matches the plans, you can then approve and release the amount.</span></div><div class="msg-time"><span data-nl>vandaag 10:45</span><span data-en>today 10:45</span></div></div></div>
+            <div class="msg"><div class="msg-avatar av-client">MV</div><div class="msg-wrap"><div class="msg-bubble"><span data-nl>Super, dank je! Fijn dat jij dat eerste controleert.</span><span data-en>Great, thanks! Good that you check first.</span></div><div class="msg-time"><span data-nl>vandaag 11:00</span><span data-en>today 11:00</span></div></div></div>
+          </div>
+          <div class="chat-input-wrap">
+            <input class="chat-input" type="text" id="client-chat-input" placeholder="Bericht aan klant...">
+            <button class="chat-send" onclick="sendMsg('client')">➤</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--arch-light);border:1px solid var(--arch-border);border-radius:8px;padding:0.85rem 1.1rem;font-size:0.78rem;color:var(--arch-mid);">
+      📐 <strong><span data-nl>Als architect communiceer je apart met klant en aannemer.</span><span data-en>As architect you communicate separately with client and contractor.</span></strong> <span data-nl>Zo kan je neutraal blijven en vermijd je belangenconflicten.</span><span data-en>This allows you to remain neutral and avoid conflicts of interest.</span>
+    </div>
+  </div>
+
+  <!-- ===== CONFLICTS ===== -->
+  <div class="page" id="page-conflicts">
+    <div style="margin-bottom:1.5rem;">
+      <h2 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--navy);">⚠️ <span data-nl>Conflictbeheer</span><span data-en>Conflict management</span></h2>
+      <p style="font-size:0.85rem;color:var(--slate);margin-top:0.25rem;"><span data-nl>Als architect ben jij de eerste bemiddelaar — escaleer naar Buildpay admin indien nodig</span><span data-en>As architect you are the first mediator — escalate to Buildpay admin if needed</span></p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem;">
+      <div class="kpi-card" style="border-left:3px solid var(--error);"><div class="kpi-label"><span data-nl>Open conflicten</span><span data-en>Open conflicts</span></div><div class="kpi-value">1</div></div>
+      <div class="kpi-card" style="border-left:3px solid var(--success);"><div class="kpi-label"><span data-nl>Opgelost dit jaar</span><span data-en>Resolved this year</span></div><div class="kpi-value">3</div><div class="kpi-sub">100%</div></div>
+      <div class="kpi-card" style="border-left:3px solid var(--arch);"><div class="kpi-label"><span data-nl>Avg. oplostijd</span><span data-en>Avg. resolution time</span></div><div class="kpi-value">4 <span style="font-size:1rem;">dagen</span></div></div>
+    </div>
+
+    <div class="conflict-card">
+      <div class="conflict-head">
+        <div class="conflict-title">🏡 <span data-nl>Villa Martens — Milestone 2</span><span data-en>Villa Martens — Milestone 2</span></div>
+        <span class="status-pill pill-blocked"><span data-nl>Open</span><span data-en>Open</span></span>
+      </div>
+      <div class="conflict-desc">
+        <strong><span data-nl>Betwist bedrag:</span><span data-en>Disputed amount:</span></strong> € 28.400 &nbsp;·&nbsp;
+        <strong><span data-nl>Geopend:</span><span data-en>Opened:</span></strong> 23 mrt 2025
+        <br><br>
+        <span data-nl>Klant betwist de waterinstallatie — drie lekken gevonden bij eigen inspectie. Aannemer stelt dat de lekken zijn ontstaan door vorstschade na de werken. Jij bent gevraagd om als eerste te bemiddelen voor escalatie naar Buildpay admin.</span>
+        <span data-en>Client disputes the water installation — three leaks found during own inspection. Contractor claims leaks were caused by frost damage after the works. You are asked to mediate first before escalation to Buildpay admin.</span>
+      </div>
+
+      <div class="conflict-parties">
+        <div class="conflict-party">
+          <div class="conflict-party-role">🏠 <span data-nl>Klant</span><span data-en>Client</span></div>
+          <div class="conflict-party-name">Luc Martens</div>
+          <div class="conflict-party-claim"><span data-nl>Waterinstallatie niet conform bestek. Lekken gevonden op 3 plaatsen. Vraagt herstel of terugbetaling € 28.400.</span><span data-en>Water installation not per specification. Leaks found at 3 locations. Requests repair or refund € 28,400.</span></div>
+        </div>
+        <div class="conflict-party">
+          <div class="conflict-party-role">🔨 <span data-nl>Aannemer</span><span data-en>Contractor</span></div>
+          <div class="conflict-party-name">BouwGroep NL</div>
+          <div class="conflict-party-claim"><span data-nl>Werk correct uitgevoerd en lekvrij getest op 15 mrt. Lekken zijn vorstschade — externe oorzaak. Vraagt volledige betaling.</span><span data-en>Work correctly completed and leak-tested on Mar 15. Leaks are frost damage — external cause. Requests full payment.</span></div>
+        </div>
+      </div>
+
+      <div style="background:var(--off-white);border:1px solid var(--border);border-radius:8px;padding:0.85rem;margin-bottom:1rem;">
+        <div style="font-size:0.72rem;font-weight:600;color:var(--slate);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.5rem;"><span data-nl>Jouw beoordeling als architect</span><span data-en>Your assessment as architect</span></div>
+        <textarea style="width:100%;padding:0.6rem 0.75rem;border:1.5px solid var(--border);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:0.8rem;color:var(--navy);resize:vertical;min-height:90px;outline:none;" placeholder="Geef jouw technisch advies als architect..."></textarea>
+        <div style="margin-top:0.75rem;">
+          <div style="font-size:0.72rem;font-weight:600;color:var(--slate);margin-bottom:0.5rem;"><span data-nl>Werfbezoek plannen</span><span data-en>Plan site visit</span></div>
+          <input type="date" style="padding:0.45rem 0.75rem;border:1.5px solid var(--border);border-radius:7px;font-size:0.82rem;font-family:'DM Sans',sans-serif;color:var(--navy);outline:none;">
+        </div>
+      </div>
+
+      <div class="conflict-actions">
+        <button class="btn-arch-sm" onclick="resolveConflict(this)">✓ <span data-nl>Bemiddeling geslaagd</span><span data-en>Mediation successful</span></button>
+        <button class="btn-mediate" onclick="showPage('chat')">💬 <span data-nl>Partijen samenbrengen</span><span data-en>Bring parties together</span></button>
+        <button class="btn-escalate" onclick="escalateConflict(this)">⬆ <span data-nl>Escaleren naar Buildpay admin</span><span data-en>Escalate to Buildpay admin</span></button>
+        <button class="btn-outline-sm">📋 <span data-nl>Werfbezoek plannen</span><span data-en>Plan site visit</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ESCROW ===== -->
+  <div class="page" id="page-escrow">
+    <div style="margin-bottom:1.5rem;">
+      <h2 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--navy);">🔒 <span data-nl>Escrow overzicht</span><span data-en>Escrow overview</span></h2>
+      <p style="font-size:0.85rem;color:var(--slate);margin-top:0.25rem;"><span data-nl>Financieel overzicht van alle projecten — alleen leesrecht</span><span data-en>Financial overview of all projects — read only</span></p>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-label"><span data-nl>Totaal in escrow</span><span data-en>Total in escrow</span></div><div class="kpi-value">€ 312K</div><div class="kpi-trend trend-arch"><span data-nl>5 projecten</span><span data-en>5 projects</span></div></div>
+      <div class="kpi-card"><div class="kpi-label"><span data-nl>Vrijgegeven (YTD)</span><span data-en>Released (YTD)</span></div><div class="kpi-value">€ 58.7K</div><div class="kpi-trend trend-up">↑ 23%</div></div>
+      <div class="kpi-card"><div class="kpi-label"><span data-nl>Wacht vrijgave</span><span data-en>Pending release</span></div><div class="kpi-value">€ 41K</div><div class="kpi-trend trend-warn">2 <span data-nl>milestones</span><span data-en>milestones</span></div></div>
+      <div class="kpi-card"><div class="kpi-label"><span data-nl>Geblokkeerd (conflict)</span><span data-en>Blocked (conflict)</span></div><div class="kpi-value">€ 28.4K</div><div class="kpi-trend" style="background:var(--error-light);color:#991B1B;">1 <span data-nl>dossier</span><span data-en>file</span></div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><div class="card-head-title"><span data-nl>Alle escrow posities</span><span data-en>All escrow positions</span></div><div style="font-size:0.72rem;color:var(--slate-light);">👁 <span data-nl>Leesrecht</span><span data-en>Read only</span></div></div>
+      <div class="card-body" style="padding:0;">
+        <table class="data-table">
+          <thead><tr>
+            <th><span data-nl>Project</span><span data-en>Project</span></th>
+            <th><span data-nl>Klant</span><span data-en>Client</span></th>
+            <th><span data-nl>Aannemer</span><span data-en>Contractor</span></th>
+            <th><span data-nl>Totaal</span><span data-en>Total</span></th>
+            <th><span data-nl>Vrijgegeven</span><span data-en>Released</span></th>
+            <th><span data-nl>Resterend</span><span data-en>Remaining</span></th>
+            <th><span data-nl>Voortgang</span><span data-en>Progress</span></th>
+            <th>Status</th>
+          </tr></thead>
+          <tbody>
+            <tr><td><strong>🍳 <span data-nl>Keuken Van Damme</span><span data-en>Kitchen Van Damme</span></strong></td><td>M. Van Damme</td><td>De Bouwers BV</td><td style="font-weight:700;">€ 48.500</td><td style="color:var(--success);font-weight:600;">€ 8.500</td><td>€ 40.000</td><td style="width:80px;"><div class="mini-bar"><div class="mini-fill" style="width:17%"></div></div><div style="font-size:0.65rem;color:var(--slate-light);">17%</div></td><td><span class="status-pill pill-active"><span data-nl>Actief</span><span data-en>Active</span></span></td></tr>
+            <tr><td><strong>🏢 <span data-nl>Kantoor Pieters</span><span data-en>Office Pieters</span></strong></td><td>Pieters NV</td><td>Vandebroeck BV</td><td style="font-weight:700;">€ 75.000</td><td style="color:var(--success);font-weight:600;">€ 30.000</td><td>€ 45.000</td><td style="width:80px;"><div class="mini-bar"><div class="mini-fill" style="width:40%"></div></div><div style="font-size:0.65rem;color:var(--slate-light);">40%</div></td><td><span class="status-pill pill-active"><span data-nl>Actief</span><span data-en>Active</span></span></td></tr>
+            <tr><td><strong>🚿 <span data-nl>Badkamer Janssen</span><span data-en>Bathroom Janssen</span></strong></td><td>T. Janssen</td><td>Sanitair Pro</td><td style="font-weight:700;">€ 22.000</td><td style="color:var(--success);font-weight:600;">€ 4.500</td><td>€ 17.500</td><td style="width:80px;"><div class="mini-bar"><div class="mini-fill" style="width:20%"></div></div><div style="font-size:0.65rem;color:var(--slate-light);">20%</div></td><td><span class="status-pill pill-active"><span data-nl>Actief</span><span data-en>Active</span></span></td></tr>
+            <tr><td><strong>🏡 <span data-nl>Villa Martens</span><span data-en>Villa Martens</span></strong></td><td>L. Martens</td><td>BouwGroep NL</td><td style="font-weight:700;">€ 142.000</td><td style="color:var(--success);font-weight:600;">€ 39.760</td><td style="color:var(--error);font-weight:600;">€ 28.400 🔒</td><td style="width:80px;"><div class="mini-bar"><div class="mini-fill" style="width:28%;background:linear-gradient(to right,var(--error),#F87171);"></div></div><div style="font-size:0.65rem;color:var(--slate-light);">28%</div></td><td><span class="status-pill pill-blocked"><span data-nl>Conflict</span><span data-en>Conflict</span></span></td></tr>
+            <tr><td><strong>🏗️ <span data-nl>App. Declercq</span><span data-en>Apt. Declercq</span></strong></td><td>H. Declercq</td><td>RenovaPro</td><td style="font-weight:700;">€ 38.500</td><td style="color:var(--success);font-weight:600;">€ 0</td><td>€ 38.500</td><td style="width:80px;"><div class="mini-bar"><div class="mini-fill" style="width:0%"></div></div><div style="font-size:0.65rem;color:var(--slate-light);">0%</div></td><td><span class="status-pill pill-pending"><span data-nl>Gepland</span><span data-en>Planned</span></span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div style="background:var(--arch-light);border:1px solid var(--arch-border);border-radius:8px;padding:0.85rem 1.1rem;margin-top:1rem;font-size:0.78rem;color:var(--arch-mid);">
+      📐 <strong><span data-nl>Als architect heb je enkel leesrecht op de escrow posities.</span><span data-en>As architect you have read-only access to escrow positions.</span></strong> <span data-nl>Vrijgave en betalingen worden beheerd door klant en Buildpay platform.</span><span data-en>Releases and payments are managed by the client and Buildpay platform.</span>
+    </div>
+  </div>
+
+</div><!-- end main -->
+
+<script>
+  const pageTitles={
+    overview:{nl:'Overzicht',en:'Overview'},
+    milestones:{nl:'Milestone validatie',en:'Milestone validation'},
+    documents:{nl:'Plannen & documenten',en:'Plans & documents'},
+    chat:{nl:'Berichten',en:'Messages'},
+    conflicts:{nl:'Conflictbeheer',en:'Conflict management'},
+    escrow:{nl:'Escrow overzicht',en:'Escrow overview'}
+  };
+  const pageOrder=['overview','milestones','documents','chat','conflicts','escrow'];
+
+  function showPage(id){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('page-'+id).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+    const items=document.querySelectorAll('.nav-item');
+    const idx=pageOrder.indexOf(id);
+    if(items[idx])items[idx].classList.add('active');
+    const lang=document.body.classList.contains('lang-en')?'en':'nl';
+    const t=pageTitles[id];
+    if(t)document.getElementById('page-title').textContent=t[lang];
+    window.scrollTo(0,0);
+  }
+
+  function setLang(lang){
+    document.body.className='lang-'+lang;
+    document.getElementById('btn-nl').classList.toggle('active',lang==='nl');
+    document.getElementById('btn-en').classList.toggle('active',lang==='en');
+  }
+
+  function validateMilestone(btn, action){
+    const lang=document.body.classList.contains('lang-en')?'en':'nl';
+    const card=btn.closest('.ms-validate-card');
+    if(action==='approved'){
+      card.className='ms-validate-card arch-approved';
+      const flow=card.querySelector('.approval-flow');
+      if(flow){
+        const steps=flow.querySelectorAll('.approval-step');
+        if(steps[1]){steps[1].className='approval-step done';steps[1].querySelector('.approval-step-status').textContent='✓ '+(lang==='nl'?'Goedgekeurd':'Approved');}
+        if(steps[2]){steps[2].className='approval-step active';steps[2].querySelector('.approval-step-status').textContent='⏳ '+(lang==='nl'?'Klant':'Client');}
+      }
+      const actions=card.querySelector('.ms-val-actions');
+      if(actions)actions.innerHTML=`<div style="background:var(--success-light);border:1px solid #BBF7D0;border-radius:7px;padding:0.6rem 1rem;font-size:0.8rem;font-weight:600;color:#065F46;">✓ ${lang==='nl'?'Technisch goedgekeurd — klant kan nu vrijgeven':'Technically approved — client can now release'}</div>`;
+      const badge=document.querySelector('.nav-badge.warn');
+      if(badge){const n=parseInt(badge.textContent)-1;if(n<=0)badge.style.display='none';else badge.textContent=n;}
+    } else {
+      card.className='ms-validate-card blocked';
+      const actions=card.querySelector('.ms-val-actions');
+      if(actions)actions.innerHTML=`<div style="background:var(--error-light);border:1px solid #FECACA;border-radius:7px;padding:0.6rem 1rem;font-size:0.8rem;font-weight:600;color:#991B1B;">⛔ ${lang==='nl'?'Milestone geblokkeerd — aannemer moet herstelwerk uitvoeren':'Milestone blocked — contractor must carry out remedial work'}</div>`;
+    }
+  }
+
+  function resolveConflict(btn){
+    const lang=document.body.classList.contains('lang-en')?'en':'nl';
+    const card=btn.closest('.conflict-card');
+    card.querySelector('.conflict-actions').innerHTML=`<div style="background:var(--success-light);border:1px solid #BBF7D0;border-radius:8px;padding:0.75rem 1rem;font-size:0.82rem;font-weight:600;color:#065F46;">✓ ${lang==='nl'?'Bemiddeling geslaagd — beide partijen akkoord. Buildpay admin wordt genotificeerd.':'Mediation successful — both parties agree. Buildpay admin will be notified.'}</div>`;
+    card.querySelector('.conflict-head .status-pill').textContent=lang==='nl'?'Opgelost':'Resolved';
+    card.querySelector('.conflict-head .status-pill').className='status-pill pill-done';
+    document.querySelector('.nav-badge.err').style.display='none';
+  }
+
+  function escalateConflict(btn){
+    const lang=document.body.classList.contains('lang-en')?'en':'nl';
+    const card=btn.closest('.conflict-card');
+    card.querySelector('.conflict-actions').innerHTML=`<div style="background:var(--error-light);border:1px solid #FECACA;border-radius:8px;padding:0.75rem 1rem;font-size:0.82rem;font-weight:600;color:#991B1B;">⬆ ${lang==='nl'?'Geëscaleerd naar Buildpay admin. Dossier overgedragen voor bindende beslissing.':'Escalated to Buildpay admin. File transferred for binding decision.'}</div>`;
+  }
+
+  function sendMsg(type){
+    const input=document.getElementById(type+'-chat-input');
+    if(!input.value.trim())return;
+    const container=document.getElementById(type+'-chat');
+    const lang=document.body.classList.contains('lang-en')?'en':'nl';
+    const now=new Date();
+    const time=now.toLocaleTimeString(lang==='nl'?'nl-BE':'en-GB',{hour:'2-digit',minute:'2-digit'});
+    const div=document.createElement('div');
+    div.className='msg mine';
+    div.innerHTML=`<div class="msg-avatar av-arch">SV</div><div class="msg-wrap"><div class="msg-bubble">${input.value}</div><div class="msg-time">${time}</div></div>`;
+    container.appendChild(div);
+    input.value='';
+    container.scrollTop=container.scrollHeight;
+  }
+
+  document.getElementById('contractor-chat-input').addEventListener('keydown',e=>{if(e.key==='Enter')sendMsg('contractor');});
+  document.getElementById('client-chat-input').addEventListener('keydown',e=>{if(e.key==='Enter')sendMsg('client');});
+</script>
+</body>
+</html>

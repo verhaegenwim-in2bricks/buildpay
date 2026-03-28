@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buildpay — Klant Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#0A1628;--blue:#1A4FAB;--blue-mid:#2563EB;--blue-light:#EFF6FF;--accent:#3B82F6;
+    --white:#FFFFFF;--off-white:#F8FAFC;--slate:#64748B;--slate-light:#94A3B8;--border:#E2E8F0;
+    --success:#10B981;--success-light:#D1FAE5;--warning:#F59E0B;--warning-light:#FEF3C7;
+    --error:#EF4444;--error-light:#FEE2E2;--sidebar-w:240px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}html,body{height:100%;}
+  body{font-family:'Inter',sans-serif;background:var(--off-white);color:var(--navy);display:flex;min-height:100vh;}
+
+  .sidebar{width:var(--sidebar-w);background:var(--navy);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:50;overflow-y:auto;}
+  .sidebar-logo{padding:1.75rem 1.5rem 1.25rem;font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--white);letter-spacing:-0.03em;text-decoration:none;display:block;border-bottom:1px solid rgba(255,255,255,0.07);margin-bottom:0.5rem;}
+  .sidebar-logo span{color:#60A5FA;}
+  .sidebar-user{padding:0.75rem 1.5rem 1rem;display:flex;align-items:center;gap:0.75rem;border-bottom:1px solid rgba(255,255,255,0.07);margin-bottom:0.75rem;}
+  .user-avatar{width:2rem;height:2rem;border-radius:50%;background:linear-gradient(135deg,#3B82F6,#1D4ED8);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:var(--white);flex-shrink:0;}
+  .user-name{font-size:0.8rem;font-weight:600;color:var(--white);}
+  .user-role{font-size:0.7rem;color:rgba(255,255,255,0.35);display:flex;align-items:center;gap:0.3rem;margin-top:0.05rem;}
+  .role-dot{width:5px;height:5px;border-radius:50%;background:#60A5FA;}
+  .sidebar-section-label{font-size:0.65rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.25);padding:0.5rem 1.5rem 0.35rem;}
+  .nav-item{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;font-size:0.85rem;font-weight:500;color:rgba(255,255,255,0.5);cursor:pointer;transition:all 0.15s;border-left:2px solid transparent;text-decoration:none;}
+  .nav-item:hover{color:var(--white);background:rgba(255,255,255,0.05);}
+  .nav-item.active{color:var(--white);background:rgba(59,130,246,0.15);border-left-color:#60A5FA;}
+  .nav-icon{font-size:1rem;width:1.1rem;text-align:center;}
+  .nav-badge{margin-left:auto;background:var(--blue-mid);color:var(--white);font-size:0.6rem;font-weight:700;padding:0.15rem 0.4rem;border-radius:100px;}
+  .nav-badge.warn{background:var(--warning);}
+  .sidebar-bottom{margin-top:auto;padding:1rem 1.5rem;border-top:1px solid rgba(255,255,255,0.07);}
+  .logout-btn{display:flex;align-items:center;gap:0.75rem;font-size:0.82rem;color:rgba(255,255,255,0.35);cursor:pointer;transition:color 0.2s;background:none;border:none;font-family:'Inter',sans-serif;padding:0;width:100%;}
+  .logout-btn:hover{color:rgba(255,255,255,0.7);}
+
+  .main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+  .topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 2rem;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:40;}
+  .topbar-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--navy);}
+  .topbar-right{display:flex;align-items:center;gap:1rem;}
+  .notif-btn{position:relative;background:none;border:none;cursor:pointer;font-size:1.1rem;padding:0.3rem;}
+  .notif-dot{position:absolute;top:0;right:0;width:8px;height:8px;border-radius:50%;background:var(--error);border:2px solid var(--white);}
+  .lang-mini{display:flex;gap:0;border:1px solid var(--border);border-radius:5px;overflow:hidden;}
+  .lang-mini button{padding:0.25rem 0.6rem;font-size:0.7rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;background:none;border:none;cursor:pointer;color:var(--slate-light);font-family:'Inter',sans-serif;transition:all 0.15s;}
+  .lang-mini button.active{background:var(--navy);color:var(--white);}
+
+  .page{display:none;padding:2rem;}
+  .page.active{display:block;animation:fadeIn 0.25s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes pulse-ring{0%{box-shadow:0 0 0 3px rgba(37,99,235,0.4);}100%{box-shadow:0 0 0 7px rgba(37,99,235,0);}}
+
+  .card{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+  .card-head{padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
+  .card-head-title{font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;color:var(--navy);}
+  .card-head-action{font-size:0.78rem;color:var(--blue-mid);font-weight:500;cursor:pointer;background:none;border:none;font-family:'Inter',sans-serif;transition:color 0.15s;}
+  .card-head-action:hover{color:var(--blue);}
+  .card-body{padding:1.5rem;}
+
+  .status-pill{font-size:0.68rem;font-weight:600;padding:0.25rem 0.6rem;border-radius:100px;white-space:nowrap;}
+  .pill-active{background:var(--blue-light);color:var(--blue-mid);}
+  .pill-done{background:var(--success-light);color:#065F46;}
+  .pill-pending{background:var(--warning-light);color:#92400E;}
+
+  .btn-primary{background:var(--blue-mid);color:var(--white);border:none;border-radius:7px;padding:0.6rem 1.25rem;font-size:0.85rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:background 0.2s;white-space:nowrap;}
+  .btn-primary:hover{background:var(--blue);}
+  .btn-outline-sm{background:none;color:var(--slate);border:1px solid var(--border);border-radius:6px;padding:0.4rem 0.85rem;font-size:0.78rem;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;}
+  .btn-outline-sm:hover{border-color:var(--blue-mid);color:var(--blue-mid);}
+
+  .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;}
+  .kpi-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;transition:box-shadow 0.2s;}
+  .kpi-card:hover{box-shadow:0 4px 20px rgba(0,0,0,0.07);}
+  .kpi-label{font-size:0.75rem;font-weight:500;color:var(--slate);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.5rem;}
+  .kpi-value{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--navy);letter-spacing:-0.02em;}
+  .kpi-sub{font-size:0.75rem;color:var(--slate-light);margin-top:0.2rem;}
+  .kpi-trend{display:inline-flex;align-items:center;gap:0.25rem;font-size:0.72rem;font-weight:600;padding:0.15rem 0.45rem;border-radius:4px;margin-top:0.3rem;}
+  .trend-up{background:var(--success-light);color:#065F46;}
+  .trend-warn{background:var(--warning-light);color:#92400E;}
+  .trend-blue{background:var(--blue-light);color:var(--blue-mid);}
+
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;}
+  .main-side{display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;margin-bottom:1.5rem;}
+
+  .welcome-bar{background:linear-gradient(135deg,var(--navy) 0%,#0F2952 100%);border-radius:12px;padding:1.75rem 2rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden;}
+  .welcome-bar::before{content:'';position:absolute;right:-60px;top:-60px;width:220px;height:220px;background:radial-gradient(circle,rgba(59,130,246,0.25) 0%,transparent 70%);}
+  .welcome-text h2{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--white);margin-bottom:0.25rem;}
+  .welcome-text p{font-size:0.875rem;color:rgba(255,255,255,0.55);}
+
+  .project-list{display:flex;flex-direction:column;gap:0.75rem;}
+  .project-row{border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.25rem;display:flex;align-items:center;gap:1rem;cursor:pointer;transition:all 0.15s;background:var(--white);}
+  .project-row:hover{border-color:var(--accent);box-shadow:0 2px 12px rgba(37,99,235,0.08);}
+  .project-icon{width:2.5rem;height:2.5rem;border-radius:8px;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+  .project-info{flex:1;min-width:0;}
+  .project-name{font-size:0.875rem;font-weight:600;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .project-meta{font-size:0.75rem;color:var(--slate);margin-top:0.15rem;}
+  .mini-bar{height:4px;background:var(--border);border-radius:100px;overflow:hidden;margin-bottom:0.25rem;}
+  .mini-fill{height:100%;border-radius:100px;background:linear-gradient(to right,var(--blue-mid),var(--accent));}
+  .mini-pct{font-size:0.7rem;color:var(--slate);text-align:right;}
+  .progress-wrap{width:80px;}
+
+  .escrow-card{background:linear-gradient(135deg,var(--navy) 0%,#0F2952 100%);border-radius:12px;padding:1.5rem;color:var(--white);position:relative;overflow:hidden;}
+  .escrow-card::before{content:'';position:absolute;right:-40px;top:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(59,130,246,0.3) 0%,transparent 70%);}
+  .escrow-label{font-size:0.72rem;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.45);margin-bottom:0.5rem;}
+  .escrow-amount{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;letter-spacing:-0.03em;margin-bottom:0.2rem;}
+  .escrow-sub{font-size:0.78rem;color:rgba(255,255,255,0.45);margin-bottom:1.25rem;}
+  .escrow-bar-track{height:6px;background:rgba(255,255,255,0.15);border-radius:100px;overflow:hidden;margin-bottom:0.5rem;}
+  .escrow-bar-fill{height:100%;border-radius:100px;background:linear-gradient(to right,#60A5FA,#93C5FD);}
+  .escrow-bar-labels{display:flex;justify-content:space-between;font-size:0.7rem;color:rgba(255,255,255,0.35);}
+  .escrow-breakdown{margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid rgba(255,255,255,0.1);display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+  .eb-label{font-size:0.65rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.08em;}
+  .eb-value{font-size:0.95rem;font-weight:700;color:var(--white);margin-top:0.15rem;}
+
+  .ms-list{display:flex;flex-direction:column;}
+  .ms-item{display:flex;align-items:flex-start;gap:1rem;padding:1.1rem 0;border-bottom:1px solid var(--border);}
+  .ms-item:last-child{border-bottom:none;}
+  .ms-timeline{display:flex;flex-direction:column;align-items:center;flex-shrink:0;padding-top:0.15rem;}
+  .ms-dot{width:12px;height:12px;border-radius:50%;}
+  .ms-dot.done{background:var(--success);box-shadow:0 0 0 3px var(--success-light);}
+  .ms-dot.active{background:var(--blue-mid);box-shadow:0 0 0 3px #DBEAFE;animation:pulse-ring 2s infinite;}
+  .ms-dot.pending{background:var(--border);box-shadow:0 0 0 3px var(--off-white);}
+  .ms-line{width:1px;flex:1;background:var(--border);min-height:20px;margin-top:4px;}
+  .ms-content{flex:1;}
+  .ms-name{font-size:0.875rem;font-weight:600;color:var(--navy);margin-bottom:0.2rem;}
+  .ms-desc{font-size:0.78rem;color:var(--slate);line-height:1.5;}
+  .ms-meta{display:flex;align-items:center;gap:0.75rem;margin-top:0.5rem;flex-wrap:wrap;}
+  .ms-amount{font-size:0.82rem;font-weight:700;color:var(--navy);}
+  .ms-date{font-size:0.75rem;color:var(--slate-light);}
+  .ms-actions{display:flex;gap:0.5rem;margin-top:0.75rem;flex-wrap:wrap;}
+  .btn-approve{padding:0.4rem 0.9rem;background:var(--success);color:var(--white);border:none;border-radius:6px;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:background 0.2s;}
+  .btn-approve:hover{background:#059669;}
+  .btn-dispute{padding:0.4rem 0.9rem;background:none;color:var(--slate);border:1px solid var(--border);border-radius:6px;font-size:0.78rem;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;}
+  .btn-dispute:hover{border-color:var(--error);color:var(--error);}
+
+  .proof-thumbs{display:flex;gap:0.5rem;margin-top:0.75rem;flex-wrap:wrap;}
+  .proof-thumb{width:60px;height:60px;border-radius:6px;background:var(--off-white);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.4rem;cursor:pointer;transition:border-color 0.15s;}
+  .proof-thumb:hover{border-color:var(--blue-mid);}
+
+  .chat-wrap{display:flex;flex-direction:column;height:450px;}
+  .chat-project-select{padding:0.75rem 1rem;border-bottom:1px solid var(--border);display:flex;gap:0.5rem;overflow-x:auto;}
+  .chat-project-tab{padding:0.3rem 0.75rem;border-radius:100px;font-size:0.75rem;font-weight:500;border:1px solid var(--border);background:none;cursor:pointer;white-space:nowrap;transition:all 0.15s;font-family:'Inter',sans-serif;color:var(--slate);}
+  .chat-project-tab.active{background:var(--blue-mid);color:var(--white);border-color:var(--blue-mid);}
+  .chat-messages{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:0.75rem;}
+  .chat-messages::-webkit-scrollbar{width:4px;}
+  .chat-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:100px;}
+  .msg{display:flex;gap:0.6rem;align-items:flex-end;}
+  .msg.mine{flex-direction:row-reverse;}
+  .msg-avatar{width:1.75rem;height:1.75rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;color:var(--white);flex-shrink:0;}
+  .msg-avatar.client-av{background:linear-gradient(135deg,#3B82F6,#1D4ED8);}
+  .msg-avatar.contractor-av{background:linear-gradient(135deg,#10B981,#047857);}
+  .msg-wrap{display:flex;flex-direction:column;}
+  .msg.mine .msg-wrap{align-items:flex-end;}
+  .msg-bubble{max-width:75%;padding:0.6rem 0.9rem;border-radius:12px;font-size:0.82rem;line-height:1.5;}
+  .msg.mine .msg-bubble{background:var(--blue-mid);color:var(--white);border-bottom-right-radius:3px;}
+  .msg:not(.mine) .msg-bubble{background:var(--off-white);color:var(--navy);border:1px solid var(--border);border-bottom-left-radius:3px;}
+  .msg-time{font-size:0.65rem;color:var(--slate-light);margin-top:0.2rem;padding:0 0.25rem;}
+  .chat-input-wrap{padding:0.75rem 1rem;border-top:1px solid var(--border);display:flex;gap:0.5rem;align-items:center;}
+  .chat-input{flex:1;padding:0.6rem 0.9rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.85rem;font-family:'Inter',sans-serif;color:var(--navy);outline:none;transition:border-color 0.2s;}
+  .chat-input:focus{border-color:var(--blue-mid);}
+  .chat-send{width:2.25rem;height:2.25rem;background:var(--blue-mid);color:var(--white);border:none;border-radius:8px;cursor:pointer;font-size:0.9rem;transition:background 0.2s;display:flex;align-items:center;justify-content:center;}
+  .chat-send:hover{background:var(--blue);}
+
+  .doc-filters{display:flex;gap:0.5rem;margin-bottom:1.25rem;flex-wrap:wrap;}
+  .doc-filter-btn{padding:0.3rem 0.75rem;border-radius:100px;font-size:0.75rem;font-weight:500;border:1px solid var(--border);background:none;cursor:pointer;font-family:'Inter',sans-serif;color:var(--slate);transition:all 0.15s;}
+  .doc-filter-btn.active{background:var(--navy);color:var(--white);border-color:var(--navy);}
+  .doc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.75rem;}
+  .doc-card{border:1px solid var(--border);border-radius:10px;padding:1rem;cursor:pointer;transition:all 0.15s;background:var(--white);display:flex;flex-direction:column;gap:0.75rem;}
+  .doc-card:hover{border-color:var(--blue-mid);box-shadow:0 2px 12px rgba(37,99,235,0.08);}
+  .doc-card-icon{width:2.5rem;height:2.5rem;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;}
+  .doc-pdf{background:#FEE2E2;}.doc-img{background:var(--success-light);}.doc-word{background:var(--blue-light);}
+  .doc-card-name{font-size:0.82rem;font-weight:600;color:var(--navy);line-height:1.3;}
+  .doc-card-meta{font-size:0.7rem;color:var(--slate-light);}
+  .doc-card-project{font-size:0.7rem;color:var(--blue-mid);font-weight:500;margin-top:auto;}
+
+  .pay-list{display:flex;flex-direction:column;}
+  .pay-row{display:flex;align-items:center;gap:1rem;padding:0.9rem 0;border-bottom:1px solid var(--border);}
+  .pay-row:last-child{border-bottom:none;}
+  .pay-icon{width:2.25rem;height:2.25rem;border-radius:8px;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;}
+  .pay-info{flex:1;}
+  .pay-name{font-size:0.82rem;font-weight:600;color:var(--navy);}
+  .pay-date{font-size:0.72rem;color:var(--slate-light);margin-top:0.1rem;}
+  .pay-amount{font-size:0.9rem;font-weight:700;}
+  .pay-out{color:var(--error);}
+  .pay-pending-amt{color:var(--warning);}
+  .pay-status{font-size:0.68rem;font-weight:600;padding:0.2rem 0.5rem;border-radius:4px;}
+  .pay-released{background:var(--success-light);color:#065F46;}
+  .pay-pending-s{background:var(--warning-light);color:#92400E;}
+  .pay-deposited{background:var(--blue-light);color:var(--blue-mid);}
+
+  .activity-item{display:flex;gap:0.75rem;align-items:flex-start;padding:0.6rem 0;border-bottom:1px solid var(--border);}
+  .activity-item:last-child{border-bottom:none;}
+  .activity-icon{width:1.75rem;height:1.75rem;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;flex-shrink:0;}
+  .activity-text{font-size:0.78rem;font-weight:600;color:var(--navy);}
+  .activity-sub{font-size:0.7rem;color:var(--slate-light);margin-top:0.1rem;}
+
+  .alert-banner{display:flex;align-items:center;gap:0.75rem;background:var(--warning-light);border:1px solid #FDE68A;border-radius:8px;padding:0.85rem 1.1rem;margin-bottom:1.5rem;}
+  .alert-banner p{font-size:0.82rem;color:#92400E;flex:1;}
+
+  body.lang-en [data-nl]{display:none;}
+  body.lang-nl [data-en]{display:none;}
+
+  @media(max-width:900px){
+    .sidebar{transform:translateX(-100%);}
+    .main{margin-left:0;}
+    .kpi-row{grid-template-columns:repeat(2,1fr);}
+    .two-col,.main-side{grid-template-columns:1fr;}
+    .doc-grid{grid-template-columns:repeat(2,1fr);}
+  }
+</style>
+</head>
+<body class="lang-nl">
+
+<aside class="sidebar">
+  <a href="buildpay-landing.html" class="sidebar-logo">Build<span>pay</span></a>
+  <div class="sidebar-user">
+    <div class="user-avatar">MV</div>
+    <div>
+      <div class="user-name">Marie Van Damme</div>
+      <div class="user-role"><span class="role-dot"></span><span data-nl>Klant</span><span data-en>Client</span></div>
+    </div>
+  </div>
+  <div class="sidebar-section-label"><span data-nl>Navigatie</span><span data-en>Navigation</span></div>
+  <a class="nav-item active" onclick="showPage('overview')" href="#"><span class="nav-icon">🏠</span><span data-nl>Overzicht</span><span data-en>Overview</span></a>
+  <a class="nav-item" onclick="showPage('milestones')" href="#"><span class="nav-icon">📋</span><span data-nl>Milestones</span><span data-en>Milestones</span><span class="nav-badge warn">1</span></a>
+  <a class="nav-item" onclick="showPage('escrow')" href="#"><span class="nav-icon">🔒</span><span data-nl>Escrow</span><span data-en>Escrow</span></a>
+  <a class="nav-item" onclick="showPage('chat')" href="#"><span class="nav-icon">💬</span><span data-nl>Chat</span><span data-en>Chat</span><span class="nav-badge">3</span></a>
+  <a class="nav-item" onclick="showPage('documents')" href="#"><span class="nav-icon">📁</span><span data-nl>Documenten</span><span data-en>Documents</span></a>
+  <a class="nav-item" onclick="showPage('payments')" href="#"><span class="nav-icon">💳</span><span data-nl>Betalingen</span><span data-en>Payments</span></a>
+  <div class="sidebar-bottom">
+    <button class="logout-btn" onclick="window.location='buildpay-login.html'"><span>🚪</span><span data-nl>Uitloggen</span><span data-en>Log out</span></button>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="page-title"><span data-nl>Overzicht</span><span data-en>Overview</span></div>
+    <div class="topbar-right">
+      <button class="notif-btn">🔔<span class="notif-dot"></span></button>
+      <div class="lang-mini">
+        <button class="active" onclick="setLang('nl')" id="btn-nl">NL</button>
+        <button onclick="setLang('en')" id="btn-en">EN</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="page active" id="page-overview">
+    <div class="welcome-bar">
+      <div class="welcome-text">
+        <h2><span data-nl>Goedemiddag, Marie 👋</span><span data-en>Good afternoon, Marie 👋</span></h2>
+        <p><span data-nl>2 actieve projecten · 1 milestone wacht op jouw goedkeuring</span><span data-en>2 active projects · 1 milestone awaiting your approval</span></p>
+      </div>
+      <button class="btn-primary" onclick="showPage('milestones')"><span data-nl>Milestone goedkeuren →</span><span data-en>Approve milestone →</span></button>
+    </div>
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-label"><span data-nl>Actieve projecten</span><span data-en>Active projects</span></div><div class="kpi-value">2</div><div class="kpi-sub"><span data-nl>1 afgerond dit jaar</span><span data-en>1 completed this year</span></div></div>
+      <div class="kpi-card"><div class="kpi-label"><span data-nl>Escrow saldo</span><span data-en>Escrow balance</span></div><div class="kpi-value">€ 48.5K</div><div class="kpi-sub"><span data-nl>Veilig geblokkeerd</span><span data-en>Securely held</span></div></div>
+      <div class="kpi-card"><div class="kpi-label"><span data-nl>Vrijgegeven</span><span data-en>Released</span></div><div class="kpi-value">€ 20.4K</div><div class="kpi-trend trend-up">42%</div></div>
+      <div class="kpi-card"><div class="kpi-label"><span data-nl>Open milestones</span><span data-en>Open milestones</span></div><div class="kpi-value">4</div><div class="kpi-trend trend-warn"><span data-nl>1 wacht op jou</span><span data-en>1 awaits you</span></div></div>
+    </div>
+    <div class="main-side">
+      <div style="display:flex;flex-direction:column;gap:1.5rem;">
+        <div class="card">
+          <div class="card-head"><div class="card-head-title"><span data-nl>Mijn projecten</span><span data-en>My projects</span></div><button class="card-head-action" onclick="showPage('milestones')"><span data-nl>Details →</span><span data-en>Details →</span></button></div>
+          <div class="card-body">
+            <div class="project-list">
+              <div class="project-row" onclick="showPage('milestones')">
+                <div class="project-icon">🍳</div>
+                <div class="project-info"><div class="project-name"><span data-nl>Keuken renovatie</span><span data-en>Kitchen renovation</span></div><div class="project-meta"><span data-nl>De Bouwers BV · MS 2/3</span><span data-en>De Bouwers BV · MS 2/3</span></div></div>
+                <div class="progress-wrap"><div class="mini-bar"><div class="mini-fill" style="width:42%"></div></div><div class="mini-pct">42%</div></div>
+                <span class="status-pill pill-active"><span data-nl>Actief</span><span data-en>Active</span></span>
+              </div>
+              <div class="project-row" onclick="showPage('milestones')">
+                <div class="project-icon">🚿</div>
+                <div class="project-info"><div class="project-name"><span data-nl>Badkamer verbouwing</span><span data-en>Bathroom renovation</span></div><div class="project-meta"><span data-nl>Sanitair Pro · MS 1/4</span><span data-en>Sanitair Pro · MS 1/4</span></div></div>
+                <div class="progress-wrap"><div class="mini-bar"><div class="mini-fill" style="width:15%"></div></div><div class="mini-pct">15%</div></div>
+                <span class="status-pill pill-pending"><span data-nl>Gepland</span><span data-en>Planned</span></span>
+              </div>
+              <div class="project-row">
+                <div class="project-icon">🏡</div>
+                <div class="project-info"><div class="project-name"><span data-nl>Dakisolatie</span><span data-en>Roof insulation</span></div><div class="project-meta"><span data-nl>IsoTherm NL · Afgerond</span><span data-en>IsoTherm NL · Completed</span></div></div>
+                <div class="progress-wrap"><div class="mini-bar"><div class="mini-fill" style="width:100%"></div></div><div class="mini-pct">100%</div></div>
+                <span class="status-pill pill-done"><span data-nl>Afgerond</span><span data-en>Done</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-head-title"><span data-nl>Recente activiteit</span><span data-en>Recent activity</span></div></div>
+          <div class="card-body" style="padding:0.75rem 1.5rem;">
+            <div class="activity-item"><div class="activity-icon" style="background:var(--warning-light);">⏳</div><div><div class="activity-text"><span data-nl>Milestone 2 wacht op jouw goedkeuring</span><span data-en>Milestone 2 awaiting your approval</span></div><div class="activity-sub"><span data-nl>Keuken renovatie · vandaag 09:15</span><span data-en>Kitchen renovation · today 09:15</span></div></div></div>
+            <div class="activity-item"><div class="activity-icon" style="background:var(--blue-light);">📸</div><div><div class="activity-text"><span data-nl>3 bewijs-foto's geüpload door aannemer</span><span data-en>3 proof photos uploaded by contractor</span></div><div class="activity-sub"><span data-nl>Gisteren 14:32</span><span data-en>Yesterday 14:32</span></div></div></div>
+            <div class="activity-item"><div class="activity-icon" style="background:var(--success-light);">✅</div><div><div class="activity-text"><span data-nl>Milestone 1 vrijgegeven · € 12.000</span><span data-en>Milestone 1 released · € 12,000</span></div><div class="activity-sub">18 mrt 2025</div></div></div>
+            <div class="activity-item"><div class="activity-icon" style="background:var(--blue-light);">💬</div><div><div class="activity-text"><span data-nl>Nieuw bericht van De Bouwers BV</span><span data-en>New message from De Bouwers BV</span></div><div class="activity-sub"><span data-nl>2 uur geleden</span><span data-en>2 hours ago</span></div></div></div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.5rem;">
+        <div class="escrow-card">
+          <div class="escrow-label"><span data-nl>Escrow · Keuken renovatie</span><span data-en>Escrow · Kitchen renovation</span></div>
+          <div class="escrow-amount">€ 48.500</div>
+          <div class="escrow-sub"><span data-nl>42% vrijgegeven</span><span data-en>42% released</span></div>
+          <div class="escrow-bar-track"><div class="escrow-bar-fill" style="width:42%"></div></div>
+          <div class="escrow-bar-labels"><span>€ 0</span><span>€ 48.500</span></div>
+          <div class="escrow-breakdown">
+            <div><div class="eb-label"><span data-nl>Vrijgegeven</span><span data-en>Released</span></div><div class="eb-value">€ 20.370</div></div>
+            <div><div class="eb-label"><span data-nl>Resterend</span><span data-en>Remaining</span></div><div class="eb-value">€ 28.130</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-head-title"><span data-nl>Snel navigeren</span><span data-en>Quick links</span></div></div>
+          <div class="card-body" style="display:flex;flex-direction:column;gap:0.5rem;padding:1rem 1.25rem;">
+            <button class="btn-outline-sm" style="width:100%;text-align:left;" onclick="showPage('milestones')">📋 <span data-nl>Milestone goedkeuren</span><span data-en>Approve milestone</span></button>
+            <button class="btn-outline-sm" style="width:100%;text-align:left;" onclick="showPage('chat')">💬 <span data-nl>Berichten (3 nieuw)</span><span data-en>Messages (3 new)</span></button>
+            <button class="btn-outline-sm" style="width:100%;text-align:left;" onclick="showPage('documents')">📁 <span data-nl>Documenten bekijken</span><span data-en>View documents</span></button>
+            <button class="btn-outline-sm" style="width:100%;text-align:left;" onclick="showPage('payments')">💳 <span data-nl>Betalingshistoriek</span><span data-en>Payment history</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MILESTONES -->
+  <div class="page" id="page-milestones">
+    <div class="alert-banner" id="alert-banner">
+      <span style="font-size:1.1rem;">⚠️</span>
+      <p><strong><span data-nl>Actie vereist:</span><span data-en>Action required:</span></strong> <span data-nl>Milestone 2 van "Keuken renovatie" wacht op goedkeuring.</span><span data-en>Milestone 2 of "Kitchen renovation" awaits approval.</span></p>
+      <button class="btn-primary" style="font-size:0.8rem;padding:0.45rem 1rem;" onclick="document.getElementById('ms-active').scrollIntoView({behavior:'smooth'})"><span data-nl>Bekijken →</span><span data-en>Review →</span></button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1.5rem;">
+      <div class="card">
+        <div class="card-head">
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <span style="font-size:1.1rem;">🍳</span>
+            <div><div class="card-head-title"><span data-nl>Keuken renovatie</span><span data-en>Kitchen renovation</span></div><div style="font-size:0.72rem;color:var(--slate);margin-top:0.1rem;">De Bouwers BV · € 48.500</div></div>
+          </div>
+          <span class="status-pill pill-active"><span data-nl>Actief</span><span data-en>Active</span></span>
+        </div>
+        <div class="card-body">
+          <div class="ms-list">
+            <div class="ms-item">
+              <div class="ms-timeline"><div class="ms-dot done"></div><div class="ms-line"></div></div>
+              <div class="ms-content">
+                <div class="ms-name"><span data-nl>1. Sloopwerk & fundament</span><span data-en>1. Demolition & foundation</span></div>
+                <div class="ms-desc"><span data-nl>Verwijderen oude keuken, vloer egaliseren, leidingen aanleggen.</span><span data-en>Removing old kitchen, levelling floor, installing pipes.</span></div>
+                <div class="ms-meta"><span class="ms-amount">€ 12.000</span><span class="ms-date"><span data-nl>Vrijgegeven</span><span data-en>Released</span> · 18 mrt 2025</span><span class="status-pill pill-done"><span data-nl>Vrijgegeven</span><span data-en>Released</span></span></div>
+              </div>
+            </div>
+            <div class="ms-item" id="ms-active">
+              <div class="ms-timeline"><div class="ms-dot active"></div><div class="ms-line"></div></div>
+              <div class="ms-content">
+                <div class="ms-name"><span data-nl>2. Ruwbouw & installaties</span><span data-en>2. Structure & installations</span></div>
+                <div class="ms-desc"><span data-nl>Muren optrekken, elektriciteit & waterinstallatie afgerond. Bewijs ingediend op 24 mrt 2025.</span><span data-en>Walls built, electrical & water installation completed. Proof submitted Mar 24, 2025.</span></div>
+                <div class="proof-thumbs">
+                  <div class="proof-thumb">📸</div><div class="proof-thumb">📸</div><div class="proof-thumb">📸</div>
+                  <div class="proof-thumb" style="font-size:0.7rem;font-weight:600;color:var(--blue-mid);">+2</div>
+                </div>
+                <div class="ms-meta"><span class="ms-amount">€ 18.500</span><span class="ms-date"><span data-nl>Bewijs</span><span data-en>Proof</span> · 24 mrt</span><span class="status-pill pill-pending"><span data-nl>Wacht op jou</span><span data-en>Awaiting you</span></span></div>
+                <div class="ms-actions">
+                  <button class="btn-approve" onclick="approveMilestone(this)">✓ <span data-nl>Goedkeuren & vrijgeven</span><span data-en>Approve & release</span></button>
+                  <button class="btn-dispute">⚠ <span data-nl>Betwisten</span><span data-en>Dispute</span></button>
+                  <button class="btn-outline-sm" onclick="showPage('chat')">💬 <span data-nl>Vraag stellen</span><span data-en>Ask question</span></button>
+                </div>
+              </div>
+            </div>
+            <div class="ms-item">
+              <div class="ms-timeline"><div class="ms-dot pending"></div></div>
+              <div class="ms-content">
+                <div class="ms-name"><span data-nl>3. Afwerking & oplevering</span><span data-en>3. Finishing & delivery</span></div>
+                <div class="ms-desc"><span data-nl>Keukenblokken, tegels, schilderwerk, eindoplevering.</span><span data-en>Kitchen units, tiling, painting, final delivery.</span></div>
+                <div class="ms-meta"><span class="ms-amount">€ 18.000</span><span class="status-pill" style="background:var(--off-white);color:var(--slate-light);"><span data-nl>Gepland</span><span data-en>Planned</span></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <span style="font-size:1.1rem;">🚿</span>
+            <div><div class="card-head-title"><span data-nl>Badkamer verbouwing</span><span data-en>Bathroom renovation</span></div><div style="font-size:0.72rem;color:var(--slate);margin-top:0.1rem;">Sanitair Pro · € 22.000</div></div>
+          </div>
+          <span class="status-pill pill-pending"><span data-nl>Gepland</span><span data-en>Planned</span></span>
+        </div>
+        <div class="card-body">
+          <div class="ms-list">
+            <div class="ms-item"><div class="ms-timeline"><div class="ms-dot active"></div><div class="ms-line"></div></div><div class="ms-content"><div class="ms-name"><span data-nl>1. Sloopwerk</span><span data-en>1. Demolition</span></div><div class="ms-meta"><span class="ms-amount">€ 4.500</span><span class="status-pill pill-active"><span data-nl>In uitvoering</span><span data-en>In progress</span></span></div></div></div>
+            <div class="ms-item"><div class="ms-timeline"><div class="ms-dot pending"></div><div class="ms-line"></div></div><div class="ms-content"><div class="ms-name"><span data-nl>2. Loodgieterij</span><span data-en>2. Plumbing</span></div><div class="ms-meta"><span class="ms-amount">€ 6.200</span></div></div></div>
+            <div class="ms-item"><div class="ms-timeline"><div class="ms-dot pending"></div><div class="ms-line"></div></div><div class="ms-content"><div class="ms-name"><span data-nl>3. Tegels & afwerking</span><span data-en>3. Tiling & finishing</span></div><div class="ms-meta"><span class="ms-amount">€ 7.800</span></div></div></div>
+            <div class="ms-item"><div class="ms-timeline"><div class="ms-dot pending"></div></div><div class="ms-content"><div class="ms-name"><span data-nl>4. Oplevering</span><span data-en>4. Final delivery</span></div><div class="ms-meta"><span class="ms-amount">€ 3.500</span></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ESCROW -->
+  <div class="page" id="page-escrow">
+    <div style="margin-bottom:1.5rem;">
+      <h2 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--navy);">🔒 <span data-nl>Escrow overzicht</span><span data-en>Escrow overview</span></h2>
+      <p style="font-size:0.85rem;color:var(--slate);margin-top:0.25rem;"><span data-nl>Jouw geld staat veilig — vrijgave enkel na wederzijdse goedkeuring</span><span data-en>Your money is secure — release only upon mutual approval</span></p>
+    </div>
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-label"><span data-nl>Totaal gestort</span><span data-en>Total deposited</span></div><div class="kpi-value">€ 70.500</div><div class="kpi-sub"><span data-nl>2 projecten</span><span data-en>2 projects</span></div></div>
+      <div class="kpi-card"><div class="kpi-label"><span data-nl>Vrijgegeven</span><span data-en>Released</span></div><div class="kpi-value">€ 20.370</div><div class="kpi-trend trend-up">29%</div></div>
+      <div class="kpi-card"><div class="kpi-label"><span data-nl>Geblokkeerd</span><span data-en>Locked</span></div><div class="kpi-value">€ 50.130</div><div class="kpi-trend trend-blue"><span data-nl>Veilig</span><span data-en>Secure</span></div></div>
+      <div class="kpi-card"><div class="kpi-label"><span data-nl>Commissie</span><span data-en>Commission</span></div><div class="kpi-value">€ 306</div><div class="kpi-sub">1.5%</div></div>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-head"><div class="card-head-title">🍳 <span data-nl>Keuken renovatie</span><span data-en>Kitchen renovation</span></div><span class="status-pill pill-active"><span data-nl>Actief</span><span data-en>Active</span></span></div>
+        <div class="card-body">
+          <div class="escrow-card">
+            <div class="escrow-label"><span data-nl>Escrow saldo</span><span data-en>Escrow balance</span></div>
+            <div class="escrow-amount">€ 48.500</div>
+            <div class="escrow-sub">De Bouwers BV</div>
+            <div class="escrow-bar-track"><div class="escrow-bar-fill" style="width:42%"></div></div>
+            <div class="escrow-bar-labels"><span>€ 0</span><span>€ 48.500</span></div>
+            <div class="escrow-breakdown">
+              <div><div class="eb-label"><span data-nl>Vrijgegeven</span><span data-en>Released</span></div><div class="eb-value">€ 20.370</div></div>
+              <div><div class="eb-label"><span data-nl>In wacht</span><span data-en>Pending</span></div><div class="eb-value">€ 18.500</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="card-head-title">🚿 <span data-nl>Badkamer verbouwing</span><span data-en>Bathroom renovation</span></div><span class="status-pill pill-pending"><span data-nl>Gepland</span><span data-en>Planned</span></span></div>
+        <div class="card-body">
+          <div class="escrow-card">
+            <div class="escrow-label"><span data-nl>Escrow saldo</span><span data-en>Escrow balance</span></div>
+            <div class="escrow-amount">€ 22.000</div>
+            <div class="escrow-sub">Sanitair Pro</div>
+            <div class="escrow-bar-track"><div class="escrow-bar-fill" style="width:0%"></div></div>
+            <div class="escrow-bar-labels"><span>€ 0</span><span>€ 22.000</span></div>
+            <div class="escrow-breakdown">
+              <div><div class="eb-label"><span data-nl>Vrijgegeven</span><span data-en>Released</span></div><div class="eb-value">€ 0</div></div>
+              <div><div class="eb-label"><span data-nl>Geblokkeerd</span><span data-en>Locked</span></div><div class="eb-value">€ 22.000</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-head-title"><span data-nl>Hoe werkt Buildpay escrow?</span><span data-en>How does Buildpay escrow work?</span></div></div>
+      <div class="card-body">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;text-align:center;">
+          <div><div style="font-size:2rem;margin-bottom:0.75rem;">💰</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;color:var(--navy);margin-bottom:0.4rem;"><span data-nl>Jij stort</span><span data-en>You deposit</span></div><div style="font-size:0.8rem;color:var(--slate);line-height:1.6;"><span data-nl>Het volledige bedrag wordt veilig geblokkeerd bij een erkende betaalinstelling.</span><span data-en>The full amount is securely held at a licensed payment institution.</span></div></div>
+          <div><div style="font-size:2rem;margin-bottom:0.75rem;">🔨</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;color:var(--navy);margin-bottom:0.4rem;"><span data-nl>Aannemer werkt</span><span data-en>Contractor works</span></div><div style="font-size:0.8rem;color:var(--slate);line-height:1.6;"><span data-nl>Per milestone uploadt de aannemer bewijs en dient in ter goedkeuring.</span><span data-en>Per milestone, the contractor uploads proof and submits for approval.</span></div></div>
+          <div><div style="font-size:2rem;margin-bottom:0.75rem;">✅</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;color:var(--navy);margin-bottom:0.4rem;"><span data-nl>Beiden akkoord</span><span data-en>Both agree</span></div><div style="font-size:0.8rem;color:var(--slate);line-height:1.6;"><span data-nl>Zodra jij goedkeurt, wordt het bedrag automatisch vrijgegeven binnen 24 uur.</span><span data-en>Once you approve, the amount is automatically released within 24 hours.</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAT -->
+  <div class="page" id="page-chat">
+    <div style="margin-bottom:1.5rem;">
+      <h2 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--navy);">💬 <span data-nl>Berichten</span><span data-en>Messages</span></h2>
+      <p style="font-size:0.85rem;color:var(--slate);margin-top:0.25rem;"><span data-nl>Communiceer rechtstreeks met je aannemers</span><span data-en>Communicate directly with your contractors</span></p>
+    </div>
+    <div class="card">
+      <div class="chat-wrap">
+        <div class="chat-project-select">
+          <button class="chat-project-tab active">🍳 <span data-nl>Keuken</span><span data-en>Kitchen</span></button>
+          <button class="chat-project-tab" onclick="switchTab(this)">🚿 <span data-nl>Badkamer</span><span data-en>Bathroom</span></button>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+          <div class="msg"><div class="msg-avatar contractor-av">DB</div><div class="msg-wrap"><div class="msg-bubble"><span data-nl>Goedemiddag! We hebben fase 2 afgerond. Bewijs foto's zijn geüpload.</span><span data-en>Good afternoon! We've completed phase 2. Proof photos have been uploaded.</span></div><div class="msg-time"><span data-nl>vandaag 09:15</span><span data-en>today 09:15</span></div></div></div>
+          <div class="msg mine"><div class="msg-avatar client-av">MV</div><div class="msg-wrap"><div class="msg-bubble"><span data-nl>Dank je! Is het elektriciteitswerk ook gekeurd?</span><span data-en>Thank you! Has the electrical work been inspected?</span></div><div class="msg-time"><span data-nl>vandaag 09:32</span><span data-en>today 09:32</span></div></div></div>
+          <div class="msg"><div class="msg-avatar contractor-av">DB</div><div class="msg-wrap"><div class="msg-bubble"><span data-nl>Ja! Het certificaat staat in de documenten. Keuringsdatum was 23 maart.</span><span data-en>Yes! The certificate is in the documents. Inspection date was March 23.</span></div><div class="msg-time"><span data-nl>vandaag 09:45</span><span data-en>today 09:45</span></div></div></div>
+          <div class="msg mine"><div class="msg-avatar client-av">MV</div><div class="msg-wrap"><div class="msg-bubble"><span data-nl>Perfect, ik keur de milestone goed vandaag.</span><span data-en>Perfect, I'll approve the milestone today.</span></div><div class="msg-time"><span data-nl>vandaag 10:02</span><span data-en>today 10:02</span></div></div></div>
+        </div>
+        <div class="chat-input-wrap">
+          <input class="chat-input" type="text" id="chat-input" placeholder="Stuur een bericht...">
+          <button class="chat-send" onclick="sendMessage()">➤</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOCUMENTS -->
+  <div class="page" id="page-documents">
+    <div style="margin-bottom:1.5rem;">
+      <h2 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--navy);">📁 <span data-nl>Documenten</span><span data-en>Documents</span></h2>
+      <p style="font-size:0.85rem;color:var(--slate);margin-top:0.25rem;"><span data-nl>Offertes, vergunningen, foto's en keuringen</span><span data-en>Quotes, permits, photos and inspections</span></p>
+    </div>
+    <div class="doc-filters">
+      <button class="doc-filter-btn active" onclick="filterDocs(this)"><span data-nl>Alle</span><span data-en>All</span></button>
+      <button class="doc-filter-btn" onclick="filterDocs(this)">PDF</button>
+      <button class="doc-filter-btn" onclick="filterDocs(this)"><span data-nl>Foto's</span><span data-en>Photos</span></button>
+      <button class="doc-filter-btn" onclick="filterDocs(this)">🍳 <span data-nl>Keuken</span><span data-en>Kitchen</span></button>
+      <button class="doc-filter-btn" onclick="filterDocs(this)">🚿 <span data-nl>Badkamer</span><span data-en>Bathroom</span></button>
+    </div>
+    <div class="doc-grid">
+      <div class="doc-card"><div class="doc-card-icon doc-pdf">📄</div><div class="doc-card-name"><span data-nl>Offerte keuken renovatie.pdf</span><span data-en>Kitchen renovation quote.pdf</span></div><div class="doc-card-meta">245 KB · 10 feb</div><div class="doc-card-project">🍳 <span data-nl>Keuken</span><span data-en>Kitchen</span></div></div>
+      <div class="doc-card"><div class="doc-card-icon doc-img">📸</div><div class="doc-card-name"><span data-nl>Sloopwerk fase 1 — foto's</span><span data-en>Demolition phase 1 — photos</span></div><div class="doc-card-meta">3.2 MB · 18 mrt</div><div class="doc-card-project">🍳 <span data-nl>Keuken</span><span data-en>Kitchen</span></div></div>
+      <div class="doc-card"><div class="doc-card-icon doc-img">📸</div><div class="doc-card-name"><span data-nl>Leidingen installatie bewijs</span><span data-en>Pipe installation proof</span></div><div class="doc-card-meta">2.8 MB · 22 mrt</div><div class="doc-card-project">🍳 <span data-nl>Keuken</span><span data-en>Kitchen</span></div></div>
+      <div class="doc-card"><div class="doc-card-icon doc-pdf">📄</div><div class="doc-card-name"><span data-nl>Elektrische keuring certificaat</span><span data-en>Electrical inspection certificate</span></div><div class="doc-card-meta">180 KB · 23 mrt</div><div class="doc-card-project">🍳 <span data-nl>Keuken</span><span data-en>Kitchen</span></div></div>
+      <div class="doc-card"><div class="doc-card-icon doc-pdf">📄</div><div class="doc-card-name"><span data-nl>Offerte badkamer verbouwing.pdf</span><span data-en>Bathroom renovation quote.pdf</span></div><div class="doc-card-meta">198 KB · 5 mrt</div><div class="doc-card-project">🚿 <span data-nl>Badkamer</span><span data-en>Bathroom</span></div></div>
+      <div class="doc-card"><div class="doc-card-icon doc-pdf">📄</div><div class="doc-card-name"><span data-nl>Vergunning verbouwing.pdf</span><span data-en>Renovation permit.pdf</span></div><div class="doc-card-meta">420 KB · 8 mrt</div><div class="doc-card-project">🚿 <span data-nl>Badkamer</span><span data-en>Bathroom</span></div></div>
+      <div class="doc-card"><div class="doc-card-icon doc-img">📸</div><div class="doc-card-name"><span data-nl>Voormeting badkamer</span><span data-en>Pre-measurement bathroom</span></div><div class="doc-card-meta">8.1 MB · 12 mrt</div><div class="doc-card-project">🚿 <span data-nl>Badkamer</span><span data-en>Bathroom</span></div></div>
+      <div class="doc-card" style="border-style:dashed;align-items:center;justify-content:center;text-align:center;min-height:130px;" onclick="alert('Upload functie komt hier.')"><div style="font-size:1.5rem;">➕</div><div style="font-size:0.8rem;font-weight:600;color:var(--slate);margin-top:0.5rem;"><span data-nl>Document uploaden</span><span data-en>Upload document</span></div></div>
+    </div>
+  </div>
+
+  <!-- PAYMENTS -->
+  <div class="page" id="page-payments">
+    <div style="margin-bottom:1.5rem;">
+      <h2 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--navy);">💳 <span data-nl>Betalingshistoriek</span><span data-en>Payment history</span></h2>
+      <p style="font-size:0.85rem;color:var(--slate);margin-top:0.25rem;"><span data-nl>Overzicht van alle stortingen en vrijgaven</span><span data-en>Overview of all deposits and releases</span></p>
+    </div>
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-label"><span data-nl>Totaal gestort</span><span data-en>Total deposited</span></div><div class="kpi-value">€ 70.500</div></div>
+      <div class="kpi-card"><div class="kpi-label"><span data-nl>Vrijgegeven</span><span data-en>Released</span></div><div class="kpi-value">€ 20.370</div><div class="kpi-trend trend-up">29%</div></div>
+      <div class="kpi-card"><div class="kpi-label"><span data-nl>In behandeling</span><span data-en>Pending</span></div><div class="kpi-value">€ 18.500</div><div class="kpi-trend trend-warn"><span data-nl>Wacht goedkeuring</span><span data-en>Awaiting approval</span></div></div>
+      <div class="kpi-card"><div class="kpi-label"><span data-nl>Resterend in escrow</span><span data-en>Remaining in escrow</span></div><div class="kpi-value">€ 31.630</div><div class="kpi-trend trend-blue"><span data-nl>Veilig</span><span data-en>Secure</span></div></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-head-title"><span data-nl>Alle transacties</span><span data-en>All transactions</span></div></div>
+      <div class="card-body" style="padding:0 1.5rem;">
+        <div class="pay-list">
+          <div class="pay-row"><div class="pay-icon">🏦</div><div class="pay-info"><div class="pay-name"><span data-nl>Storting escrow — Keuken renovatie</span><span data-en>Escrow deposit — Kitchen renovation</span></div><div class="pay-date">10 feb 2025 · De Bouwers BV</div></div><div class="pay-amount pay-out">− € 48.500</div><span class="pay-status pay-deposited"><span data-nl>Gestort</span><span data-en>Deposited</span></span></div>
+          <div class="pay-row"><div class="pay-icon">✅</div><div class="pay-info"><div class="pay-name"><span data-nl>Milestone 1 vrijgegeven — Keuken</span><span data-en>Milestone 1 released — Kitchen</span></div><div class="pay-date">18 mrt 2025 · De Bouwers BV</div></div><div class="pay-amount pay-out">− € 12.000</div><span class="pay-status pay-released"><span data-nl>Vrijgegeven</span><span data-en>Released</span></span></div>
+          <div class="pay-row"><div class="pay-icon">⏳</div><div class="pay-info"><div class="pay-name"><span data-nl>Milestone 2 — in behandeling</span><span data-en>Milestone 2 — processing</span></div><div class="pay-date"><span data-nl>Wacht op goedkeuring · 24 mrt 2025</span><span data-en>Awaiting approval · Mar 24, 2025</span></div></div><div class="pay-amount pay-pending-amt">€ 18.500</div><span class="pay-status pay-pending-s"><span data-nl>In behandeling</span><span data-en>Processing</span></span></div>
+          <div class="pay-row"><div class="pay-icon">🏦</div><div class="pay-info"><div class="pay-name"><span data-nl>Storting escrow — Badkamer verbouwing</span><span data-en>Escrow deposit — Bathroom renovation</span></div><div class="pay-date">5 mrt 2025 · Sanitair Pro</div></div><div class="pay-amount pay-out">− € 22.000</div><span class="pay-status pay-deposited"><span data-nl>Gestort</span><span data-en>Deposited</span></span></div>
+          <div class="pay-row"><div class="pay-icon">✅</div><div class="pay-info"><div class="pay-name"><span data-nl>Project afgerond — Dakisolatie</span><span data-en>Project completed — Roof insulation</span></div><div class="pay-date">15 jan 2025 · IsoTherm NL</div></div><div class="pay-amount pay-out">− € 18.200</div><span class="pay-status pay-released"><span data-nl>Volledig vrijgegeven</span><span data-en>Fully released</span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const pageTitles={overview:{nl:'Overzicht',en:'Overview'},milestones:{nl:'Milestones',en:'Milestones'},escrow:{nl:'Escrow',en:'Escrow'},chat:{nl:'Berichten',en:'Messages'},documents:{nl:'Documenten',en:'Documents'},payments:{nl:'Betalingshistoriek',en:'Payment history'}};
+  const pageOrder=['overview','milestones','escrow','chat','documents','payments'];
+
+  function showPage(id){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('page-'+id).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+    const items=document.querySelectorAll('.nav-item');
+    const idx=pageOrder.indexOf(id);
+    if(items[idx])items[idx].classList.add('active');
+    const lang=document.body.classList.contains('lang-en')?'en':'nl';
+    const t=pageTitles[id];
+    if(t)document.getElementById('page-title').textContent=t[lang];
+    window.scrollTo(0,0);
+  }
+
+  function setLang(lang){
+    document.body.className='lang-'+lang;
+    document.getElementById('btn-nl').classList.toggle('active',lang==='nl');
+    document.getElementById('btn-en').classList.toggle('active',lang==='en');
+  }
+
+  function approveMilestone(btn){
+    const lang=document.body.classList.contains('lang-en')?'en':'nl';
+    btn.textContent=lang==='nl'?'✅ Goedgekeurd! Vrijgave loopt...':'✅ Approved! Release in progress...';
+    btn.style.background='#059669';btn.disabled=true;
+    const actions=btn.closest('.ms-actions');
+    actions.querySelectorAll('button:not(:first-child)').forEach(b=>b.style.display='none');
+    const banner=document.getElementById('alert-banner');
+    if(banner)banner.style.display='none';
+    document.querySelector('.nav-badge.warn').style.display='none';
+  }
+
+  function sendMessage(){
+    const input=document.getElementById('chat-input');
+    if(!input.value.trim())return;
+    const messages=document.getElementById('chat-messages');
+    const lang=document.body.classList.contains('lang-en')?'en':'nl';
+    const now=new Date();
+    const time=now.toLocaleTimeString(lang==='nl'?'nl-BE':'en-GB',{hour:'2-digit',minute:'2-digit'});
+    const div=document.createElement('div');
+    div.className='msg mine';
+    div.innerHTML=`<div class="msg-avatar client-av">MV</div><div class="msg-wrap"><div class="msg-bubble">${input.value}</div><div class="msg-time">${time}</div></div>`;
+    messages.appendChild(div);
+    input.value='';
+    messages.scrollTop=messages.scrollHeight;
+  }
+
+  document.getElementById('chat-input').addEventListener('keydown',e=>{if(e.key==='Enter')sendMessage();});
+
+  function switchTab(btn){
+    document.querySelectorAll('.chat-project-tab').forEach(t=>t.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function filterDocs(btn){
+    document.querySelectorAll('.doc-filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+</script>
+</body>
+</html>

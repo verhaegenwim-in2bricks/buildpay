@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buildpay — Admin Paneel</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#0A1628;--purple:#7C3AED;--purple-mid:#8B5CF6;--purple-light:#F5F3FF;--purple-border:#DDD6FE;
+    --white:#FFFFFF;--off-white:#F8FAFC;--slate:#64748B;--slate-light:#94A3B8;--border:#E2E8F0;
+    --success:#10B981;--success-light:#D1FAE5;--warning:#F59E0B;--warning-light:#FEF3C7;
+    --error:#EF4444;--error-light:#FEE2E2;--blue-mid:#2563EB;--blue-light:#EFF6FF;
+    --teal:#0F766E;--teal-light:#F0FDFA;--sidebar-w:240px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}html,body{height:100%;}
+  body{font-family:'Inter',sans-serif;background:var(--off-white);color:var(--navy);display:flex;min-height:100vh;}
+
+  /* SIDEBAR */
+  .sidebar{width:var(--sidebar-w);background:var(--navy);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:50;overflow-y:auto;}
+  .sidebar-logo{padding:1.75rem 1.5rem 1.25rem;font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--white);letter-spacing:-0.03em;text-decoration:none;display:block;border-bottom:1px solid rgba(255,255,255,0.07);margin-bottom:0.5rem;}
+  .sidebar-logo span{color:#A78BFA;}
+  .sidebar-user{padding:0.75rem 1.5rem 1rem;display:flex;align-items:center;gap:0.75rem;border-bottom:1px solid rgba(255,255,255,0.07);margin-bottom:0.75rem;}
+  .user-avatar{width:2rem;height:2rem;border-radius:50%;background:linear-gradient(135deg,#7C3AED,#6D28D9);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:var(--white);flex-shrink:0;}
+  .user-name{font-size:0.8rem;font-weight:600;color:var(--white);}
+  .user-role{font-size:0.7rem;color:rgba(255,255,255,0.35);display:flex;align-items:center;gap:0.3rem;margin-top:0.05rem;}
+  .role-dot{width:5px;height:5px;border-radius:50%;background:#A78BFA;}
+  .sidebar-section-label{font-size:0.65rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.25);padding:0.5rem 1.5rem 0.35rem;}
+  .nav-item{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;font-size:0.85rem;font-weight:500;color:rgba(255,255,255,0.5);cursor:pointer;transition:all 0.15s;border-left:2px solid transparent;text-decoration:none;}
+  .nav-item:hover{color:var(--white);background:rgba(255,255,255,0.05);}
+  .nav-item.active{color:var(--white);background:rgba(124,58,237,0.2);border-left-color:#A78BFA;}
+  .nav-icon{font-size:1rem;width:1.1rem;text-align:center;}
+  .nav-badge{margin-left:auto;background:var(--purple);color:var(--white);font-size:0.6rem;font-weight:700;padding:0.15rem 0.4rem;border-radius:100px;}
+  .nav-badge.warn{background:var(--warning);}
+  .nav-badge.err{background:var(--error);}
+  .sidebar-bottom{margin-top:auto;padding:1rem 1.5rem;border-top:1px solid rgba(255,255,255,0.07);}
+  .logout-btn{display:flex;align-items:center;gap:0.75rem;font-size:0.82rem;color:rgba(255,255,255,0.35);cursor:pointer;transition:color 0.2s;background:none;border:none;font-family:'Inter',sans-serif;padding:0;width:100%;}
+  .logout-btn:hover{color:rgba(255,255,255,0.7);}
+
+  /* MAIN */
+  .main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+  .topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 2rem;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:40;}
+  .topbar-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--navy);}
+  .topbar-right{display:flex;align-items:center;gap:1rem;}
+  .notif-btn{position:relative;background:none;border:none;cursor:pointer;font-size:1.1rem;padding:0.3rem;}
+  .notif-dot{position:absolute;top:0;right:0;width:8px;height:8px;border-radius:50%;background:var(--error);border:2px solid var(--white);}
+  .lang-mini{display:flex;gap:0;border:1px solid var(--border);border-radius:5px;overflow:hidden;}
+  .lang-mini button{padding:0.25rem 0.6rem;font-size:0.7rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;background:none;border:none;cursor:pointer;color:var(--slate-light);font-family:'Inter',sans-serif;transition:all 0.15s;}
+  .lang-mini button.active{background:var(--navy);color:var(--white);}
+  .admin-badge-top{display:flex;align-items:center;gap:0.4rem;background:var(--purple-light);border:1px solid var(--purple-border);border-radius:100px;padding:0.25rem 0.75rem;font-size:0.72rem;font-weight:600;color:var(--purple);}
+
+  /* PAGES */
+  .page{display:none;padding:2rem;}
+  .page.active{display:block;animation:fadeIn 0.25s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+  /* COMPONENTS */
+  .card{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+  .card-head{padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
+  .card-head-title{font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;color:var(--navy);}
+  .card-body{padding:1.5rem;}
+  .card-head-action{font-size:0.78rem;color:var(--purple-mid);font-weight:500;cursor:pointer;background:none;border:none;font-family:'Inter',sans-serif;transition:color 0.15s;}
+
+  .status-pill{font-size:0.68rem;font-weight:600;padding:0.25rem 0.6rem;border-radius:100px;white-space:nowrap;}
+  .pill-active{background:var(--blue-light);color:var(--blue-mid);}
+  .pill-done{background:var(--success-light);color:#065F46;}
+  .pill-pending{background:var(--warning-light);color:#92400E;}
+  .pill-dispute{background:var(--error-light);color:#991B1B;}
+  .pill-purple{background:var(--purple-light);color:var(--purple);}
+
+  .btn-purple{background:var(--purple);color:var(--white);border:none;border-radius:7px;padding:0.6rem 1.25rem;font-size:0.85rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:background 0.2s;white-space:nowrap;}
+  .btn-purple:hover{background:#6D28D9;}
+  .btn-purple-sm{background:var(--purple);color:var(--white);border:none;border-radius:6px;padding:0.35rem 0.8rem;font-size:0.75rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:background 0.2s;}
+  .btn-purple-sm:hover{background:#6D28D9;}
+  .btn-outline-sm{background:none;color:var(--slate);border:1px solid var(--border);border-radius:6px;padding:0.35rem 0.8rem;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;}
+  .btn-outline-sm:hover{border-color:var(--purple-mid);color:var(--purple-mid);}
+  .btn-danger-sm{background:none;color:var(--error);border:1px solid var(--error-light);border-radius:6px;padding:0.35rem 0.8rem;font-size:0.75rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;}
+  .btn-danger-sm:hover{background:var(--error-light);}
+  .btn-success-sm{background:var(--success);color:var(--white);border:none;border-radius:6px;padding:0.35rem 0.8rem;font-size:0.75rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:background 0.2s;}
+  .btn-success-sm:hover{background:#059669;}
+
+  /* KPI */
+  .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;}
+  .kpi-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;transition:box-shadow 0.2s;}
+  .kpi-card:hover{box-shadow:0 4px 20px rgba(0,0,0,0.07);}
+  .kpi-label{font-size:0.75rem;font-weight:500;color:var(--slate);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.5rem;}
+  .kpi-value{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--navy);letter-spacing:-0.02em;}
+  .kpi-sub{font-size:0.75rem;color:var(--slate-light);margin-top:0.2rem;}
+  .kpi-trend{display:inline-flex;align-items:center;gap:0.25rem;font-size:0.72rem;font-weight:600;padding:0.15rem 0.45rem;border-radius:4px;margin-top:0.3rem;}
+  .trend-up{background:var(--success-light);color:#065F46;}
+  .trend-warn{background:var(--warning-light);color:#92400E;}
+  .trend-err{background:var(--error-light);color:#991B1B;}
+  .trend-purple{background:var(--purple-light);color:var(--purple);}
+
+  /* LAYOUT */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;}
+  .main-side{display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;margin-bottom:1.5rem;}
+  .three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:1.5rem;}
+
+  /* WELCOME */
+  .welcome-bar{background:linear-gradient(135deg,#1E0B3E 0%,#0A1628 100%);border-radius:12px;padding:1.75rem 2rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden;}
+  .welcome-bar::before{content:'';position:absolute;right:-60px;top:-60px;width:220px;height:220px;background:radial-gradient(circle,rgba(124,58,237,0.3) 0%,transparent 70%);}
+  .welcome-text h2{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--white);margin-bottom:0.25rem;}
+  .welcome-text p{font-size:0.875rem;color:rgba(255,255,255,0.5);}
+
+  /* TABLE */
+  .data-table{width:100%;border-collapse:collapse;}
+  .data-table th{text-align:left;padding:0.75rem 1rem;font-size:0.72rem;font-weight:600;color:var(--slate);text-transform:uppercase;letter-spacing:0.08em;border-bottom:1px solid var(--border);background:var(--off-white);}
+  .data-table td{padding:0.85rem 1rem;font-size:0.82rem;color:var(--navy);border-bottom:1px solid var(--border);vertical-align:middle;}
+  .data-table tr:last-child td{border-bottom:none;}
+  .data-table tr:hover td{background:var(--off-white);}
+  .td-name{font-weight:600;}
+  .td-sub{font-size:0.7rem;color:var(--slate-light);margin-top:0.1rem;}
+  .td-actions{display:flex;gap:0.4rem;flex-wrap:wrap;}
+
+  /* ESCROW OVERVIEW */
+  .escrow-bar-track{height:6px;background:var(--border);border-radius:100px;overflow:hidden;}
+  .escrow-bar-fill{height:100%;border-radius:100px;background:linear-gradient(to right,var(--purple-mid),#A78BFA);}
+
+  /* ACTIVITY */
+  .activity-item{display:flex;gap:0.75rem;align-items:flex-start;padding:0.7rem 0;border-bottom:1px solid var(--border);}
+  .activity-item:last-child{border-bottom:none;}
+  .activity-icon{width:1.75rem;height:1.75rem;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;flex-shrink:0;}
+  .activity-text{font-size:0.78rem;font-weight:600;color:var(--navy);}
+  .activity-sub{font-size:0.7rem;color:var(--slate-light);margin-top:0.1rem;}
+
+  /* DISPUTE CARD */
+  .dispute-card{border:1px solid var(--error-light);border-radius:10px;padding:1.25rem;background:#FFFBFB;margin-bottom:0.75rem;}
+  .dispute-card:last-child{margin-bottom:0;}
+  .dispute-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;}
+  .dispute-title{font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;color:var(--navy);}
+  .dispute-meta{font-size:0.75rem;color:var(--slate);margin-bottom:0.75rem;line-height:1.6;}
+  .dispute-parties{display:flex;gap:1rem;margin-bottom:1rem;}
+  .party-box{flex:1;background:var(--off-white);border:1px solid var(--border);border-radius:8px;padding:0.75rem;}
+  .party-role{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--slate-light);margin-bottom:0.2rem;}
+  .party-name{font-size:0.82rem;font-weight:600;color:var(--navy);}
+  .party-claim{font-size:0.75rem;color:var(--slate);margin-top:0.3rem;line-height:1.5;}
+  .dispute-actions{display:flex;gap:0.5rem;flex-wrap:wrap;}
+
+  /* CHART BARS */
+  .chart-wrap{display:flex;align-items:flex-end;gap:0.4rem;height:80px;padding:0.5rem 0;}
+  .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:0.3rem;}
+  .bar{width:100%;border-radius:3px 3px 0 0;transition:opacity 0.2s;}
+  .bar:hover{opacity:0.7;}
+  .bar-lbl{font-size:0.62rem;color:var(--slate-light);}
+
+  /* USER CARD */
+  .user-row{display:flex;align-items:center;gap:1rem;padding:0.85rem 0;border-bottom:1px solid var(--border);}
+  .user-row:last-child{border-bottom:none;}
+  .user-av{width:2rem;height:2rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:var(--white);flex-shrink:0;}
+  .uav-client{background:linear-gradient(135deg,#3B82F6,#1D4ED8);}
+  .uav-contractor{background:linear-gradient(135deg,#10B981,#047857);}
+  .uav-admin{background:linear-gradient(135deg,#7C3AED,#6D28D9);}
+  .user-info{flex:1;}
+  .user-name-t{font-size:0.82rem;font-weight:600;color:var(--navy);}
+  .user-email{font-size:0.72rem;color:var(--slate-light);margin-top:0.05rem;}
+  .user-actions{display:flex;gap:0.4rem;}
+
+  /* SETTINGS */
+  .setting-row{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 0;border-bottom:1px solid var(--border);}
+  .setting-row:last-child{border-bottom:none;}
+  .setting-info{}
+  .setting-label{font-size:0.875rem;font-weight:600;color:var(--navy);}
+  .setting-desc{font-size:0.78rem;color:var(--slate);margin-top:0.2rem;}
+  .toggle{position:relative;width:44px;height:24px;flex-shrink:0;}
+  .toggle input{opacity:0;width:0;height:0;}
+  .toggle-slider{position:absolute;inset:0;background:var(--border);border-radius:100px;cursor:pointer;transition:background 0.2s;}
+  .toggle-slider::before{content:'';position:absolute;height:18px;width:18px;left:3px;top:3px;background:var(--white);border-radius:50%;transition:transform 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
+  .toggle input:checked+.toggle-slider{background:var(--purple);}
+  .toggle input:checked+.toggle-slider::before{transform:translateX(20px);}
+  .input-field{padding:0.55rem 0.85rem;border:1.5px solid var(--border);border-radius:7px;font-size:0.85rem;font-family:'Inter',sans-serif;color:var(--navy);outline:none;transition:border-color 0.2s;width:100%;}
+  .input-field:focus{border-color:var(--purple-mid);}
+
+  /* LOG */
+  .log-row{display:flex;align-items:flex-start;gap:0.75rem;padding:0.65rem 0;border-bottom:1px solid var(--border);font-size:0.78rem;}
+  .log-row:last-child{border-bottom:none;}
+  .log-time{color:var(--slate-light);white-space:nowrap;flex-shrink:0;font-size:0.7rem;margin-top:0.1rem;}
+  .log-icon{flex-shrink:0;font-size:0.85rem;}
+  .log-text{color:var(--navy);flex:1;}
+  .log-text span{color:var(--slate);}
+
+  /* SEARCH BAR */
+  .search-bar{display:flex;gap:0.75rem;margin-bottom:1.25rem;align-items:center;}
+  .search-input{flex:1;padding:0.6rem 0.9rem 0.6rem 2.2rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.85rem;font-family:'Inter',sans-serif;color:var(--navy);outline:none;transition:border-color 0.2s;background:var(--white);}
+  .search-input:focus{border-color:var(--purple-mid);}
+  .search-wrap{position:relative;flex:1;}
+  .search-wrap::before{content:'🔍';position:absolute;left:0.7rem;top:50%;transform:translateY(-50%);font-size:0.8rem;}
+
+  /* LANG */
+  body.lang-en [data-nl]{display:none;}
+  body.lang-nl [data-en]{display:none;}
+
+  @media(max-width:900px){
+    .sidebar{transform:translateX(-100%);}
+    .main{margin-left:0;}
+    .kpi-row,.three-col{grid-template-columns:repeat(2,1fr);}
+    .two-col,.main-side{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body class="lang-nl">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <a href="buildpay-landing.html" class="sidebar-logo">Build<span>pay</span></a>
+  <div class="sidebar-user">
+    <div class="user-avatar">SA</div>
+    <div>
+      <div class="user-name">Sara Adriaens</div>
+      <div class="user-role"><span class="role-dot"></span> Admin</div>
+    </div>
+  </div>
+  <div class="sidebar-section-label"><span data-nl>Beheer</span><span data-en>Management</span></div>
+  <a class="nav-item active" onclick="showPage('overview')" href="#"><span class="nav-icon">📊</span><span data-nl>Dashboard</span><span data-en>Dashboard</span></a>
+  <a class="nav-item" onclick="showPage('escrow')" href="#"><span class="nav-icon">🔒</span><span data-nl>Escrow beheer</span><span data-en>Escrow management</span></a>
+  <a class="nav-item" onclick="showPage('disputes')" href="#"><span class="nav-icon">⚠️</span><span data-nl>Geschillen</span><span data-en>Disputes</span><span class="nav-badge err">2</span></a>
+  <a class="nav-item" onclick="showPage('projects')" href="#"><span class="nav-icon">🏗️</span><span data-nl>Alle projecten</span><span data-en>All projects</span></a>
+  <a class="nav-item" onclick="showPage('users')" href="#"><span class="nav-icon">👥</span><span data-nl>Gebruikers</span><span data-en>Users</span></a>
+  <div class="sidebar-section-label"><span data-nl>Systeem</span><span data-en>System</span></div>
+  <a class="nav-item" onclick="showPage('logs')" href="#"><span class="nav-icon">📋</span><span data-nl>Audit logs</span><span data-en>Audit logs</span></a>
+  <a class="nav-item" onclick="showPage('settings')" href="#"><span class="nav-icon">⚙️</span><span data-nl>Instellingen</span><span data-en>Settings</span></a>
+  <div class="sidebar-bottom">
+    <button class="logout-btn" onclick="window.location='buildpay-login.html'"><span>🚪</span><span data-nl>Uitloggen</span><span data-en>Log out</span></button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="page-title">Dashboard</div>
+    <div class="topbar-right">
+      <div class="admin-badge-top">🛡️ Admin</div>
+      <button class="notif-btn">🔔<span class="notif-dot"></span></button>
+      <div class="lang-mini">
+        <button class="active" onclick="setLang('nl')" id="btn-nl">NL</button>
+        <button onclick="setLang('en')" id="btn-en">EN</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DASHBOARD ===== -->
+  <div class="page active" id="page-overview">
+    <div class="welcome-bar">
+      <div class="welcome-text">
+        <h2>🛡️ <span data-nl>Admin dashboard</span><span data-en>Admin dashboard</span></h2>
+        <p><span data-nl>2 openstaande geschillen · 5 vrijgaven wachten op verificatie · Platformstatus: operationeel</span><span data-en>2 open disputes · 5 releases pending verification · Platform status: operational</span></p>
+      </div>
+      <div style="display:flex;gap:0.75rem;position:relative;z-index:1;">
+        <button class="btn-purple" onclick="showPage('disputes')">⚠️ <span data-nl>Geschillen bekijken</span><span data-en>View disputes</span></button>
+        <button class="btn-outline-sm" style="color:rgba(255,255,255,0.6);border-color:rgba(255,255,255,0.2);" onclick="showPage('escrow')"><span data-nl>Escrow beheer</span><span data-en>Escrow management</span></button>
+      </div>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-label"><span data-nl>Totaal in escrow</span><span data-en>Total in escrow</span></div>
+        <div class="kpi-value">€ 842K</div>
+        <div class="kpi-trend trend-up">↑ 18% <span data-nl>deze maand</span><span data-en>this month</span></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label"><span data-nl>Actieve projecten</span><span data-en>Active projects</span></div>
+        <div class="kpi-value">127</div>
+        <div class="kpi-sub">34 <span data-nl>nieuw deze week</span><span data-en>new this week</span></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label"><span data-nl>Geregistreerde gebruikers</span><span data-en>Registered users</span></div>
+        <div class="kpi-value">1.284</div>
+        <div class="kpi-trend trend-up">↑ 12%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label"><span data-nl>Openstaande geschillen</span><span data-en>Open disputes</span></div>
+        <div class="kpi-value">2</div>
+        <div class="kpi-trend trend-err"><span data-nl>Actie vereist</span><span data-en>Action required</span></div>
+      </div>
+    </div>
+
+    <div class="main-side">
+      <div style="display:flex;flex-direction:column;gap:1.5rem;">
+
+        <!-- Platform stats -->
+        <div class="three-col" style="margin-bottom:0;">
+          <div class="kpi-card" style="border-left:3px solid var(--success);">
+            <div class="kpi-label"><span data-nl>Commissie (MTD)</span><span data-en>Commission (MTD)</span></div>
+            <div class="kpi-value" style="font-size:1.3rem;">€ 12.630</div>
+            <div class="kpi-trend trend-up">↑ 1.5%</div>
+          </div>
+          <div class="kpi-card" style="border-left:3px solid var(--blue-mid);">
+            <div class="kpi-label"><span data-nl>Vrijgaven (MTD)</span><span data-en>Releases (MTD)</span></div>
+            <div class="kpi-value" style="font-size:1.3rem;">€ 842K</div>
+            <div class="kpi-sub">248 <span data-nl>transacties</span><span data-en>transactions</span></div>
+          </div>
+          <div class="kpi-card" style="border-left:3px solid var(--warning);">
+            <div class="kpi-label"><span data-nl>Wacht vrijgave</span><span data-en>Pending release</span></div>
+            <div class="kpi-value" style="font-size:1.3rem;">€ 94.5K</div>
+            <div class="kpi-trend trend-warn">5 <span data-nl>transacties</span><span data-en>transactions</span></div>
+          </div>
+        </div>
+
+        <!-- Revenue chart -->
+        <div class="card">
+          <div class="card-head"><div class="card-head-title"><span data-nl>Platformomzet 2025</span><span data-en>Platform revenue 2025</span></div><span style="font-size:0.72rem;color:var(--slate-light);">1.5% <span data-nl>commissie</span><span data-en>commission</span></span></div>
+          <div class="card-body">
+            <div class="chart-wrap">
+              <div class="bar-col"><div class="bar" style="height:28px;background:linear-gradient(to top,var(--purple),#A78BFA);"></div><div class="bar-lbl">Jan</div></div>
+              <div class="bar-col"><div class="bar" style="height:38px;background:linear-gradient(to top,var(--purple),#A78BFA);"></div><div class="bar-lbl">Feb</div></div>
+              <div class="bar-col"><div class="bar" style="height:32px;background:linear-gradient(to top,var(--purple),#A78BFA);"></div><div class="bar-lbl">Mrt</div></div>
+              <div class="bar-col"><div class="bar" style="height:52px;background:linear-gradient(to top,var(--purple),#A78BFA);"></div><div class="bar-lbl">Apr</div></div>
+              <div class="bar-col"><div class="bar" style="height:48px;background:linear-gradient(to top,var(--purple),#A78BFA);"></div><div class="bar-lbl">Mei</div></div>
+              <div class="bar-col"><div class="bar" style="height:65px;background:linear-gradient(to top,var(--purple),#A78BFA);"></div><div class="bar-lbl">Jun</div></div>
+              <div class="bar-col"><div class="bar" style="height:58px;background:linear-gradient(to top,var(--purple),#A78BFA);"></div><div class="bar-lbl">Jul</div></div>
+              <div class="bar-col"><div class="bar" style="height:72px;background:linear-gradient(to top,var(--purple),#A78BFA);"></div><div class="bar-lbl">Aug</div></div>
+              <div class="bar-col"><div class="bar" style="height:80px;background:linear-gradient(to top,var(--purple),#A78BFA);"></div><div class="bar-lbl">Sep</div></div>
+              <div class="bar-col"><div class="bar" style="height:68px;background:linear-gradient(to top,var(--purple),#A78BFA);"></div><div class="bar-lbl">Okt</div></div>
+              <div class="bar-col"><div class="bar" style="height:80px;background:linear-gradient(to top,#5B21B6,#7C3AED);box-shadow:0 0 8px rgba(124,58,237,0.4);"></div><div class="bar-lbl" style="color:var(--purple);font-weight:700;">Nov</div></div>
+              <div class="bar-col"><div class="bar" style="height:30px;opacity:0.25;background:linear-gradient(to top,var(--purple),#A78BFA);"></div><div class="bar-lbl">Dec</div></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:0.75rem;">
+              <span style="font-size:0.75rem;color:var(--slate);"><span data-nl>Totale commissie 2025:</span><span data-en>Total commission 2025:</span> <strong style="color:var(--navy);">€ 12.630</strong></span>
+              <span style="font-size:0.75rem;color:var(--slate);"><span data-nl>Vrijgegeven volume:</span><span data-en>Released volume:</span> <strong style="color:var(--navy);">€ 842.000</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent projects -->
+        <div class="card">
+          <div class="card-head"><div class="card-head-title"><span data-nl>Recente projecten</span><span data-en>Recent projects</span></div><button class="card-head-action" onclick="showPage('projects')"><span data-nl>Alle projecten →</span><span data-en>All projects →</span></button></div>
+          <div class="card-body" style="padding:0;">
+            <table class="data-table">
+              <thead><tr><th><span data-nl>Project</span><span data-en>Project</span></th><th><span data-nl>Klant</span><span data-en>Client</span></th><th><span data-nl>Aannemer</span><span data-en>Contractor</span></th><th><span data-nl>Escrow</span><span data-en>Escrow</span></th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td><div class="td-name">🍳 <span data-nl>Keuken Van Damme</span><span data-en>Kitchen Van Damme</span></div><div class="td-sub">MS 2/3 · 42%</div></td><td>Marie Van Damme</td><td>De Bouwers BV</td><td style="font-weight:700;">€ 48.500</td><td><span class="status-pill pill-active"><span data-nl>Actief</span><span data-en>Active</span></span></td></tr>
+                <tr><td><div class="td-name">🏢 <span data-nl>Kantoor Pieters</span><span data-en>Office Pieters</span></div><div class="td-sub">MS 3/5 · 60%</div></td><td>Pieters NV</td><td>Vandebroeck BV</td><td style="font-weight:700;">€ 75.000</td><td><span class="status-pill pill-active"><span data-nl>Actief</span><span data-en>Active</span></span></td></tr>
+                <tr><td><div class="td-name">🚿 <span data-nl>Badkamer Janssen</span><span data-en>Bathroom Janssen</span></div><div class="td-sub">MS 1/4 · 20%</div></td><td>Tom Janssen</td><td>Sanitair Pro</td><td style="font-weight:700;">€ 22.000</td><td><span class="status-pill pill-active"><span data-nl>Actief</span><span data-en>Active</span></span></td></tr>
+                <tr><td><div class="td-name">🏡 <span data-nl>Villa Verbouwing</span><span data-en>Villa Renovation</span></div><div class="td-sub">MS 2/6 · 28%</div></td><td>Luc Martens</td><td>BouwGroep NL</td><td style="font-weight:700;">€ 142.000</td><td><span class="status-pill pill-dispute"><span data-nl>Geschil</span><span data-en>Dispute</span></span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div style="display:flex;flex-direction:column;gap:1.5rem;">
+        <!-- Platform health -->
+        <div class="card">
+          <div class="card-head"><div class="card-head-title"><span data-nl>Platformstatus</span><span data-en>Platform status</span></div></div>
+          <div class="card-body" style="padding:1rem 1.5rem;">
+            <div style="display:flex;flex-direction:column;gap:0.75rem;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:0.82rem;color:var(--navy);">API</span>
+                <span style="font-size:0.72rem;font-weight:600;color:var(--success);background:var(--success-light);padding:0.2rem 0.5rem;border-radius:4px;">✓ Operationeel</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:0.82rem;color:var(--navy);"><span data-nl>Betalingsverwerking</span><span data-en>Payment processing</span></span>
+                <span style="font-size:0.72rem;font-weight:600;color:var(--success);background:var(--success-light);padding:0.2rem 0.5rem;border-radius:4px;">✓ Operationeel</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:0.82rem;color:var(--navy);">Escrow <span data-nl>service</span><span data-en>service</span></span>
+                <span style="font-size:0.72rem;font-weight:600;color:var(--success);background:var(--success-light);padding:0.2rem 0.5rem;border-radius:4px;">✓ Operationeel</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:0.82rem;color:var(--navy);">Notificaties</span>
+                <span style="font-size:0.72rem;font-weight:600;color:var(--warning);background:var(--warning-light);padding:0.2rem 0.5rem;border-radius:4px;">⚠ <span data-nl>Vertraging</span><span data-en>Delay</span></span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:0.82rem;color:var(--navy);">KYC / Verificatie</span>
+                <span style="font-size:0.72rem;font-weight:600;color:var(--success);background:var(--success-light);padding:0.2rem 0.5rem;border-radius:4px;">✓ Operationeel</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent activity -->
+        <div class="card">
+          <div class="card-head"><div class="card-head-title"><span data-nl>Recente activiteit</span><span data-en>Recent activity</span></div><button class="card-head-action" onclick="showPage('logs')"><span data-nl>Alle logs →</span><span data-en>All logs →</span></button></div>
+          <div class="card-body" style="padding:0.5rem 1rem;">
+            <div class="activity-item"><div class="activity-icon" style="background:var(--error-light);">⚠️</div><div><div class="activity-text"><span data-nl>Nieuw geschil geopend</span><span data-en>New dispute opened</span></div><div class="activity-sub"><span data-nl>Villa Martens · 14 min geleden</span><span data-en>Villa Martens · 14 min ago</span></div></div></div>
+            <div class="activity-item"><div class="activity-icon" style="background:var(--success-light);">💰</div><div><div class="activity-text">€ 18.500 <span data-nl>vrijgegeven</span><span data-en>released</span></div><div class="activity-sub"><span data-nl>Keuken Van Damme · 1u geleden</span><span data-en>Kitchen Van Damme · 1h ago</span></div></div></div>
+            <div class="activity-item"><div class="activity-icon" style="background:var(--blue-light);">👤</div><div><div class="activity-text"><span data-nl>Nieuwe aannemer geregistreerd</span><span data-en>New contractor registered</span></div><div class="activity-sub"><span data-nl>BouwPro BV · 2u geleden</span><span data-en>BouwPro BV · 2h ago</span></div></div></div>
+            <div class="activity-item"><div class="activity-icon" style="background:var(--purple-light);">🔒</div><div><div class="activity-text">€ 142.000 <span data-nl>gestort in escrow</span><span data-en>deposited in escrow</span></div><div class="activity-sub"><span data-nl>Villa Martens · 3u geleden</span><span data-en>Villa Martens · 3h ago</span></div></div></div>
+            <div class="activity-item"><div class="activity-icon" style="background:var(--warning-light);">🔑</div><div><div class="activity-text"><span data-nl>Admin login poging (mislukt)</span><span data-en>Admin login attempt (failed)</span></div><div class="activity-sub"><span data-nl>IP: 185.xx.xx.12 · 4u geleden</span><span data-en>IP: 185.xx.xx.12 · 4h ago</span></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ESCROW ===== -->
+  <div class="page" id="page-escrow">
+    <div style="margin-bottom:1.5rem;">
+      <h2 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--navy);">🔒 <span data-nl>Escrow beheer</span><span data-en>Escrow management</span></h2>
+      <p style="font-size:0.85rem;color:var(--slate);margin-top:0.25rem;"><span data-nl>Overzicht van alle geblokkeerde bedragen en vrijgaven</span><span data-en>Overview of all locked amounts and releases</span></p>
+    </div>
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-label"><span data-nl>Totaal in escrow</span><span data-en>Total in escrow</span></div><div class="kpi-value">€ 842K</div><div class="kpi-trend trend-up">↑ 18%</div></div>
+      <div class="kpi-card"><div class="kpi-label"><span data-nl>Wacht vrijgave</span><span data-en>Pending release</span></div><div class="kpi-value">€ 94.5K</div><div class="kpi-trend trend-warn">5 <span data-nl>transacties</span><span data-en>transactions</span></div></div>
+      <div class="kpi-card"><div class="kpi-label"><span data-nl>Vrijgegeven (MTD)</span><span data-en>Released (MTD)</span></div><div class="kpi-value">€ 248K</div><div class="kpi-trend trend-up">↑ 32%</div></div>
+      <div class="kpi-card"><div class="kpi-label"><span data-nl>Geblokkeerd (geschil)</span><span data-en>Locked (dispute)</span></div><div class="kpi-value">€ 52K</div><div class="kpi-trend trend-err">2 <span data-nl>dossiers</span><span data-en>files</span></div></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-head-title"><span data-nl>Alle escrow posities</span><span data-en>All escrow positions</span></div>
+        <div style="display:flex;gap:0.5rem;">
+          <select style="font-size:0.78rem;padding:0.3rem 0.6rem;border:1px solid var(--border);border-radius:6px;font-family:'Inter',sans-serif;color:var(--slate);background:var(--white);cursor:pointer;">
+            <option><span data-nl>Alle statussen</span><span data-en>All statuses</span></option>
+            <option><span data-nl>Actief</span><span data-en>Active</span></option>
+            <option><span data-nl>Wacht</span><span data-en>Pending</span></option>
+            <option><span data-nl>Geschil</span><span data-en>Dispute</span></option>
+          </select>
+        </div>
+      </div>
+      <div class="card-body" style="padding:0;">
+        <table class="data-table">
+          <thead><tr>
+            <th><span data-nl>Project</span><span data-en>Project</span></th>
+            <th><span data-nl>Partijen</span><span data-en>Parties</span></th>
+            <th><span data-nl>Totaal</span><span data-en>Total</span></th>
+            <th><span data-nl>Vrijgegeven</span><span data-en>Released</span></th>
+            <th><span data-nl>Geblokkeerd</span><span data-en>Locked</span></th>
+            <th><span data-nl>Voortgang</span><span data-en>Progress</span></th>
+            <th>Status</th>
+            <th></th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td><div class="td-name">🍳 <span data-nl>Keuken Van Damme</span><span data-en>Kitchen Van Damme</span></div></td>
+              <td><div style="font-size:0.78rem;">Van Damme ↔ De Bouwers BV</div></td>
+              <td style="font-weight:700;">€ 48.500</td>
+              <td style="color:var(--success);font-weight:600;">€ 20.370</td>
+              <td style="color:var(--navy);font-weight:600;">€ 28.130</td>
+              <td style="width:100px;"><div class="escrow-bar-track"><div class="escrow-bar-fill" style="width:42%"></div></div><div style="font-size:0.65rem;color:var(--slate-light);margin-top:2px;">42%</div></td>
+              <td><span class="status-pill pill-active"><span data-nl>Actief</span><span data-en>Active</span></span></td>
+              <td><div class="td-actions"><button class="btn-outline-sm" onclick="showPage('disputes')"><span data-nl>Detail</span><span data-en>Detail</span></button></div></td>
+            </tr>
+            <tr>
+              <td><div class="td-name">🏢 <span data-nl>Kantoor Pieters</span><span data-en>Office Pieters</span></div></td>
+              <td><div style="font-size:0.78rem;">Pieters NV ↔ Vandebroeck BV</div></td>
+              <td style="font-weight:700;">€ 75.000</td>
+              <td style="color:var(--success);font-weight:600;">€ 45.000</td>
+              <td style="color:var(--navy);font-weight:600;">€ 30.000</td>
+              <td style="width:100px;"><div class="escrow-bar-track"><div class="escrow-bar-fill" style="width:60%"></div></div><div style="font-size:0.65rem;color:var(--slate-light);margin-top:2px;">60%</div></td>
+              <td><span class="status-pill pill-active"><span data-nl>Actief</span><span data-en>Active</span></span></td>
+              <td><div class="td-actions"><button class="btn-outline-sm"><span data-nl>Detail</span><span data-en>Detail</span></button></div></td>
+            </tr>
+            <tr>
+              <td><div class="td-name">🏡 <span data-nl>Villa Martens</span><span data-en>Villa Martens</span></div></td>
+              <td><div style="font-size:0.78rem;">L. Martens ↔ BouwGroep NL</div></td>
+              <td style="font-weight:700;">€ 142.000</td>
+              <td style="color:var(--success);font-weight:600;">€ 39.760</td>
+              <td style="color:var(--error);font-weight:600;">€ 52.000</td>
+              <td style="width:100px;"><div class="escrow-bar-track"><div class="escrow-bar-fill" style="width:28%;background:linear-gradient(to right,var(--error),#F87171);"></div></div><div style="font-size:0.65rem;color:var(--slate-light);margin-top:2px;">28%</div></td>
+              <td><span class="status-pill pill-dispute"><span data-nl>Geschil</span><span data-en>Dispute</span></span></td>
+              <td><div class="td-actions"><button class="btn-danger-sm" onclick="showPage('disputes')"><span data-nl>Bekijk geschil</span><span data-en>View dispute</span></button></div></td>
+            </tr>
+            <tr>
+              <td><div class="td-name">🚿 <span data-nl>Badkamer Janssen</span><span data-en>Bathroom Janssen</span></div></td>
+              <td><div style="font-size:0.78rem;">T. Janssen ↔ Sanitair Pro</div></td>
+              <td style="font-weight:700;">€ 22.000</td>
+              <td style="color:var(--success);font-weight:600;">€ 4.500</td>
+              <td style="color:var(--navy);font-weight:600;">€ 17.500</td>
+              <td style="width:100px;"><div class="escrow-bar-track"><div class="escrow-bar-fill" style="width:20%"></div></div><div style="font-size:0.65rem;color:var(--slate-light);margin-top:2px;">20%</div></td>
+              <td><span class="status-pill pill-active"><span data-nl>Actief</span><span data-en>Active</span></span></td>
+              <td><div class="td-actions"><button class="btn-outline-sm"><span data-nl>Detail</span><span data-en>Detail</span></button></div></td>
+            </tr>
+            <tr>
+              <td><div class="td-name">🏗️ <span data-nl>Appartement Declercq</span><span data-en>Apartment Declercq</span></div></td>
+              <td><div style="font-size:0.78rem;">H. Declercq ↔ RenovaPro</div></td>
+              <td style="font-weight:700;">€ 38.500</td>
+              <td style="color:var(--warning);font-weight:600;">€ 0 <span style="font-size:0.68rem;">(wacht)</span></td>
+              <td style="color:var(--navy);font-weight:600;">€ 38.500</td>
+              <td style="width:100px;"><div class="escrow-bar-track"><div class="escrow-bar-fill" style="width:0%"></div></div><div style="font-size:0.65rem;color:var(--slate-light);margin-top:2px;">0%</div></td>
+              <td><span class="status-pill pill-pending"><span data-nl>Gepland</span><span data-en>Planned</span></span></td>
+              <td><div class="td-actions"><button class="btn-outline-sm"><span data-nl>Detail</span><span data-en>Detail</span></button></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DISPUTES ===== -->
+  <div class="page" id="page-disputes">
+    <div style="margin-bottom:1.5rem;">
+      <h2 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--navy);">⚠️ <span data-nl>Geschillenbeheer</span><span data-en>Dispute management</span></h2>
+      <p style="font-size:0.85rem;color:var(--slate);margin-top:0.25rem;"><span data-nl>Als admin beslis jij bij betwiste milestones — jouw beslissing is bindend</span><span data-en>As admin you decide on disputed milestones — your decision is binding</span></p>
+    </div>
+
+    <div style="display:flex;gap:0.75rem;margin-bottom:1.5rem;">
+      <div class="kpi-card" style="flex:1;border-left:3px solid var(--error);">
+        <div class="kpi-label"><span data-nl>Open geschillen</span><span data-en>Open disputes</span></div>
+        <div class="kpi-value">2</div>
+      </div>
+      <div class="kpi-card" style="flex:1;border-left:3px solid var(--warning);">
+        <div class="kpi-label"><span data-nl>Geblokkeerd bedrag</span><span data-en>Locked amount</span></div>
+        <div class="kpi-value">€ 64.500</div>
+      </div>
+      <div class="kpi-card" style="flex:1;border-left:3px solid var(--success);">
+        <div class="kpi-label"><span data-nl>Opgelost (dit jaar)</span><span data-en>Resolved (this year)</span></div>
+        <div class="kpi-value">14</div>
+        <div class="kpi-sub">100% <span data-nl>opgelost</span><span data-en>resolved</span></div>
+      </div>
+    </div>
+
+    <div class="dispute-card">
+      <div class="dispute-header">
+        <div><div class="dispute-title">🏡 <span data-nl>Villa Martens — Milestone 2</span><span data-en>Villa Martens — Milestone 2</span></div><div style="font-size:0.7rem;color:var(--slate-light);margin-top:0.2rem;"><span data-nl>Geopend</span><span data-en>Opened</span>: 24 mrt 2025 · #DISP-2024-041</div></div>
+        <span class="status-pill pill-dispute"><span data-nl>Open</span><span data-en>Open</span></span>
+      </div>
+      <div class="dispute-meta">
+        <strong><span data-nl>Betwist bedrag:</span><span data-en>Disputed amount:</span></strong> € 28.400 &nbsp;·&nbsp;
+        <strong><span data-nl>Project totaal:</span><span data-en>Project total:</span></strong> € 142.000 &nbsp;·&nbsp;
+        <strong><span data-nl>Milestone:</span><span data-en>Milestone:</span></strong> <span data-nl>Ruwbouw & waterinstallatie</span><span data-en>Structure & water installation</span>
+        <br><span data-nl><strong>Reden betwisting:</strong> Klant stelt dat de waterinstallatie niet conform de offerte is uitgevoerd. Drie lekken gevonden bij inspectie op 22 mrt.</span>
+        <span data-en><strong>Reason for dispute:</strong> Client claims water installation was not completed per the quote. Three leaks found during inspection on Mar 22.</span>
+      </div>
+      <div class="dispute-parties">
+        <div class="party-box">
+          <div class="party-role">🏠 <span data-nl>Klant</span><span data-en>Client</span></div>
+          <div class="party-name">Luc Martens</div>
+          <div class="party-claim"><span data-nl>Werk niet conform offerte. Lekken gevonden. Vraagt om herstel of terugbetaling van € 28.400.</span><span data-en>Work not per quote. Leaks found. Requests repair or refund of € 28,400.</span></div>
+        </div>
+        <div class="party-box">
+          <div class="party-role">🔨 <span data-nl>Aannemer</span><span data-en>Contractor</span></div>
+          <div class="party-name">BouwGroep NL</div>
+          <div class="party-claim"><span data-nl>Werk correct uitgevoerd. Lekken zijn gevolg van bevriezing door vroege vorst. Vraagt volledige vrijgave.</span><span data-en>Work correctly completed. Leaks caused by early frost freezing. Requests full release.</span></div>
+        </div>
+      </div>
+      <div style="background:var(--off-white);border:1px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:1rem;">
+        <div style="font-size:0.78rem;font-weight:600;color:var(--navy);margin-bottom:0.5rem;">📎 <span data-nl>Ingediend bewijs</span><span data-en>Submitted evidence</span></div>
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+          <div style="background:var(--white);border:1px solid var(--border);border-radius:6px;padding:0.4rem 0.75rem;font-size:0.75rem;cursor:pointer;">📸 <span data-nl>Foto's aannemer (8)</span><span data-en>Contractor photos (8)</span></div>
+          <div style="background:var(--white);border:1px solid var(--border);border-radius:6px;padding:0.4rem 0.75rem;font-size:0.75rem;cursor:pointer;">📸 <span data-nl>Foto's klant (4)</span><span data-en>Client photos (4)</span></div>
+          <div style="background:var(--white);border:1px solid var(--border);border-radius:6px;padding:0.4rem 0.75rem;font-size:0.75rem;cursor:pointer;">📄 <span data-nl>Originele offerte.pdf</span><span data-en>Original quote.pdf</span></div>
+          <div style="background:var(--white);border:1px solid var(--border);border-radius:6px;padding:0.4rem 0.75rem;font-size:0.75rem;cursor:pointer;">📄 <span data-nl>Inspectierapport.pdf</span><span data-en>Inspection report.pdf</span></div>
+        </div>
+      </div>
+      <div style="margin-bottom:1rem;">
+        <div style="font-size:0.78rem;font-weight:600;color:var(--navy);margin-bottom:0.5rem;"><span data-nl>Admin beslissing</span><span data-en>Admin decision</span></div>
+        <textarea style="width:100%;padding:0.75rem;border:1.5px solid var(--border);border-radius:8px;font-family:'Inter',sans-serif;font-size:0.82rem;color:var(--navy);resize:vertical;min-height:80px;outline:none;" placeholder="Motiveer je beslissing..."></textarea>
+      </div>
+      <div class="dispute-actions">
+        <button class="btn-success-sm" onclick="resolveDispute(this,'client')">✓ <span data-nl>Vrijgave aan klant (terugbetaling)</span><span data-en>Release to client (refund)</span></button>
+        <button class="btn-purple-sm" onclick="resolveDispute(this,'split')">⚖ <span data-nl>Gedeelde vrijgave (50/50)</span><span data-en>Split release (50/50)</span></button>
+        <button class="btn-success-sm" style="background:var(--teal);" onclick="resolveDispute(this,'contractor')">✓ <span data-nl>Vrijgave aan aannemer</span><span data-en>Release to contractor</span></button>
+        <button class="btn-outline-sm">📞 <span data-nl>Bemiddeling plannen</span><span data-en>Schedule mediation</span></button>
+      </div>
+    </div>
+
+    <div class="dispute-card">
+      <div class="dispute-header">
+        <div><div class="dispute-title">🏗️ <span data-nl>Appartement Declercq — Milestone 1</span><span data-en>Apartment Declercq — Milestone 1</span></div><div style="font-size:0.7rem;color:var(--slate-light);margin-top:0.2rem;"><span data-nl>Geopend</span><span data-en>Opened</span>: 23 mrt 2025 · #DISP-2024-040</div></div>
+        <span class="status-pill pill-dispute"><span data-nl>Open</span><span data-en>Open</span></span>
+      </div>
+      <div class="dispute-meta">
+        <strong><span data-nl>Betwist bedrag:</span><span data-en>Disputed amount:</span></strong> € 8.500 &nbsp;·&nbsp;
+        <strong><span data-nl>Milestone:</span><span data-en>Milestone:</span></strong> <span data-nl>Sloopwerk & voorbereiding</span><span data-en>Demolition & preparation</span>
+        <br><span data-nl><strong>Reden:</strong> Klant weigert te betalen omdat sloopwerk 4 dagen vertraging had en niet volledig afgerond is.</span>
+        <span data-en><strong>Reason:</strong> Client refuses payment because demolition was 4 days late and not fully completed.</span>
+      </div>
+      <div class="dispute-parties">
+        <div class="party-box">
+          <div class="party-role">🏠 <span data-nl>Klant</span><span data-en>Client</span></div>
+          <div class="party-name">H. Declercq</div>
+          <div class="party-claim"><span data-nl>Sloopwerk niet volledig afgerond. Vraagt korting van 30% op milestone bedrag.</span><span data-en>Demolition not fully completed. Requests 30% discount on milestone amount.</span></div>
+        </div>
+        <div class="party-box">
+          <div class="party-role">🔨 <span data-nl>Aannemer</span><span data-en>Contractor</span></div>
+          <div class="party-name">RenovaPro</div>
+          <div class="party-claim"><span data-nl>Sloopwerk 95% afgerond. Kleine vertraging door onvoorziene asbest. Vraagt volledige betaling.</span><span data-en>Demolition 95% complete. Minor delay due to unforeseen asbestos. Requests full payment.</span></div>
+        </div>
+      </div>
+      <div class="dispute-actions">
+        <button class="btn-success-sm" onclick="resolveDispute(this,'client')">✓ <span data-nl>Korting 30% toekennen</span><span data-en>Grant 30% discount</span></button>
+        <button class="btn-purple-sm" onclick="resolveDispute(this,'split')">⚖ <span data-nl>Gedeelde vrijgave</span><span data-en>Split release</span></button>
+        <button class="btn-success-sm" style="background:var(--teal);" onclick="resolveDispute(this,'contractor')">✓ <span data-nl>Volledige vrijgave</span><span data-en>Full release</span></button>
+        <button class="btn-outline-sm">📞 <span data-nl>Bemiddeling</span><span data-en>Mediation</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PROJECTS ===== -->
+  <div class="page" id="page-projects">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+      <div>
+        <h2 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--navy);">🏗️ <span data-nl>Alle projecten</span><span data-en>All projects</span></h2>
+        <p style="font-size:0.85rem;color:var(--slate);margin-top:0.25rem;"><span data-nl>127 actieve projecten op het platform</span><span data-en>127 active projects on the platform</span></p>
+      </div>
+      <div class="search-bar" style="margin:0;width:280px;">
+        <div class="search-wrap" style="width:100%;"><input class="search-input" type="text" placeholder="Zoeken..."></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body" style="padding:0;">
+        <table class="data-table">
+          <thead><tr>
+            <th>#</th>
+            <th><span data-nl>Project</span><span data-en>Project</span></th>
+            <th><span data-nl>Klant</span><span data-en>Client</span></th>
+            <th><span data-nl>Aannemer</span><span data-en>Contractor</span></th>
+            <th><span data-nl>Escrow</span><span data-en>Escrow</span></th>
+            <th>MS</th>
+            <th>Status</th>
+            <th></th>
+          </tr></thead>
+          <tbody>
+            <tr><td style="color:var(--slate-light);font-size:0.72rem;">#1041</td><td><div class="td-name">🍳 <span data-nl>Keuken Van Damme</span><span data-en>Kitchen Van Damme</span></div></td><td>Marie Van Damme</td><td>De Bouwers BV</td><td style="font-weight:600;">€ 48.500</td><td><span style="font-size:0.75rem;">2/3</span></td><td><span class="status-pill pill-active"><span data-nl>Actief</span><span data-en>Active</span></span></td><td><div class="td-actions"><button class="btn-outline-sm"><span data-nl>Bekijk</span><span data-en>View</span></button><button class="btn-danger-sm"><span data-nl>Bevries</span><span data-en>Freeze</span></button></div></td></tr>
+            <tr><td style="color:var(--slate-light);font-size:0.72rem;">#1040</td><td><div class="td-name">🏢 <span data-nl>Kantoor Pieters</span><span data-en>Office Pieters</span></div></td><td>Pieters NV</td><td>Vandebroeck BV</td><td style="font-weight:600;">€ 75.000</td><td><span style="font-size:0.75rem;">3/5</span></td><td><span class="status-pill pill-active"><span data-nl>Actief</span><span data-en>Active</span></span></td><td><div class="td-actions"><button class="btn-outline-sm"><span data-nl>Bekijk</span><span data-en>View</span></button><button class="btn-danger-sm"><span data-nl>Bevries</span><span data-en>Freeze</span></button></div></td></tr>
+            <tr><td style="color:var(--slate-light);font-size:0.72rem;">#1039</td><td><div class="td-name">🏡 <span data-nl>Villa Martens</span><span data-en>Villa Martens</span></div></td><td>Luc Martens</td><td>BouwGroep NL</td><td style="font-weight:600;">€ 142.000</td><td><span style="font-size:0.75rem;">2/6</span></td><td><span class="status-pill pill-dispute"><span data-nl>Geschil</span><span data-en>Dispute</span></span></td><td><div class="td-actions"><button class="btn-danger-sm" onclick="showPage('disputes')"><span data-nl>Geschil</span><span data-en>Dispute</span></button></div></td></tr>
+            <tr><td style="color:var(--slate-light);font-size:0.72rem;">#1038</td><td><div class="td-name">🚿 <span data-nl>Badkamer Janssen</span><span data-en>Bathroom Janssen</span></div></td><td>Tom Janssen</td><td>Sanitair Pro</td><td style="font-weight:600;">€ 22.000</td><td><span style="font-size:0.75rem;">1/4</span></td><td><span class="status-pill pill-active"><span data-nl>Actief</span><span data-en>Active</span></span></td><td><div class="td-actions"><button class="btn-outline-sm"><span data-nl>Bekijk</span><span data-en>View</span></button><button class="btn-danger-sm"><span data-nl>Bevries</span><span data-en>Freeze</span></button></div></td></tr>
+            <tr><td style="color:var(--slate-light);font-size:0.72rem;">#1037</td><td><div class="td-name">🏡 <span data-nl>Dakisolatie De Smedt</span><span data-en>Roof Insulation De Smedt</span></div></td><td>An De Smedt</td><td>IsoTherm NL</td><td style="font-weight:600;">€ 18.200</td><td><span style="font-size:0.75rem;">4/4</span></td><td><span class="status-pill pill-done"><span data-nl>Afgerond</span><span data-en>Done</span></span></td><td><div class="td-actions"><button class="btn-outline-sm"><span data-nl>Archief</span><span data-en>Archive</span></button></div></td></tr>
+            <tr><td style="color:var(--slate-light);font-size:0.72rem;">#1036</td><td><div class="td-name">🏗️ <span data-nl>Appartement Declercq</span><span data-en>Apartment Declercq</span></div></td><td>H. Declercq</td><td>RenovaPro</td><td style="font-weight:600;">€ 38.500</td><td><span style="font-size:0.75rem;">1/5</span></td><td><span class="status-pill pill-dispute"><span data-nl>Geschil</span><span data-en>Dispute</span></span></td><td><div class="td-actions"><button class="btn-danger-sm" onclick="showPage('disputes')"><span data-nl>Geschil</span><span data-en>Dispute</span></button></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== USERS ===== -->
+  <div class="page" id="page-users">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+      <div>
+        <h2 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--navy);">👥 <span data-nl>Gebruikersbeheer</span><span data-en>User management</span></h2>
+        <p style="font-size:0.85rem;color:var(--slate);margin-top:0.25rem;">1.284 <span data-nl>geregistreerde gebruikers</span><span data-en>registered users</span></p>
+      </div>
+      <button class="btn-purple">+ <span data-nl>Gebruiker toevoegen</span><span data-en>Add user</span></button>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-label"><span data-nl>Klanten</span><span data-en>Clients</span></div><div class="kpi-value">847</div><div class="kpi-trend trend-up">↑ 8%</div></div>
+      <div class="kpi-card"><div class="kpi-label"><span data-nl>Aannemers</span><span data-en>Contractors</span></div><div class="kpi-value">431</div><div class="kpi-trend trend-up">↑ 15%</div></div>
+      <div class="kpi-card"><div class="kpi-label">Admins</div><div class="kpi-value">6</div><div class="kpi-sub"><span data-nl>Actieve admins</span><span data-en>Active admins</span></div></div>
+      <div class="kpi-card"><div class="kpi-label"><span data-nl>Geblokkeerd</span><span data-en>Blocked</span></div><div class="kpi-value">3</div><div class="kpi-trend trend-err"><span data-nl>Verdacht</span><span data-en>Suspicious</span></div></div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-head-title">🏠 <span data-nl>Klanten</span><span data-en>Clients</span></div>
+          <div class="search-wrap" style="width:160px;"><input class="search-input" style="padding:0.35rem 0.7rem 0.35rem 2rem;font-size:0.75rem;" type="text" placeholder="Zoeken..."></div>
+        </div>
+        <div class="card-body" style="padding:0 1.5rem;">
+          <div class="user-row"><div class="user-av uav-client">MV</div><div class="user-info"><div class="user-name-t">Marie Van Damme</div><div class="user-email">marie@example.com · 3 <span data-nl>projecten</span><span data-en>projects</span></div></div><div class="user-actions"><button class="btn-outline-sm"><span data-nl>Bekijk</span><span data-en>View</span></button></div></div>
+          <div class="user-row"><div class="user-av uav-client">TJ</div><div class="user-info"><div class="user-name-t">Tom Janssen</div><div class="user-email">tom@example.com · 1 <span data-nl>project</span><span data-en>project</span></div></div><div class="user-actions"><button class="btn-outline-sm"><span data-nl>Bekijk</span><span data-en>View</span></button></div></div>
+          <div class="user-row"><div class="user-av uav-client">LM</div><div class="user-info"><div class="user-name-t">Luc Martens</div><div class="user-email">luc@example.com · 1 <span data-nl>project</span><span data-en>project</span></div></div><div class="user-actions"><button class="btn-outline-sm"><span data-nl>Bekijk</span><span data-en>View</span></button><button class="btn-danger-sm"><span data-nl>Blokkeer</span><span data-en>Block</span></button></div></div>
+          <div class="user-row"><div class="user-av uav-client">HD</div><div class="user-info"><div class="user-name-t">H. Declercq</div><div class="user-email">h.declercq@example.com · 1 <span data-nl>project</span><span data-en>project</span></div></div><div class="user-actions"><button class="btn-outline-sm"><span data-nl>Bekijk</span><span data-en>View</span></button></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <div class="card-head-title">🔨 <span data-nl>Aannemers</span><span data-en>Contractors</span></div>
+          <div class="search-wrap" style="width:160px;"><input class="search-input" style="padding:0.35rem 0.7rem 0.35rem 2rem;font-size:0.75rem;" type="text" placeholder="Zoeken..."></div>
+        </div>
+        <div class="card-body" style="padding:0 1.5rem;">
+          <div class="user-row"><div class="user-av uav-contractor">DB</div><div class="user-info"><div class="user-name-t">De Bouwers BV</div><div class="user-email">info@debouwers.be · ✓ <span data-nl>Geverifieerd</span><span data-en>Verified</span></div></div><div class="user-actions"><button class="btn-outline-sm"><span data-nl>Bekijk</span><span data-en>View</span></button></div></div>
+          <div class="user-row"><div class="user-av uav-contractor">PV</div><div class="user-info"><div class="user-name-t">Vandebroeck BV</div><div class="user-email">pieter@vandebroeck.be · ✓ <span data-nl>Geverifieerd</span><span data-en>Verified</span></div></div><div class="user-actions"><button class="btn-outline-sm"><span data-nl>Bekijk</span><span data-en>View</span></button></div></div>
+          <div class="user-row"><div class="user-av uav-contractor" style="background:linear-gradient(135deg,#F59E0B,#D97706);">BG</div><div class="user-info"><div class="user-name-t">BouwGroep NL</div><div class="user-email">info@bouwgroep.nl · ⚠ <span data-nl>Geschil actief</span><span data-en>Dispute active</span></div></div><div class="user-actions"><button class="btn-outline-sm"><span data-nl>Bekijk</span><span data-en>View</span></button><button class="btn-danger-sm"><span data-nl>Blokkeer</span><span data-en>Block</span></button></div></div>
+          <div class="user-row"><div class="user-av uav-contractor">SP</div><div class="user-info"><div class="user-name-t">Sanitair Pro</div><div class="user-email">info@sanitairpro.nl · ✓ <span data-nl>Geverifieerd</span><span data-en>Verified</span></div></div><div class="user-actions"><button class="btn-outline-sm"><span data-nl>Bekijk</span><span data-en>View</span></button></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== AUDIT LOGS ===== -->
+  <div class="page" id="page-logs">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+      <div>
+        <h2 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--navy);">📋 Audit logs</h2>
+        <p style="font-size:0.85rem;color:var(--slate);margin-top:0.25rem;"><span data-nl>Volledige geschiedenis van alle platformacties</span><span data-en>Complete history of all platform actions</span></p>
+      </div>
+      <button class="btn-outline-sm">⬇ <span data-nl>Exporteer CSV</span><span data-en>Export CSV</span></button>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+          <button class="doc-filter-btn active" style="padding:0.3rem 0.75rem;border-radius:100px;font-size:0.75rem;font-weight:500;border:1px solid var(--border);background:var(--navy);color:var(--white);cursor:pointer;font-family:'Inter',sans-serif;"><span data-nl>Alle</span><span data-en>All</span></button>
+          <button class="btn-outline-sm"><span data-nl>Betalingen</span><span data-en>Payments</span></button>
+          <button class="btn-outline-sm"><span data-nl>Geschillen</span><span data-en>Disputes</span></button>
+          <button class="btn-outline-sm"><span data-nl>Gebruikers</span><span data-en>Users</span></button>
+          <button class="btn-outline-sm"><span data-nl>Inloggen</span><span data-en>Logins</span></button>
+        </div>
+      </div>
+      <div class="card-body" style="padding:0 1.5rem;">
+        <div class="log-row"><span class="log-time">24/03 14:22</span><span class="log-icon">⚠️</span><div class="log-text"><strong>DISPUTE_OPENED</strong> · <span>#DISP-2024-041 · Villa Martens · € 28.400 geblokkeerd door admin</span></div></div>
+        <div class="log-row"><span class="log-time">24/03 13:15</span><span class="log-icon">💰</span><div class="log-text"><strong>ESCROW_RELEASE</strong> · <span>€ 18.500 · Keuken Van Damme MS2 · goedgekeurd door beide partijen</span></div></div>
+        <div class="log-row"><span class="log-time">24/03 11:08</span><span class="log-icon">👤</span><div class="log-text"><strong>USER_REGISTERED</strong> · <span>BouwPro BV (aannemer) · KYC verificatie gestart</span></div></div>
+        <div class="log-row"><span class="log-time">24/03 09:45</span><span class="log-icon">✅</span><div class="log-text"><strong>MILESTONE_APPROVED</strong> · <span>Keuken Van Damme MS2 · klant: Marie Van Damme · aannemer: De Bouwers BV</span></div></div>
+        <div class="log-row"><span class="log-time">24/03 09:15</span><span class="log-icon">📤</span><div class="log-text"><strong>MILESTONE_SUBMITTED</strong> · <span>Keuken Van Damme MS2 · bewijs: 5 bestanden · door: De Bouwers BV</span></div></div>
+        <div class="log-row"><span class="log-time">23/03 16:30</span><span class="log-icon">🔒</span><div class="log-text"><strong>ESCROW_DEPOSIT</strong> · <span>€ 142.000 · Villa Martens · L. Martens → BouwGroep NL</span></div></div>
+        <div class="log-row"><span class="log-time">23/03 14:55</span><span class="log-icon">⚠️</span><div class="log-text"><strong>DISPUTE_OPENED</strong> · <span>#DISP-2024-040 · Appartement Declercq · € 8.500 geblokkeerd</span></div></div>
+        <div class="log-row"><span class="log-time">23/03 12:00</span><span class="log-icon">🔑</span><div class="log-text"><strong>LOGIN_FAILED</strong> · <span>Admin account · IP: 185.xx.xx.12 · 3 pogingen · account tijdelijk geblokkeerd</span></div></div>
+        <div class="log-row"><span class="log-time">22/03 18:20</span><span class="log-icon">💰</span><div class="log-text"><strong>ESCROW_RELEASE</strong> · <span>€ 8.370 · Badkamer Janssen MS1 · automatisch vrijgegeven</span></div></div>
+        <div class="log-row"><span class="log-time">22/03 11:45</span><span class="log-icon">⚙️</span><div class="log-text"><strong>SETTINGS_UPDATED</strong> · <span>Commissie rate aangepast: 1.4% → 1.5% · door: Sara Adriaens (admin)</span></div></div>
+        <div class="log-row"><span class="log-time">21/03 09:00</span><span class="log-icon">✅</span><div class="log-text"><strong>DISPUTE_RESOLVED</strong> · <span>#DISP-2024-039 · gedeelde vrijgave 60/40 · beslissing: Sara Adriaens</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SETTINGS ===== -->
+  <div class="page" id="page-settings">
+    <div style="margin-bottom:1.5rem;">
+      <h2 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--navy);">⚙️ <span data-nl>Platforminstellingen</span><span data-en>Platform settings</span></h2>
+      <p style="font-size:0.85rem;color:var(--slate);margin-top:0.25rem;"><span data-nl>Beheer commissies, limieten en beveiligingsinstellingen</span><span data-en>Manage commissions, limits and security settings</span></p>
+    </div>
+
+    <div class="two-col">
+      <div style="display:flex;flex-direction:column;gap:1.5rem;">
+        <div class="card">
+          <div class="card-head"><div class="card-head-title">💰 <span data-nl>Financiële instellingen</span><span data-en>Financial settings</span></div></div>
+          <div class="card-body">
+            <div class="setting-row">
+              <div class="setting-info"><div class="setting-label"><span data-nl>Buildpay commissie</span><span data-en>Buildpay commission</span></div><div class="setting-desc"><span data-nl>Percentage per vrijgegeven milestone</span><span data-en>Percentage per released milestone</span></div></div>
+              <div style="display:flex;align-items:center;gap:0.5rem;"><input type="number" class="input-field" value="1.5" style="width:80px;text-align:center;"><span style="font-size:0.82rem;color:var(--slate);">%</span></div>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info"><div class="setting-label"><span data-nl>Minimum projectbedrag</span><span data-en>Minimum project amount</span></div><div class="setting-desc"><span data-nl>Laagste toegelaten escrow storting</span><span data-en>Lowest allowed escrow deposit</span></div></div>
+              <div style="display:flex;align-items:center;gap:0.5rem;"><span style="font-size:0.82rem;color:var(--slate);">€</span><input type="number" class="input-field" value="500" style="width:100px;text-align:center;"></div>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info"><div class="setting-label"><span data-nl>Maximum projectbedrag</span><span data-en>Maximum project amount</span></div><div class="setting-desc"><span data-nl>Boven dit bedrag vereist extra KYC</span><span data-en>Above this amount requires extra KYC</span></div></div>
+              <div style="display:flex;align-items:center;gap:0.5rem;"><span style="font-size:0.82rem;color:var(--slate);">€</span><input type="number" class="input-field" value="500000" style="width:120px;text-align:center;"></div>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info"><div class="setting-label"><span data-nl>Uitbetalingstermijn</span><span data-en>Payout term</span></div><div class="setting-desc"><span data-nl>Na goedkeuring, uitbetaling binnen</span><span data-en>After approval, payout within</span></div></div>
+              <div style="display:flex;align-items:center;gap:0.5rem;"><input type="number" class="input-field" value="24" style="width:70px;text-align:center;"><span style="font-size:0.82rem;color:var(--slate);"><span data-nl>uur</span><span data-en>hours</span></span></div>
+            </div>
+            <div style="margin-top:1rem;">
+              <button class="btn-purple"><span data-nl>Opslaan</span><span data-en>Save changes</span></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><div class="card-head-title">🌍 <span data-nl>Taal & regio</span><span data-en>Language & region</span></div></div>
+          <div class="card-body">
+            <div class="setting-row">
+              <div class="setting-info"><div class="setting-label"><span data-nl>Standaard taal</span><span data-en>Default language</span></div></div>
+              <select class="input-field" style="width:140px;cursor:pointer;"><option>Nederlands</option><option>English</option></select>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info"><div class="setting-label"><span data-nl>Valuta</span><span data-en>Currency</span></div></div>
+              <select class="input-field" style="width:140px;cursor:pointer;"><option>EUR (€)</option><option>USD ($)</option><option>GBP (£)</option></select>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info"><div class="setting-label"><span data-nl>Tijdzone</span><span data-en>Timezone</span></div></div>
+              <select class="input-field" style="width:200px;cursor:pointer;"><option>Europe/Brussels (CET)</option><option>Europe/Amsterdam (CET)</option></select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:1.5rem;">
+        <div class="card">
+          <div class="card-head"><div class="card-head-title">🛡️ <span data-nl>Beveiligingsinstellingen</span><span data-en>Security settings</span></div></div>
+          <div class="card-body">
+            <div class="setting-row">
+              <div class="setting-info"><div class="setting-label"><span data-nl>2FA verplicht voor admins</span><span data-en>2FA required for admins</span></div><div class="setting-desc"><span data-nl>Tweestapsverificatie bij elke login</span><span data-en>Two-factor authentication on every login</span></div></div>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info"><div class="setting-label">KYC <span data-nl>verificatie verplicht</span><span data-en>verification required</span></div><div class="setting-desc"><span data-nl>Aannemers moeten KYC doorlopen</span><span data-en>Contractors must complete KYC</span></div></div>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info"><div class="setting-label"><span data-nl>Auto-blokkeer verdachte IPs</span><span data-en>Auto-block suspicious IPs</span></div><div class="setting-desc"><span data-nl>Na 3 mislukte loginpogingen</span><span data-en>After 3 failed login attempts</span></div></div>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info"><div class="setting-label"><span data-nl>E-mail notificaties</span><span data-en>Email notifications</span></div><div class="setting-desc"><span data-nl>Stuur meldingen bij nieuwe geschillen</span><span data-en>Send alerts for new disputes</span></div></div>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info"><div class="setting-label"><span data-nl>Onderhoudsmodus</span><span data-en>Maintenance mode</span></div><div class="setting-desc"><span data-nl>Platform tijdelijk offline zetten</span><span data-en>Take platform temporarily offline</span></div></div>
+              <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><div class="card-head-title">📧 <span data-nl>Notificatie templates</span><span data-en>Notification templates</span></div></div>
+          <div class="card-body" style="display:flex;flex-direction:column;gap:0.5rem;padding:1rem 1.25rem;">
+            <button class="btn-outline-sm" style="text-align:left;">📧 <span data-nl>Milestone goedgekeurd</span><span data-en>Milestone approved</span></button>
+            <button class="btn-outline-sm" style="text-align:left;">📧 <span data-nl>Escrow ontvangen</span><span data-en>Escrow received</span></button>
+            <button class="btn-outline-sm" style="text-align:left;">📧 <span data-nl>Geschil geopend</span><span data-en>Dispute opened</span></button>
+            <button class="btn-outline-sm" style="text-align:left;">📧 <span data-nl>Betaling vrijgegeven</span><span data-en>Payment released</span></button>
+            <button class="btn-outline-sm" style="text-align:left;">📧 <span data-nl>Welkomstmail klant</span><span data-en>Welcome email client</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end main -->
+
+<script>
+  const pageTitles={
+    overview:{nl:'Dashboard',en:'Dashboard'},
+    escrow:{nl:'Escrow beheer',en:'Escrow management'},
+    disputes:{nl:'Geschillen',en:'Disputes'},
+    projects:{nl:'Alle projecten',en:'All projects'},
+    users:{nl:'Gebruikers',en:'Users'},
+    logs:{nl:'Audit logs',en:'Audit logs'},
+    settings:{nl:'Instellingen',en:'Settings'}
+  };
+  const pageOrder=['overview','escrow','disputes','projects','users','logs','settings'];
+
+  function showPage(id){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('page-'+id).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+    const items=document.querySelectorAll('.nav-item');
+    const idx=pageOrder.indexOf(id);
+    if(items[idx])items[idx].classList.add('active');
+    const lang=document.body.classList.contains('lang-en')?'en':'nl';
+    const t=pageTitles[id];
+    if(t)document.getElementById('page-title').textContent=t[lang];
+    window.scrollTo(0,0);
+  }
+
+  function setLang(lang){
+    document.body.className='lang-'+lang;
+    document.getElementById('btn-nl').classList.toggle('active',lang==='nl');
+    document.getElementById('btn-en').classList.toggle('active',lang==='en');
+  }
+
+  function resolveDispute(btn,type){
+    const lang=document.body.classList.contains('lang-en')?'en':'nl';
+    const labels={
+      nl:{client:'✅ Beslissing: terugbetaling aan klant',split:'✅ Beslissing: gedeelde vrijgave',contractor:'✅ Beslissing: vrijgave aan aannemer'},
+      en:{client:'✅ Decision: refund to client',split:'✅ Decision: split release',contractor:'✅ Decision: release to contractor'}
+    };
+    const card=btn.closest('.dispute-card');
+    const actions=card.querySelector('.dispute-actions');
+    actions.innerHTML=`<div style="background:var(--success-light);border:1px solid #BBF7D0;border-radius:8px;padding:0.75rem 1rem;font-size:0.82rem;font-weight:600;color:#065F46;">${labels[lang][type]} — <span style="font-weight:400;">${lang==='nl'?'Partijen worden per e-mail genotificeerd.':'Parties will be notified by email.'}</span></div>`;
+    card.querySelector('.dispute-header .status-pill').textContent=lang==='nl'?'Opgelost':'Resolved';
+    card.querySelector('.dispute-header .status-pill').className='status-pill pill-done';
+    const badge=document.querySelector('.nav-badge.err');
+    if(badge){const n=parseInt(badge.textContent)-1;if(n<=0)badge.style.display='none';else badge.textContent=n;}
+  }
+</script>
+</body>
+</html>

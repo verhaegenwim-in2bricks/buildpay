@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buildpay — Contract Wizard</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#0A1628;--blue:#1A4FAB;--blue-mid:#2563EB;--blue-light:#EFF6FF;
+    --white:#FFFFFF;--off-white:#F8FAFC;--slate:#64748B;--slate-light:#94A3B8;
+    --border:#E2E8F0;--success:#10B981;--success-light:#D1FAE5;
+    --warning:#F59E0B;--warning-light:#FEF3C7;--accent:#3B82F6;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:var(--off-white);color:var(--navy);min-height:100vh;}
+
+  /* TOP NAV */
+  .topnav{background:var(--navy);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;}
+  .topnav-logo{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--white);letter-spacing:-0.03em;text-decoration:none;}
+  .topnav-logo span{color:#60A5FA;}
+  .topnav-back{font-size:0.8rem;color:rgba(255,255,255,0.45);cursor:pointer;display:flex;align-items:center;gap:0.4rem;background:none;border:none;font-family:'DM Sans',sans-serif;transition:color 0.2s;}
+  .topnav-back:hover{color:var(--white);}
+
+  /* PROGRESS */
+  .progress-bar-wrap{background:var(--white);border-bottom:1px solid var(--border);padding:1.25rem 2rem;}
+  .progress-inner{max-width:860px;margin:0 auto;}
+  .progress-steps{display:flex;align-items:center;gap:0;margin-bottom:0.75rem;}
+  .progress-step{display:flex;align-items:center;flex:1;}
+  .step-circle{width:2rem;height:2rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;transition:all 0.3s;border:2px solid var(--border);background:var(--white);color:var(--slate-light);}
+  .step-circle.done{background:var(--success);border-color:var(--success);color:var(--white);}
+  .step-circle.active{background:var(--blue-mid);border-color:var(--blue-mid);color:var(--white);box-shadow:0 0 0 4px rgba(37,99,235,0.15);}
+  .step-line{flex:1;height:2px;background:var(--border);transition:background 0.3s;}
+  .step-line.done{background:var(--success);}
+  .step-labels{display:flex;justify-content:space-between;}
+  .step-label{font-size:0.68rem;font-weight:500;color:var(--slate-light);text-align:center;flex:1;transition:color 0.3s;}
+  .step-label.active{color:var(--blue-mid);font-weight:600;}
+  .step-label.done{color:var(--success);}
+
+  /* MAIN LAYOUT */
+  .wizard-layout{max-width:860px;margin:0 auto;padding:2rem;}
+
+  /* STEP CARD */
+  .step-card{background:var(--white);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:1.5rem;}
+  .step-card-head{padding:1.5rem 2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem;}
+  .step-card-icon{width:2.5rem;height:2.5rem;border-radius:10px;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+  .step-card-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--navy);}
+  .step-card-sub{font-size:0.8rem;color:var(--slate);margin-top:0.15rem;}
+  .step-card-body{padding:1.75rem 2rem;}
+
+  /* FORM ELEMENTS */
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;}
+  .form-group{display:flex;flex-direction:column;gap:0.4rem;}
+  .form-group.full{grid-column:1/-1;}
+  label{font-size:0.8rem;font-weight:600;color:var(--navy);}
+  label .req{color:var(--blue-mid);margin-left:2px;}
+
+  input[type=text],input[type=number],input[type=date],input[type=email],select,textarea{
+    padding:0.65rem 0.9rem;border:1.5px solid var(--border);border-radius:8px;
+    font-size:0.875rem;font-family:'DM Sans',sans-serif;color:var(--navy);
+    background:var(--white);outline:none;transition:border-color 0.2s,box-shadow 0.2s;width:100%;
+  }
+  input:focus,select:focus,textarea:focus{border-color:var(--blue-mid);box-shadow:0 0 0 3px rgba(37,99,235,0.1);}
+  textarea{resize:vertical;min-height:90px;}
+  select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748B' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 0.75rem center;padding-right:2.25rem;}
+
+  /* MODULE CARDS (project type, etc) */
+  .module-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;}
+  .module-card{border:2px solid var(--border);border-radius:10px;padding:1rem;cursor:pointer;transition:all 0.2s;background:var(--white);text-align:center;}
+  .module-card:hover{border-color:var(--accent);background:var(--blue-light);}
+  .module-card.selected{border-color:var(--blue-mid);background:var(--blue-light);}
+  .module-card-icon{font-size:1.6rem;margin-bottom:0.4rem;}
+  .module-card-label{font-size:0.8rem;font-weight:600;color:var(--navy);}
+  .module-card-sub{font-size:0.7rem;color:var(--slate);margin-top:0.15rem;}
+  .module-check{width:1.1rem;height:1.1rem;border-radius:50%;background:var(--blue-mid);color:var(--white);display:none;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700;margin:0.4rem auto 0;}
+  .module-card.selected .module-check{display:flex;}
+
+  /* CHECKLIST */
+  .checklist{display:flex;flex-direction:column;gap:0.5rem;margin-top:0.5rem;}
+  .check-item{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 0.9rem;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;transition:all 0.15s;background:var(--white);}
+  .check-item:hover{border-color:var(--accent);background:var(--blue-light);}
+  .check-item.checked{border-color:var(--blue-mid);background:var(--blue-light);}
+  .check-box{width:1.1rem;height:1.1rem;border-radius:4px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s;}
+  .check-item.checked .check-box{background:var(--blue-mid);border-color:var(--blue-mid);color:var(--white);}
+  .check-item-label{font-size:0.82rem;font-weight:500;color:var(--navy);flex:1;}
+  .check-item-desc{font-size:0.72rem;color:var(--slate);}
+
+  /* MILESTONE BUILDER */
+  .milestone-list{display:flex;flex-direction:column;gap:0.75rem;}
+  .milestone-row{border:1.5px solid var(--border);border-radius:10px;padding:1.1rem;background:var(--white);transition:border-color 0.2s;}
+  .milestone-row:hover{border-color:var(--slate-light);}
+  .milestone-row-head{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.85rem;}
+  .milestone-number{width:1.75rem;height:1.75rem;border-radius:6px;background:var(--navy);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;font-family:'Syne',sans-serif;}
+  .milestone-name-input{flex:1;font-size:0.875rem;}
+  .milestone-row-body{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem;}
+  .milestone-proof{margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid var(--border);}
+  .proof-label{font-size:0.72rem;font-weight:600;color:var(--slate);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.5rem;}
+  .proof-options{display:flex;gap:0.5rem;flex-wrap:wrap;}
+  .proof-tag{font-size:0.72rem;font-weight:500;padding:0.25rem 0.6rem;border-radius:100px;border:1px solid var(--border);cursor:pointer;transition:all 0.15s;background:var(--white);color:var(--slate);}
+  .proof-tag.active{background:var(--navy);color:var(--white);border-color:var(--navy);}
+  .remove-ms{background:none;border:none;cursor:pointer;color:var(--slate-light);font-size:1rem;transition:color 0.15s;padding:0.1rem;}
+  .remove-ms:hover{color:var(--error);}
+  .add-ms-btn{display:flex;align-items:center;gap:0.5rem;padding:0.75rem 1rem;border:1.5px dashed var(--border);border-radius:10px;background:none;cursor:pointer;font-size:0.82rem;font-weight:500;color:var(--slate);font-family:'DM Sans',sans-serif;width:100%;transition:all 0.2s;}
+  .add-ms-btn:hover{border-color:var(--blue-mid);color:var(--blue-mid);background:var(--blue-light);}
+
+  /* RADIO GROUP */
+  .radio-group{display:flex;flex-direction:column;gap:0.5rem;}
+  .radio-item{display:flex;align-items:flex-start;gap:0.75rem;padding:0.85rem 1rem;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;transition:all 0.15s;}
+  .radio-item:hover{border-color:var(--accent);}
+  .radio-item.selected{border-color:var(--blue-mid);background:var(--blue-light);}
+  .radio-dot{width:1rem;height:1rem;border-radius:50%;border:2px solid var(--border);margin-top:0.1rem;flex-shrink:0;transition:all 0.15s;display:flex;align-items:center;justify-content:center;}
+  .radio-item.selected .radio-dot{border-color:var(--blue-mid);background:var(--blue-mid);}
+  .radio-item.selected .radio-dot::after{content:'';width:4px;height:4px;border-radius:50%;background:var(--white);}
+  .radio-label{font-size:0.85rem;font-weight:600;color:var(--navy);}
+  .radio-desc{font-size:0.75rem;color:var(--slate);margin-top:0.1rem;}
+
+  /* SECTION DIVIDER */
+  .section-divider{display:flex;align-items:center;gap:0.75rem;margin:1.25rem 0;}
+  .section-divider-label{font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--slate-light);white-space:nowrap;}
+  .section-divider-line{flex:1;height:1px;background:var(--border);}
+
+  /* TOTAL BAR */
+  .total-bar{background:var(--navy);border-radius:12px;padding:1.25rem 1.75rem;display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;}
+  .total-bar-label{font-size:0.8rem;color:rgba(255,255,255,0.5);}
+  .total-bar-amount{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--white);letter-spacing:-0.02em;}
+  .total-bar-sub{font-size:0.72rem;color:rgba(255,255,255,0.35);margin-top:0.1rem;}
+  .total-bar-right{text-align:right;}
+
+  /* NAV BUTTONS */
+  .wizard-nav{display:flex;justify-content:space-between;align-items:center;padding:1.5rem 0;}
+  .btn-back{background:none;border:1.5px solid var(--border);border-radius:8px;padding:0.75rem 1.5rem;font-size:0.875rem;font-weight:500;color:var(--slate);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+  .btn-back:hover{border-color:var(--slate);color:var(--navy);}
+  .btn-next{background:var(--blue-mid);border:none;border-radius:8px;padding:0.75rem 2rem;font-size:0.875rem;font-weight:600;color:var(--white);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;display:flex;align-items:center;gap:0.5rem;}
+  .btn-next:hover{background:var(--blue);transform:translateY(-1px);box-shadow:0 4px 16px rgba(37,99,235,0.3);}
+  .btn-generate{background:linear-gradient(135deg,#0A1628,#1A4FAB);border:none;border-radius:8px;padding:0.85rem 2.5rem;font-size:0.95rem;font-weight:700;color:var(--white);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;display:flex;align-items:center;gap:0.6rem;}
+  .btn-generate:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(10,22,40,0.35);}
+
+  /* PREVIEW PANEL */
+  .preview-panel{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-bottom:1.5rem;}
+  .preview-header{text-align:center;padding-bottom:1.5rem;border-bottom:2px solid var(--navy);margin-bottom:1.5rem;}
+  .preview-logo{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:var(--navy);margin-bottom:0.25rem;}
+  .preview-logo span{color:var(--blue-mid);}
+  .preview-title{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--navy);margin-top:0.5rem;}
+  .preview-subtitle{font-size:0.82rem;color:var(--slate);margin-top:0.25rem;}
+  .preview-section{margin-bottom:1.25rem;}
+  .preview-section-title{font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.75rem;padding-bottom:0.4rem;border-bottom:1px solid var(--border);}
+  .preview-row{display:flex;gap:1rem;margin-bottom:0.4rem;}
+  .preview-key{font-size:0.78rem;font-weight:600;color:var(--slate);min-width:140px;flex-shrink:0;}
+  .preview-val{font-size:0.78rem;color:var(--navy);}
+  .preview-ms-row{display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;background:var(--off-white);border-radius:6px;margin-bottom:0.4rem;}
+  .preview-ms-num{width:1.4rem;height:1.4rem;border-radius:4px;background:var(--navy);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;flex-shrink:0;}
+  .preview-ms-name{font-size:0.78rem;font-weight:600;color:var(--navy);flex:1;}
+  .preview-ms-amt{font-size:0.78rem;font-weight:700;color:var(--navy);}
+  .preview-ms-date{font-size:0.72rem;color:var(--slate);}
+  .signature-row{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);}
+  .sig-box{text-align:center;}
+  .sig-line{height:1px;background:var(--navy);margin-bottom:0.4rem;}
+  .sig-label{font-size:0.72rem;color:var(--slate);}
+  .sig-name{font-size:0.78rem;font-weight:600;color:var(--navy);margin-top:0.2rem;}
+
+  /* SUCCESS */
+  .success-screen{text-align:center;padding:3rem 2rem;}
+  .success-icon{font-size:3.5rem;margin-bottom:1rem;}
+  .success-title{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--navy);margin-bottom:0.5rem;}
+  .success-sub{font-size:0.9rem;color:var(--slate);max-width:400px;margin:0 auto 2rem;line-height:1.7;}
+  .success-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+  .btn-success-action{padding:0.75rem 1.5rem;border-radius:8px;font-size:0.875rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+  .btn-primary-action{background:var(--blue-mid);color:var(--white);border:none;}
+  .btn-primary-action:hover{background:var(--blue);}
+  .btn-secondary-action{background:none;color:var(--navy);border:1.5px solid var(--border);}
+  .btn-secondary-action:hover{border-color:var(--navy);}
+
+  /* STEP VISIBILITY */
+  .wizard-step{display:none;}
+  .wizard-step.active{display:block;animation:fadeIn 0.25s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+  /* BADGE */
+  .info-badge{display:inline-flex;align-items:center;gap:0.4rem;background:var(--blue-light);border:1px solid #BFDBFE;border-radius:6px;padding:0.4rem 0.75rem;font-size:0.75rem;color:var(--blue-mid);font-weight:500;margin-bottom:1.25rem;}
+
+  @media(max-width:700px){
+    .module-grid{grid-template-columns:repeat(2,1fr);}
+    .form-grid{grid-template-columns:1fr;}
+    .milestone-row-body{grid-template-columns:1fr 1fr;}
+    .wizard-layout{padding:1rem;}
+    .step-card-body{padding:1.25rem;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a href="buildpay-landing.html" class="topnav-logo">Build<span>pay</span></a>
+  <button class="topnav-back" onclick="window.location='buildpay-dashboard-contractor.html'">← <span>Terug naar dashboard</span></button>
+</nav>
+
+<div class="progress-bar-wrap">
+  <div class="progress-inner">
+    <div class="progress-steps" id="progress-steps">
+      <div class="progress-step"><div class="step-circle active" id="sc-1">1</div><div class="step-line" id="sl-1"></div></div>
+      <div class="progress-step"><div class="step-circle" id="sc-2">2</div><div class="step-line" id="sl-2"></div></div>
+      <div class="progress-step"><div class="step-circle" id="sc-3">3</div><div class="step-line" id="sl-3"></div></div>
+      <div class="progress-step"><div class="step-circle" id="sc-4">4</div><div class="step-line" id="sl-4"></div></div>
+      <div class="progress-step"><div class="step-circle" id="sc-5">5</div><div class="step-line" id="sl-5"></div></div>
+      <div class="progress-step"><div class="step-circle" id="sc-6">6</div><div class="step-line" id="sl-6"></div></div>
+      <div class="progress-step"><div class="step-circle" id="sc-7">7</div></div>
+    </div>
+    <div class="step-labels">
+      <span class="step-label active" id="sl-label-1">Project</span>
+      <span class="step-label" id="sl-label-2">Scope</span>
+      <span class="step-label" id="sl-label-3">Milestones</span>
+      <span class="step-label" id="sl-label-4">Tijdlijn</span>
+      <span class="step-label" id="sl-label-5">Meerwerken</span>
+      <span class="step-label" id="sl-label-6">Garanties</span>
+      <span class="step-label" id="sl-label-7">Overzicht</span>
+    </div>
+  </div>
+</div>
+
+<div class="wizard-layout">
+
+  <!-- ===== STEP 1: PROJECT TYPE ===== -->
+  <div class="wizard-step active" id="step-1">
+    <div class="step-card">
+      <div class="step-card-head">
+        <div class="step-card-icon">🏗️</div>
+        <div>
+          <div class="step-card-title">Projecttype & partijen</div>
+          <div class="step-card-sub">Wat wordt er verbouwd en wie zijn de partijen?</div>
+        </div>
+      </div>
+      <div class="step-card-body">
+
+        <div class="info-badge">ℹ️ Kies het type werk — dit bepaalt welke clausules relevant zijn</div>
+
+        <div class="module-grid" style="margin-bottom:1.5rem;">
+          <div class="module-card selected" onclick="selectModule(this,'type')">
+            <div class="module-card-icon">🍳</div>
+            <div class="module-card-label">Keuken</div>
+            <div class="module-card-sub">Renovatie of plaatsing</div>
+            <div class="module-check">✓</div>
+          </div>
+          <div class="module-card" onclick="selectModule(this,'type')">
+            <div class="module-card-icon">🚿</div>
+            <div class="module-card-label">Badkamer</div>
+            <div class="module-card-sub">Verbouwing of vernieuwing</div>
+            <div class="module-check">✓</div>
+          </div>
+          <div class="module-card" onclick="selectModule(this,'type')">
+            <div class="module-card-icon">🏠</div>
+            <div class="module-card-label">Volledige woning</div>
+            <div class="module-card-sub">Totaalrenovatie</div>
+            <div class="module-check">✓</div>
+          </div>
+          <div class="module-card" onclick="selectModule(this,'type')">
+            <div class="module-card-icon">🏢</div>
+            <div class="module-card-label">Kantoor / Handel</div>
+            <div class="module-card-sub">Commerciële ruimte</div>
+            <div class="module-check">✓</div>
+          </div>
+          <div class="module-card" onclick="selectModule(this,'type')">
+            <div class="module-card-icon">🏡</div>
+            <div class="module-card-label">Dak & isolatie</div>
+            <div class="module-card-sub">Dakwerken, isolatie</div>
+            <div class="module-check">✓</div>
+          </div>
+          <div class="module-card" onclick="selectModule(this,'type')">
+            <div class="module-card-icon">🔧</div>
+            <div class="module-card-label">Technieken</div>
+            <div class="module-card-sub">Elektra, loodgieter, HVAC</div>
+            <div class="module-check">✓</div>
+          </div>
+        </div>
+
+        <div class="section-divider"><div class="section-divider-line"></div><div class="section-divider-label">Partijen</div><div class="section-divider-line"></div></div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Naam aannemer / bedrijf <span class="req">*</span></label>
+            <input type="text" id="contractor-name" placeholder="bv. De Bouwers BV" value="Vandebroeck BV">
+          </div>
+          <div class="form-group">
+            <label>BTW-nummer aannemer</label>
+            <input type="text" placeholder="bv. BE0123.456.789" value="BE0456.789.012">
+          </div>
+          <div class="form-group">
+            <label>Naam klant <span class="req">*</span></label>
+            <input type="text" id="client-name" placeholder="bv. Marie Van Damme" value="Marie Van Damme">
+          </div>
+          <div class="form-group">
+            <label>E-mail klant <span class="req">*</span></label>
+            <input type="email" placeholder="klant@email.com" value="marie@example.com">
+          </div>
+          <div class="form-group full">
+            <label>Adres van de werken <span class="req">*</span></label>
+            <input type="text" id="work-address" placeholder="bv. Kerkstraat 12, 2000 Antwerpen" value="Bosstraat 24, 9000 Gent">
+          </div>
+          <div class="form-group full">
+            <label>Projectomschrijving <span class="req">*</span></label>
+            <textarea id="project-desc" placeholder="Korte omschrijving van de geplande werken...">Volledige renovatie van de keuken inclusief verwijdering oude keuken, aanleg leidingen, plaatsing nieuwe keukenmeubelen en afwerking.</textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="wizard-nav">
+      <div></div>
+      <button class="btn-next" onclick="nextStep(2)">Scope van werken →</button>
+    </div>
+  </div>
+
+  <!-- ===== STEP 2: SCOPE ===== -->
+  <div class="wizard-step" id="step-2">
+    <div class="step-card">
+      <div class="step-card-head">
+        <div class="step-card-icon">📋</div>
+        <div>
+          <div class="step-card-title">Scope van de werken</div>
+          <div class="step-card-sub">Wat valt exact binnen het contract? Vink aan wat van toepassing is.</div>
+        </div>
+      </div>
+      <div class="step-card-body">
+
+        <div class="info-badge">ℹ️ Alles wat je hier aanvinkt wordt juridisch bindend opgenomen in het contract</div>
+
+        <div class="section-divider"><div class="section-divider-line"></div><div class="section-divider-label">Sloopwerk & voorbereiding</div><div class="section-divider-line"></div></div>
+        <div class="checklist">
+          <div class="check-item checked" onclick="toggleCheck(this)"><div class="check-box">✓</div><div><div class="check-item-label">Verwijdering bestaande keuken / installaties</div><div class="check-item-desc">Inclusief afvoer van materiaal naar erkend verwerker</div></div></div>
+          <div class="check-item checked" onclick="toggleCheck(this)"><div class="check-box">✓</div><div><div class="check-item-label">Afbraak van niet-dragende wanden</div><div class="check-item-desc">Stabiliteitsattest vereist indien van toepassing</div></div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div><div class="check-item-label">Egaliseren en afwerken van de vloer</div><div class="check-item-desc">Zandcement of zelfnivellerend product</div></div></div>
+        </div>
+
+        <div class="section-divider"><div class="section-divider-line"></div><div class="section-divider-label">Technische installaties</div><div class="section-divider-line"></div></div>
+        <div class="checklist">
+          <div class="check-item checked" onclick="toggleCheck(this)"><div class="check-box">✓</div><div><div class="check-item-label">Elektrische installatie conform AREI</div><div class="check-item-desc">Inclusief keuringsattest door erkend organisme</div></div></div>
+          <div class="check-item checked" onclick="toggleCheck(this)"><div class="check-box">✓</div><div><div class="check-item-label">Sanitaire installatie (aan- en afvoer)</div><div class="check-item-desc">Lekvrij getest voor oplevering milestone</div></div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div><div class="check-item-label">Verluchting en dampkap aansluiting</div><div class="check-item-desc">Conform ventilatienormen NBN D 50-001</div></div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div><div class="check-item-label">Verwarming & radiator aanpassing</div><div class="check-item-desc">Indien aanpassing van bestaand systeem vereist</div></div></div>
+        </div>
+
+        <div class="section-divider"><div class="section-divider-line"></div><div class="section-divider-label">Afwerking</div><div class="section-divider-line"></div></div>
+        <div class="checklist">
+          <div class="check-item checked" onclick="toggleCheck(this)"><div class="check-box">✓</div><div><div class="check-item-label">Plaatsing keukenmeubelen (klant levert)</div><div class="check-item-desc">Aannemer plaatst, klant heeft meubilair al aangekocht</div></div></div>
+          <div class="check-item checked" onclick="toggleCheck(this)"><div class="check-box">✓</div><div><div class="check-item-label">Plaatsing keukenmeubelen (aannemer levert)</div><div class="check-item-desc">Merk en type gespecificeerd in bijlage</div></div></div>
+          <div class="check-item checked" onclick="toggleCheck(this)"><div class="check-box">✓</div><div><div class="check-item-label">Tegelwerk vloer en wanden</div><div class="check-item-desc">Tegels door klant gekozen, aannemer legt</div></div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div><div class="check-item-label">Schilderwerk</div><div class="check-item-desc">2 lagen verf, kleur in overleg</div></div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div><div class="check-item-label">Plafondschildering / pleisterwerk</div></div></div>
+        </div>
+
+        <div class="section-divider"><div class="section-divider-line"></div><div class="section-divider-label">Oplevering</div><div class="section-divider-line"></div></div>
+        <div class="checklist">
+          <div class="check-item checked" onclick="toggleCheck(this)"><div class="check-box">✓</div><div><div class="check-item-label">Schoonmaak na werken</div><div class="check-item-desc">Grofstofzuigen en bezemen, geen poetsen</div></div></div>
+          <div class="check-item checked" onclick="toggleCheck(this)"><div class="check-box">✓</div><div><div class="check-item-label">Opleveringsverslag ondertekend door beide partijen</div><div class="check-item-desc">Via Buildpay platform</div></div></div>
+        </div>
+
+        <div class="section-divider"><div class="section-divider-line"></div><div class="section-divider-label">Speciale clausule</div><div class="section-divider-line"></div></div>
+        <div class="form-group">
+          <label>Bijzondere bepalingen (optioneel)</label>
+          <textarea placeholder="Voeg eventuele bijzondere afspraken toe die niet in de lijst staan..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="wizard-nav">
+      <button class="btn-back" onclick="prevStep(1)">← Terug</button>
+      <button class="btn-next" onclick="nextStep(3)">Milestones & betalingen →</button>
+    </div>
+  </div>
+
+  <!-- ===== STEP 3: MILESTONES ===== -->
+  <div class="wizard-step" id="step-3">
+    <div class="step-card">
+      <div class="step-card-head">
+        <div class="step-card-icon">💳</div>
+        <div>
+          <div class="step-card-title">Milestones & betalingen</div>
+          <div class="step-card-sub">Verdeel het project in meetbare stappen met bijhorend bedrag</div>
+        </div>
+      </div>
+      <div class="step-card-body">
+
+        <div class="info-badge">ℹ️ Geld wordt pas vrijgegeven als beide partijen een milestone goedkeuren</div>
+
+        <div class="milestone-list" id="milestone-list">
+
+          <div class="milestone-row">
+            <div class="milestone-row-head">
+              <div class="milestone-number">1</div>
+              <input class="milestone-name-input" type="text" value="Sloopwerk & voorbereiding" placeholder="Naam van milestone">
+              <button class="remove-ms" onclick="removeMilestone(this)" title="Verwijder">✕</button>
+            </div>
+            <div class="milestone-row-body">
+              <div class="form-group">
+                <label>Bedrag (€)</label>
+                <input type="number" value="8500" placeholder="0" oninput="updateTotal()">
+              </div>
+              <div class="form-group">
+                <label>Verwachte einddatum</label>
+                <input type="date" value="2025-04-15">
+              </div>
+              <div class="form-group">
+                <label>% van totaal</label>
+                <input type="text" readonly style="background:var(--off-white);color:var(--slate);" id="ms-pct-1" value="17.5%">
+              </div>
+            </div>
+            <div class="milestone-proof">
+              <div class="proof-label">Vereist bewijs bij indiening</div>
+              <div class="proof-options">
+                <span class="proof-tag active" onclick="toggleTag(this)">📸 Foto's</span>
+                <span class="proof-tag" onclick="toggleTag(this)">📄 Keuringsattest</span>
+                <span class="proof-tag" onclick="toggleTag(this)">📋 Inspectie rapport</span>
+                <span class="proof-tag" onclick="toggleTag(this)">✍️ Opleveringsbon</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="milestone-row">
+            <div class="milestone-row-head">
+              <div class="milestone-number">2</div>
+              <input class="milestone-name-input" type="text" value="Ruwbouw & technische installaties" placeholder="Naam van milestone">
+              <button class="remove-ms" onclick="removeMilestone(this)" title="Verwijder">✕</button>
+            </div>
+            <div class="milestone-row-body">
+              <div class="form-group">
+                <label>Bedrag (€)</label>
+                <input type="number" value="18500" placeholder="0" oninput="updateTotal()">
+              </div>
+              <div class="form-group">
+                <label>Verwachte einddatum</label>
+                <input type="date" value="2025-05-10">
+              </div>
+              <div class="form-group">
+                <label>% van totaal</label>
+                <input type="text" readonly style="background:var(--off-white);color:var(--slate);" value="38.1%">
+              </div>
+            </div>
+            <div class="milestone-proof">
+              <div class="proof-label">Vereist bewijs bij indiening</div>
+              <div class="proof-options">
+                <span class="proof-tag active" onclick="toggleTag(this)">📸 Foto's</span>
+                <span class="proof-tag active" onclick="toggleTag(this)">📄 Keuringsattest</span>
+                <span class="proof-tag" onclick="toggleTag(this)">📋 Inspectie rapport</span>
+                <span class="proof-tag" onclick="toggleTag(this)">✍️ Opleveringsbon</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="milestone-row">
+            <div class="milestone-row-head">
+              <div class="milestone-number">3</div>
+              <input class="milestone-name-input" type="text" value="Afwerking & eindoplevering" placeholder="Naam van milestone">
+              <button class="remove-ms" onclick="removeMilestone(this)" title="Verwijder">✕</button>
+            </div>
+            <div class="milestone-row-body">
+              <div class="form-group">
+                <label>Bedrag (€)</label>
+                <input type="number" value="21500" placeholder="0" oninput="updateTotal()">
+              </div>
+              <div class="form-group">
+                <label>Verwachte einddatum</label>
+                <input type="date" value="2025-06-01">
+              </div>
+              <div class="form-group">
+                <label>% van totaal</label>
+                <input type="text" readonly style="background:var(--off-white);color:var(--slate);" value="44.3%">
+              </div>
+            </div>
+            <div class="milestone-proof">
+              <div class="proof-label">Vereist bewijs bij indiening</div>
+              <div class="proof-options">
+                <span class="proof-tag active" onclick="toggleTag(this)">📸 Foto's</span>
+                <span class="proof-tag active" onclick="toggleTag(this)">📄 Keuringsattest</span>
+                <span class="proof-tag active" onclick="toggleTag(this)">📋 Inspectie rapport</span>
+                <span class="proof-tag active" onclick="toggleTag(this)">✍️ Opleveringsbon</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <button class="add-ms-btn" onclick="addMilestone()" style="margin-top:0.75rem;">
+          + Milestone toevoegen
+        </button>
+
+        <div style="margin-top:1.25rem;background:var(--navy);border-radius:10px;padding:1rem 1.25rem;display:flex;justify-content:space-between;align-items:center;">
+          <div style="font-size:0.8rem;color:rgba(255,255,255,0.5);">Totaal projectbedrag</div>
+          <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--white);" id="total-display">€ 48.500</div>
+        </div>
+      </div>
+    </div>
+    <div class="wizard-nav">
+      <button class="btn-back" onclick="prevStep(2)">← Terug</button>
+      <button class="btn-next" onclick="nextStep(4)">Tijdlijn →</button>
+    </div>
+  </div>
+
+  <!-- ===== STEP 4: TIJDLIJN ===== -->
+  <div class="wizard-step" id="step-4">
+    <div class="step-card">
+      <div class="step-card-head">
+        <div class="step-card-icon">📅</div>
+        <div>
+          <div class="step-card-title">Tijdlijn & vertraging</div>
+          <div class="step-card-sub">Wanneer starten de werken en wat bij overschrijding?</div>
+        </div>
+      </div>
+      <div class="step-card-body">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Startdatum werken <span class="req">*</span></label>
+            <input type="date" value="2025-04-01">
+          </div>
+          <div class="form-group">
+            <label>Uiterste einddatum <span class="req">*</span></label>
+            <input type="date" value="2025-06-15">
+          </div>
+          <div class="form-group full">
+            <label>Toegestane vertragingstolerantie</label>
+            <select>
+              <option>5 werkdagen (aanbevolen)</option>
+              <option>10 werkdagen</option>
+              <option>15 werkdagen</option>
+              <option>Geen tolerantie</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="section-divider"><div class="section-divider-line"></div><div class="section-divider-label">Boete bij overschrijding</div><div class="section-divider-line"></div></div>
+        <div class="radio-group">
+          <div class="radio-item selected" onclick="selectRadio(this)">
+            <div class="radio-dot"></div>
+            <div>
+              <div class="radio-label">Geen boete — alleen schriftelijke verwittiging</div>
+              <div class="radio-desc">Aanbevolen voor goede werkrelaties. Vertragingen worden via Buildpay chat gecommuniceerd.</div>
+            </div>
+          </div>
+          <div class="radio-item" onclick="selectRadio(this)">
+            <div class="radio-dot"></div>
+            <div>
+              <div class="radio-label">€ 100 per werkdag na tolerantieperiode</div>
+              <div class="radio-desc">Wordt verrekend op de volgende milestone betaling</div>
+            </div>
+          </div>
+          <div class="radio-item" onclick="selectRadio(this)">
+            <div class="radio-dot"></div>
+            <div>
+              <div class="radio-label">€ 250 per werkdag na tolerantieperiode</div>
+              <div class="radio-desc">Voor tijdskritische projecten</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-divider"><div class="section-divider-line"></div><div class="section-divider-label">Overmacht</div><div class="section-divider-line"></div></div>
+        <div class="checklist">
+          <div class="check-item checked" onclick="toggleCheck(this)"><div class="check-box">✓</div><div><div class="check-item-label">Extreme weersomstandigheden</div><div class="check-item-desc">Aantoonbare hinder door vorst, storm of overstromingen</div></div></div>
+          <div class="check-item checked" onclick="toggleCheck(this)"><div class="check-box">✓</div><div><div class="check-item-label">Leveringsproblemen bij materialen</div><div class="check-item-desc">Mits schriftelijk bewijs van leverancier</div></div></div>
+          <div class="check-item checked" onclick="toggleCheck(this)"><div class="check-box">✓</div><div><div class="check-item-label">Onvoorziene constructieve problemen</div><div class="check-item-desc">bv. asbest, verborgen gebreken, instabiliteit</div></div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div><div class="check-item-label">Stakingen bij toeleveranciers</div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="wizard-nav">
+      <button class="btn-back" onclick="prevStep(3)">← Terug</button>
+      <button class="btn-next" onclick="nextStep(5)">Meerwerken →</button>
+    </div>
+  </div>
+
+  <!-- ===== STEP 5: MEERWERKEN ===== -->
+  <div class="wizard-step" id="step-5">
+    <div class="step-card">
+      <div class="step-card-head">
+        <div class="step-card-icon">➕</div>
+        <div>
+          <div class="step-card-title">Meerwerken & wijzigingen</div>
+          <div class="step-card-sub">Hoe worden aanpassingen tijdens de werken behandeld?</div>
+        </div>
+      </div>
+      <div class="step-card-body">
+        <div class="info-badge">ℹ️ Dit onderdeel voorkomt de meeste geschillen — wees hier zo duidelijk mogelijk</div>
+
+        <div class="section-divider"><div class="section-divider-line"></div><div class="section-divider-label">Procedure voor wijzigingen</div><div class="section-divider-line"></div></div>
+        <div class="radio-group" style="margin-bottom:1.25rem;">
+          <div class="radio-item selected" onclick="selectRadio(this)">
+            <div class="radio-dot"></div>
+            <div>
+              <div class="radio-label">Schriftelijk akkoord via Buildpay verplicht</div>
+              <div class="radio-desc">Alle meerwerken worden als nieuwe milestone toegevoegd via het platform. Geen mondelinge afspraken.</div>
+            </div>
+          </div>
+          <div class="radio-item" onclick="selectRadio(this)">
+            <div class="radio-dot"></div>
+            <div>
+              <div class="radio-label">Mondeling toegelaten tot € 500, daarboven schriftelijk</div>
+              <div class="radio-desc">Kleine aanpassingen kunnen ter plaatse worden afgesproken</div>
+            </div>
+          </div>
+          <div class="radio-item" onclick="selectRadio(this)">
+            <div class="radio-dot"></div>
+            <div>
+              <div class="radio-label">Geen meerwerken toegelaten — strikte scope</div>
+              <div class="radio-desc">Contract is definitief. Wijzigingen vereisen een nieuw contract.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-divider"><div class="section-divider-line"></div><div class="section-divider-label">Prijsbepaling meerwerken</div><div class="section-divider-line"></div></div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Uurtarief aannemer (€/uur)</label>
+            <input type="number" placeholder="bv. 65" value="65">
+          </div>
+          <div class="form-group">
+            <label>Materiaalopslag (%)</label>
+            <input type="number" placeholder="bv. 15" value="15">
+          </div>
+          <div class="form-group full">
+            <label>Opmerking over prijsbepaling (optioneel)</label>
+            <textarea placeholder="bv. Meerwerken worden vooraf geoffreerd en goedgekeurd via het Buildpay platform..."></textarea>
+          </div>
+        </div>
+
+        <div class="section-divider"><div class="section-divider-line"></div><div class="section-divider-label">Minwerken</div><div class="section-divider-line"></div></div>
+        <div class="radio-group">
+          <div class="radio-item selected" onclick="selectRadio(this)">
+            <div class="radio-dot"></div>
+            <div>
+              <div class="radio-label">Minwerken worden in mindering gebracht op laatste milestone</div>
+              <div class="radio-desc">Als onderdelen niet worden uitgevoerd, wordt het bedrag aangepast</div>
+            </div>
+          </div>
+          <div class="radio-item" onclick="selectRadio(this)">
+            <div class="radio-dot"></div>
+            <div>
+              <div class="radio-label">Geen verrekening — forfaitaire prijs</div>
+              <div class="radio-desc">Het totale bedrag blijft hetzelfde ongeacht eventuele aanpassingen</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="wizard-nav">
+      <button class="btn-back" onclick="prevStep(4)">← Terug</button>
+      <button class="btn-next" onclick="nextStep(6)">Garanties →</button>
+    </div>
+  </div>
+
+  <!-- ===== STEP 6: GARANTIES ===== -->
+  <div class="wizard-step" id="step-6">
+    <div class="step-card">
+      <div class="step-card-head">
+        <div class="step-card-icon">🛡️</div>
+        <div>
+          <div class="step-card-title">Garanties & aansprakelijkheid</div>
+          <div class="step-card-sub">Wettelijke garanties en eventuele extra bescherming</div>
+        </div>
+      </div>
+      <div class="step-card-body">
+
+        <div style="background:var(--success-light);border:1px solid #BBF7D0;border-radius:8px;padding:1rem 1.25rem;margin-bottom:1.25rem;">
+          <div style="font-size:0.8rem;font-weight:600;color:#065F46;margin-bottom:0.25rem;">✓ Wettelijke garanties automatisch inbegrepen</div>
+          <div style="font-size:0.75rem;color:#047857;line-height:1.6;">Conform Belgisch/Nederlands recht: 10 jaar aansprakelijkheid voor verborgen gebreken die de stabiliteit aantasten (art. 1792 BW), 2 jaar voor andere gebreken. Dit kan contractueel niet worden uitgesloten.</div>
+        </div>
+
+        <div class="section-divider"><div class="section-divider-line"></div><div class="section-divider-label">Extra garanties (vrijwillig)</div><div class="section-divider-line"></div></div>
+        <div class="checklist" style="margin-bottom:1.25rem;">
+          <div class="check-item checked" onclick="toggleCheck(this)"><div class="check-box">✓</div><div><div class="check-item-label">1 jaar garantie op alle uitgevoerde werken</div><div class="check-item-desc">Boven de wettelijke minimums — versterkt vertrouwen bij klant</div></div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div><div class="check-item-label">2 jaar garantie op alle uitgevoerde werken</div></div></div>
+          <div class="check-item checked" onclick="toggleCheck(this)"><div class="check-box">✓</div><div><div class="check-item-label">Fabrieksgarantie op gebruikte toestellen</div><div class="check-item-desc">Aannemer bezorgt garantiedocumenten aan klant bij oplevering</div></div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div><div class="check-item-label">Gratis herstelling kleine gebreken (30 dagen na oplevering)</div><div class="check-item-desc">Definitie "klein gebrek" wordt gespecificeerd in bijlage</div></div></div>
+        </div>
+
+        <div class="section-divider"><div class="section-divider-line"></div><div class="section-divider-label">Verzekeringen</div><div class="section-divider-line"></div></div>
+        <div class="checklist" style="margin-bottom:1.25rem;">
+          <div class="check-item checked" onclick="toggleCheck(this)"><div class="check-box">✓</div><div><div class="check-item-label">Aannemer beschikt over BA-verzekering beroepsaansprakelijkheid</div><div class="check-item-desc">Polisnummer wordt toegevoegd aan het contract</div></div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div><div class="check-item-label">Aannemer beschikt over BA aannemer (alle bouwrisico's)</div></div></div>
+        </div>
+
+        <div class="section-divider"><div class="section-divider-line"></div><div class="section-divider-label">Geschillenprocedure (verplicht)</div><div class="section-divider-line"></div></div>
+        <div style="background:var(--blue-light);border:1px solid #BFDBFE;border-radius:8px;padding:1rem 1.25rem;">
+          <div style="font-size:0.8rem;font-weight:600;color:var(--blue-mid);margin-bottom:0.4rem;">🔒 Buildpay geschillenprocedure — altijd van toepassing</div>
+          <div style="font-size:0.75rem;color:var(--blue);line-height:1.7;">Bij betwisting doorlopen partijen verplicht de Buildpay geschillenprocedure (7 dagen onderling overleg → 14 dagen Buildpay bemiddeling → bindende admin beslissing) alvorens rechtbank te vatten. Beide partijen aanvaarden dit door ondertekening van dit contract.</div>
+        </div>
+
+        <div class="form-grid" style="margin-top:1.25rem;">
+          <div class="form-group">
+            <label>Polisnummer BA-verzekering</label>
+            <input type="text" placeholder="bv. POL-2024-00123">
+          </div>
+          <div class="form-group">
+            <label>Verzekeringsmaatschappij</label>
+            <input type="text" placeholder="bv. Allianz, AXA...">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="wizard-nav">
+      <button class="btn-back" onclick="prevStep(5)">← Terug</button>
+      <button class="btn-next" onclick="nextStep(7)">Overzicht & genereren →</button>
+    </div>
+  </div>
+
+  <!-- ===== STEP 7: PREVIEW ===== -->
+  <div class="wizard-step" id="step-7">
+
+    <div class="total-bar">
+      <div>
+        <div class="total-bar-label">Totaal projectbedrag (escrow)</div>
+        <div class="total-bar-amount">€ 48.500</div>
+        <div class="total-bar-sub">3 milestones · Keuken renovatie</div>
+      </div>
+      <div class="total-bar-right">
+        <div class="total-bar-label">Buildpay commissie (1.5%)</div>
+        <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:#60A5FA;">€ 727,50</div>
+        <div class="total-bar-sub">Enkel bij vrijgave</div>
+      </div>
+    </div>
+
+    <div class="preview-panel">
+      <div class="preview-header">
+        <div class="preview-logo">Build<span>pay</span></div>
+        <div style="font-size:0.72rem;color:var(--slate-light);margin-top:0.15rem;">Aannemingsovereenkomst</div>
+        <div class="preview-title">Keuken Renovatie</div>
+        <div class="preview-subtitle">Contract #BPC-2025-1041 · Opgemaakt via Buildpay Contract Wizard · 24 maart 2025</div>
+      </div>
+
+      <div class="preview-section">
+        <div class="preview-section-title">Partijen</div>
+        <div class="preview-row"><span class="preview-key">Aannemer</span><span class="preview-val">Vandebroeck BV · BTW BE0456.789.012</span></div>
+        <div class="preview-row"><span class="preview-key">Opdrachtgever</span><span class="preview-val">Marie Van Damme · marie@example.com</span></div>
+        <div class="preview-row"><span class="preview-key">Adres werken</span><span class="preview-val">Bosstraat 24, 9000 Gent</span></div>
+      </div>
+
+      <div class="preview-section">
+        <div class="preview-section-title">Projectomschrijving</div>
+        <div style="font-size:0.78rem;color:var(--navy);line-height:1.7;">Volledige renovatie van de keuken inclusief verwijdering oude keuken, aanleg leidingen, plaatsing nieuwe keukenmeubelen en afwerking.</div>
+      </div>
+
+      <div class="preview-section">
+        <div class="preview-section-title">Scope van werken</div>
+        <div style="display:flex;flex-direction:column;gap:0.3rem;">
+          <div style="font-size:0.75rem;color:var(--navy);display:flex;gap:0.4rem;align-items:flex-start;"><span style="color:var(--success);flex-shrink:0;">✓</span><span>Verwijdering bestaande keuken / installaties (incl. afvoer)</span></div>
+          <div style="font-size:0.75rem;color:var(--navy);display:flex;gap:0.4rem;align-items:flex-start;"><span style="color:var(--success);flex-shrink:0;">✓</span><span>Afbraak van niet-dragende wanden</span></div>
+          <div style="font-size:0.75rem;color:var(--navy);display:flex;gap:0.4rem;align-items:flex-start;"><span style="color:var(--success);flex-shrink:0;">✓</span><span>Elektrische installatie conform AREI (incl. keuringsattest)</span></div>
+          <div style="font-size:0.75rem;color:var(--navy);display:flex;gap:0.4rem;align-items:flex-start;"><span style="color:var(--success);flex-shrink:0;">✓</span><span>Sanitaire installatie (aan- en afvoer, lekvrij getest)</span></div>
+          <div style="font-size:0.75rem;color:var(--navy);display:flex;gap:0.4rem;align-items:flex-start;"><span style="color:var(--success);flex-shrink:0;">✓</span><span>Plaatsing keukenmeubelen, tegelwerk vloer en wanden</span></div>
+          <div style="font-size:0.75rem;color:var(--navy);display:flex;gap:0.4rem;align-items:flex-start;"><span style="color:var(--success);flex-shrink:0;">✓</span><span>Schoonmaak na werken + opleveringsverslag via Buildpay</span></div>
+        </div>
+      </div>
+
+      <div class="preview-section">
+        <div class="preview-section-title">Milestones & betalingen</div>
+        <div class="preview-ms-row"><div class="preview-ms-num">1</div><span class="preview-ms-name">Sloopwerk & voorbereiding</span><span class="preview-ms-date">≤ 15 apr 2025</span><span class="preview-ms-amt">€ 8.500</span></div>
+        <div class="preview-ms-row"><div class="preview-ms-num">2</div><span class="preview-ms-name">Ruwbouw & technische installaties</span><span class="preview-ms-date">≤ 10 mei 2025</span><span class="preview-ms-amt">€ 18.500</span></div>
+        <div class="preview-ms-row"><div class="preview-ms-num">3</div><span class="preview-ms-name">Afwerking & eindoplevering</span><span class="preview-ms-date">≤ 1 jun 2025</span><span class="preview-ms-amt">€ 21.500</span></div>
+        <div style="display:flex;justify-content:flex-end;margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid var(--border);"><span style="font-size:0.85rem;font-weight:700;color:var(--navy);">Totaal: € 48.500</span></div>
+      </div>
+
+      <div class="preview-section">
+        <div class="preview-section-title">Tijdlijn</div>
+        <div class="preview-row"><span class="preview-key">Startdatum</span><span class="preview-val">1 april 2025</span></div>
+        <div class="preview-row"><span class="preview-key">Einddatum</span><span class="preview-val">15 juni 2025</span></div>
+        <div class="preview-row"><span class="preview-key">Vertragingstolerantie</span><span class="preview-val">5 werkdagen</span></div>
+        <div class="preview-row"><span class="preview-key">Boete</span><span class="preview-val">Geen — schriftelijke verwittiging via Buildpay</span></div>
+      </div>
+
+      <div class="preview-section">
+        <div class="preview-section-title">Meerwerken</div>
+        <div class="preview-row"><span class="preview-key">Procedure</span><span class="preview-val">Schriftelijk akkoord via Buildpay verplicht</span></div>
+        <div class="preview-row"><span class="preview-key">Uurtarief</span><span class="preview-val">€ 65/uur + 15% materiaalopslag</span></div>
+        <div class="preview-row"><span class="preview-key">Minwerken</span><span class="preview-val">Verrekend op laatste milestone</span></div>
+      </div>
+
+      <div class="preview-section">
+        <div class="preview-section-title">Garanties</div>
+        <div class="preview-row"><span class="preview-key">Wettelijk</span><span class="preview-val">10 jaar stabiliteit · 2 jaar overige gebreken (art. 1792 BW)</span></div>
+        <div class="preview-row"><span class="preview-key">Extra</span><span class="preview-val">1 jaar garantie alle werken · Fabrieksgarantie toestellen</span></div>
+        <div class="preview-row"><span class="preview-key">Verzekering</span><span class="preview-val">BA beroepsaansprakelijkheid aanwezig</span></div>
+      </div>
+
+      <div class="preview-section">
+        <div class="preview-section-title">Geschillenprocedure</div>
+        <div style="font-size:0.75rem;color:var(--slate);line-height:1.7;">Bij betwisting doorlopen partijen verplicht de Buildpay geschillenprocedure alvorens de rechtbank te vatten. De beslissing van de Buildpay admin is bindend in het kader van deze procedure.</div>
+      </div>
+
+      <div class="signature-row">
+        <div class="sig-box">
+          <div style="height:40px;"></div>
+          <div class="sig-line"></div>
+          <div class="sig-label">Handtekening aannemer</div>
+          <div class="sig-name">Vandebroeck BV</div>
+        </div>
+        <div class="sig-box">
+          <div style="height:40px;"></div>
+          <div class="sig-line"></div>
+          <div class="sig-label">Handtekening opdrachtgever</div>
+          <div class="sig-name">Marie Van Damme</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wizard-nav">
+      <button class="btn-back" onclick="prevStep(6)">← Aanpassen</button>
+      <button class="btn-generate" onclick="generateContract()">
+        📄 Contract genereren & versturen
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== SUCCESS ===== -->
+  <div class="wizard-step" id="step-success">
+    <div class="step-card">
+      <div class="success-screen">
+        <div class="success-icon">🎉</div>
+        <div class="success-title">Contract verstuurd!</div>
+        <div class="success-sub">Het contract is per e-mail verstuurd naar Marie Van Damme. Zodra zij ondertekent, wordt het escrow bedrag gestort en kan het project starten.</div>
+        <div style="background:var(--off-white);border:1px solid var(--border);border-radius:10px;padding:1.25rem;max-width:360px;margin:0 auto 2rem;text-align:left;">
+          <div style="font-size:0.72rem;font-weight:600;color:var(--slate);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.75rem;">Wat nu?</div>
+          <div style="display:flex;flex-direction:column;gap:0.6rem;">
+            <div style="display:flex;gap:0.6rem;align-items:flex-start;font-size:0.8rem;color:var(--navy);"><span style="color:var(--slate-light);">1.</span><span>Klant ontvangt e-mail met contract ter ondertekening</span></div>
+            <div style="display:flex;gap:0.6rem;align-items:flex-start;font-size:0.8rem;color:var(--navy);"><span style="color:var(--slate-light);">2.</span><span>Na ondertekening stort klant € 48.500 in escrow</span></div>
+            <div style="display:flex;gap:0.6rem;align-items:flex-start;font-size:0.8rem;color:var(--navy);"><span style="color:var(--slate-light);">3.</span><span>Project start op 1 april 2025</span></div>
+            <div style="display:flex;gap:0.6rem;align-items:flex-start;font-size:0.8rem;color:var(--navy);"><span style="color:var(--slate-light);">4.</span><span>Dien milestones in via je dashboard</span></div>
+          </div>
+        </div>
+        <div class="success-actions">
+          <button class="btn-success-action btn-primary-action" onclick="window.location='buildpay-dashboard-contractor.html'">Naar dashboard →</button>
+          <button class="btn-success-action btn-secondary-action">📄 PDF downloaden</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end wizard-layout -->
+
+<script>
+  let currentStep = 1;
+  const totalSteps = 7;
+
+  function nextStep(n) {
+    document.getElementById('step-' + currentStep).classList.remove('active');
+    currentStep = n;
+    document.getElementById('step-' + n).classList.add('active');
+    updateProgress(n);
+    window.scrollTo(0, 0);
+  }
+
+  function prevStep(n) {
+    document.getElementById('step-' + currentStep).classList.remove('active');
+    currentStep = n;
+    document.getElementById('step-' + n).classList.add('active');
+    updateProgress(n);
+    window.scrollTo(0, 0);
+  }
+
+  function updateProgress(current) {
+    for (let i = 1; i <= totalSteps; i++) {
+      const circle = document.getElementById('sc-' + i);
+      const label = document.getElementById('sl-label-' + i);
+      const line = document.getElementById('sl-' + i);
+      if (i < current) {
+        circle.className = 'step-circle done';
+        circle.textContent = '✓';
+        label.className = 'step-label done';
+        if (line) line.className = 'step-line done';
+      } else if (i === current) {
+        circle.className = 'step-circle active';
+        circle.textContent = i;
+        label.className = 'step-label active';
+      } else {
+        circle.className = 'step-circle';
+        circle.textContent = i;
+        label.className = 'step-label';
+        if (line) line.className = 'step-line';
+      }
+    }
+  }
+
+  function selectModule(el, group) {
+    el.closest('.module-grid').querySelectorAll('.module-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function toggleCheck(el) {
+    el.classList.toggle('checked');
+    const box = el.querySelector('.check-box');
+    box.textContent = el.classList.contains('checked') ? '✓' : '';
+  }
+
+  function selectRadio(el) {
+    el.closest('.radio-group').querySelectorAll('.radio-item').forEach(r => r.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function toggleTag(el) {
+    el.classList.toggle('active');
+  }
+
+  let msCount = 3;
+  function addMilestone() {
+    msCount++;
+    const list = document.getElementById('milestone-list');
+    const row = document.createElement('div');
+    row.className = 'milestone-row';
+    row.innerHTML = `
+      <div class="milestone-row-head">
+        <div class="milestone-number">${msCount}</div>
+        <input class="milestone-name-input" type="text" placeholder="Naam van milestone">
+        <button class="remove-ms" onclick="removeMilestone(this)" title="Verwijder">✕</button>
+      </div>
+      <div class="milestone-row-body">
+        <div class="form-group"><label>Bedrag (€)</label><input type="number" placeholder="0" oninput="updateTotal()"></div>
+        <div class="form-group"><label>Verwachte einddatum</label><input type="date"></div>
+        <div class="form-group"><label>% van totaal</label><input type="text" readonly style="background:var(--off-white);color:var(--slate);" value="—"></div>
+      </div>
+      <div class="milestone-proof">
+        <div class="proof-label">Vereist bewijs bij indiening</div>
+        <div class="proof-options">
+          <span class="proof-tag active" onclick="toggleTag(this)">📸 Foto's</span>
+          <span class="proof-tag" onclick="toggleTag(this)">📄 Keuringsattest</span>
+          <span class="proof-tag" onclick="toggleTag(this)">📋 Inspectie rapport</span>
+          <span class="proof-tag" onclick="toggleTag(this)">✍️ Opleveringsbon</span>
+        </div>
+      </div>`;
+    list.appendChild(row);
+    updateTotal();
+  }
+
+  function removeMilestone(btn) {
+    const row = btn.closest('.milestone-row');
+    if (document.querySelectorAll('.milestone-row').length > 1) {
+      row.remove();
+      renumberMilestones();
+      updateTotal();
+    }
+  }
+
+  function renumberMilestones() {
+    document.querySelectorAll('.milestone-number').forEach((el, i) => { el.textContent = i + 1; });
+  }
+
+  function updateTotal() {
+    const inputs = document.querySelectorAll('#milestone-list input[type="number"]');
+    let total = 0;
+    inputs.forEach(inp => { total += parseFloat(inp.value) || 0; });
+    const disp = document.getElementById('total-display');
+    if (disp) disp.textContent = '€ ' + total.toLocaleString('nl-BE');
+  }
+
+  function generateContract() {
+    document.getElementById('step-7').classList.remove('active');
+    document.getElementById('step-success').classList.add('active');
+    // Mark all steps done
+    for (let i = 1; i <= 7; i++) {
+      const c = document.getElementById('sc-' + i);
+      if (c) { c.className = 'step-circle done'; c.textContent = '✓'; }
+      const l = document.getElementById('sl-label-' + i);
+      if (l) l.className = 'step-label done';
+      const li = document.getElementById('sl-' + i);
+      if (li) li.className = 'step-line done';
+    }
+    window.scrollTo(0, 0);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buildpay — i18n Architectuur Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0A1628;--blue:#2563EB;--blue-light:#EFF6FF;
+  --teal:#0D9488;--teal-light:#F0FDFA;
+  --amber:#D97706;--amber-light:#FFFBEB;
+  --success:#10B981;--success-light:#D1FAE5;
+  --warning:#F59E0B;--warning-light:#FEF3C7;
+  --white:#FFFFFF;--off-white:#F8FAFC;
+  --slate:#64748B;--slate-light:#94A3B8;--border:#E2E8F0;
+  --code-bg:#0F172A;--code-green:#4ADE80;--code-blue:#60A5FA;
+  --code-yellow:#FCD34D;--code-purple:#C084FC;--code-orange:#FB923C;
+  --code-gray:#64748B;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--off-white);color:var(--navy);}
+
+.topnav{background:var(--navy);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;}
+.topnav-logo{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--white);text-decoration:none;}
+.topnav-logo span{color:#60A5FA;}
+.topnav-right{display:flex;align-items:center;gap:1rem;}
+.topnav-badge{background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);border-radius:100px;padding:0.3rem 0.85rem;font-size:0.72rem;font-weight:600;color:#4ADE80;}
+
+.page-wrap{max-width:1200px;margin:0 auto;padding:2rem;}
+.page-header{margin-bottom:2rem;}
+.page-title{font-family:'Syne',sans-serif;font-size:1.75rem;font-weight:800;color:var(--navy);margin-bottom:0.5rem;}
+.page-sub{font-size:0.95rem;color:var(--slate);line-height:1.7;max-width:680px;}
+
+/* DEMO PREVIEW */
+.demo-section{background:var(--white);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:1.5rem;}
+.demo-toolbar{background:var(--navy);padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.demo-toolbar-label{font-size:0.72rem;font-weight:600;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.1em;}
+.lang-selector{display:flex;gap:0;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;overflow:hidden;}
+.lang-opt{padding:0.4rem 0.85rem;font-size:0.78rem;font-weight:600;cursor:pointer;border:none;background:none;color:rgba(255,255,255,0.45);font-family:'DM Sans',sans-serif;transition:all 0.2s;display:flex;align-items:center;gap:0.4rem;}
+.lang-opt.active{background:var(--blue);color:var(--white);}
+.country-selector{display:flex;gap:0;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;overflow:hidden;}
+.country-opt{padding:0.4rem 0.85rem;font-size:0.78rem;font-weight:600;cursor:pointer;border:none;background:none;color:rgba(255,255,255,0.45);font-family:'DM Sans',sans-serif;transition:all 0.2s;display:flex;align-items:center;gap:0.4rem;}
+.country-opt.active{background:rgba(255,255,255,0.15);color:var(--white);}
+.demo-body{padding:2rem;}
+
+/* LIVE PREVIEW CARD */
+.preview-card{background:var(--navy);border-radius:12px;padding:2rem;color:var(--white);position:relative;overflow:hidden;}
+.preview-card::before{content:'';position:absolute;top:-80px;right:-80px;width:250px;height:250px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,0.2),transparent);}
+.preview-eyebrow{font-size:0.7rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:0.75rem;}
+.preview-headline{font-family:'Syne',sans-serif;font-size:1.75rem;font-weight:800;line-height:1.15;margin-bottom:0.75rem;}
+.preview-sub{font-size:0.9rem;color:rgba(255,255,255,0.55);line-height:1.7;margin-bottom:1.5rem;}
+.preview-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.08);}
+.preview-meta-item{}
+.preview-meta-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.3);margin-bottom:0.3rem;}
+.preview-meta-value{font-size:0.85rem;font-weight:600;color:var(--white);}
+.preview-btns{display:flex;gap:0.75rem;flex-wrap:wrap;}
+.preview-btn{padding:0.65rem 1.25rem;border-radius:7px;font-size:0.85rem;font-weight:600;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.pbtn-primary{background:var(--blue);color:var(--white);}
+.pbtn-ghost{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.15);}
+
+/* CONFIG PANEL */
+.config-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;}
+.config-card{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.config-card-head{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.6rem;}
+.config-card-title{font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;color:var(--navy);}
+.config-card-body{padding:1.25rem;}
+
+/* COUNTRY CONFIG DISPLAY */
+.country-config{display:flex;flex-direction:column;gap:0.6rem;}
+.config-row{display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--border);}
+.config-row:last-child{border-bottom:none;}
+.config-key{font-size:0.75rem;font-weight:600;color:var(--slate);font-family:'JetBrains Mono',monospace;}
+.config-val{font-size:0.78rem;font-weight:600;color:var(--navy);}
+.config-val.green{color:var(--success);}
+.config-val.blue{color:var(--blue);}
+.config-val.amber{color:var(--amber);}
+
+/* TRANSLATION COMPARISON */
+.trans-table{width:100%;border-collapse:collapse;}
+.trans-table th{text-align:left;padding:0.6rem 0.85rem;font-size:0.7rem;font-weight:700;color:var(--slate);text-transform:uppercase;letter-spacing:0.08em;background:var(--off-white);border-bottom:1px solid var(--border);}
+.trans-table td{padding:0.65rem 0.85rem;font-size:0.8rem;border-bottom:1px solid var(--border);vertical-align:top;}
+.trans-table tr:last-child td{border-bottom:none;}
+.trans-key{font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--blue);}
+.trans-nl{color:var(--navy);}
+.trans-fr{color:var(--teal);}
+.trans-en{color:var(--slate);}
+
+/* CODE BLOCKS */
+.code-wrap{border-radius:12px;overflow:hidden;margin-bottom:1.5rem;}
+.code-file-bar{background:#1E293B;padding:0.6rem 1.25rem;display:flex;align-items:center;gap:0.75rem;border-bottom:1px solid rgba(255,255,255,0.05);}
+.code-dots{display:flex;gap:5px;}
+.code-dot{width:10px;height:10px;border-radius:50%;}
+.code-filename{font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:rgba(255,255,255,0.35);}
+.code-tabs-bar{background:#1E293B;display:flex;border-bottom:1px solid rgba(255,255,255,0.05);}
+.ctab{padding:0.5rem 1rem;font-size:0.72rem;font-weight:500;cursor:pointer;border:none;background:none;color:rgba(255,255,255,0.35);font-family:'DM Sans',sans-serif;border-bottom:2px solid transparent;transition:all 0.15s;}
+.ctab.active{color:var(--white);border-bottom-color:var(--blue);}
+.code-block{background:var(--code-bg);padding:1.5rem;overflow-x:auto;position:relative;}
+.code-block pre{font-family:'JetBrains Mono',monospace;font-size:0.76rem;line-height:1.75;margin:0;}
+.code-copy{position:absolute;top:0.75rem;right:0.75rem;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:5px;padding:0.3rem 0.65rem;font-size:0.7rem;color:rgba(255,255,255,0.4);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+.code-copy:hover{background:rgba(255,255,255,0.14);color:var(--white);}
+
+/* SYNTAX */
+.kw{color:var(--code-purple);}
+.fn{color:var(--code-blue);}
+.str{color:var(--code-green);}
+.num{color:var(--code-orange);}
+.cmt{color:#3D5268;font-style:italic;}
+.obj{color:var(--code-yellow);}
+.prop{color:var(--code-blue);}
+.op{color:var(--code-gray);}
+.cls{color:var(--code-yellow);}
+
+/* PILLS */
+.pill{font-size:0.68rem;font-weight:600;padding:0.22rem 0.55rem;border-radius:100px;}
+.pill-green{background:var(--success-light);color:#065F46;}
+.pill-blue{background:var(--blue-light);color:var(--blue);}
+.pill-amber{background:var(--amber-light);color:var(--amber);}
+.pill-teal{background:var(--teal-light);color:var(--teal);}
+
+/* ARCHITECTURE DIAGRAM */
+.arch-wrap{background:var(--navy);border-radius:12px;padding:2rem;margin-bottom:1.5rem;}
+.arch-title{font-family:'Syne',sans-serif;font-size:0.82rem;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1.5rem;}
+.arch-flow{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+.arch-node{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:1rem;text-align:center;}
+.arch-node-icon{font-size:1.5rem;margin-bottom:0.5rem;}
+.arch-node-title{font-size:0.78rem;font-weight:700;color:var(--white);margin-bottom:0.3rem;}
+.arch-node-sub{font-size:0.68rem;color:rgba(255,255,255,0.35);line-height:1.5;}
+.arch-arrow{display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);font-size:1.25rem;}
+
+/* INFO BOX */
+.info-box{border-radius:8px;padding:0.85rem 1.1rem;font-size:0.78rem;line-height:1.6;margin-bottom:1rem;}
+.ib-blue{background:var(--blue-light);border:1px solid #BFDBFE;color:#1E40AF;}
+.ib-green{background:var(--success-light);border:1px solid #BBF7D0;color:#065F46;}
+.ib-amber{background:var(--amber-light);border:1px solid #FDE68A;color:#92400E;}
+
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;}
+
+@media(max-width:800px){
+  .config-grid,.two-col,.arch-flow{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a href="buildpay-landing.html" class="topnav-logo">Build<span>pay</span></a>
+  <div class="topnav-right">
+    <div class="topnav-badge">i18n Architectuur</div>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="page-header">
+    <div class="page-title">🌍 Internationalisering Architectuur</div>
+    <p class="page-sub">Volledige i18n setup voor Buildpay — talen (NL/FR/EN), landen (BE/NL/FR) en juridische configuratie per regio. Gebouwd om te schalen zonder de codebase te herschrijven.</p>
+  </div>
+
+  <!-- ARCHITECTURE OVERVIEW -->
+  <div class="arch-wrap">
+    <div class="arch-title">i18n Architectuur — 4 lagen</div>
+    <div class="arch-flow">
+      <div class="arch-node">
+        <div class="arch-node-icon">🗣️</div>
+        <div class="arch-node-title">Taal (lang)</div>
+        <div class="arch-node-sub">nl · fr · en<br>Alle UI teksten<br>via i18n.js</div>
+      </div>
+      <div class="arch-node">
+        <div class="arch-node-icon">🌍</div>
+        <div class="arch-node-title">Land (country)</div>
+        <div class="arch-node-sub">BE · NL · FR · DE<br>Betaalmethodes<br>KYC documenten</div>
+      </div>
+      <div class="arch-node">
+        <div class="arch-node-icon">⚖️</div>
+        <div class="arch-node-title">Juridisch (legal)</div>
+        <div class="arch-node-sub">Wetsartikelen<br>Garantietermijnen<br>Contract templates</div>
+      </div>
+      <div class="arch-node">
+        <div class="arch-node-icon">💳</div>
+        <div class="arch-node-title">Financieel (finance)</div>
+        <div class="arch-node-sub">Commissie %<br>Valuta<br>Mangopay config</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIVE DEMO -->
+  <div class="demo-section">
+    <div class="demo-toolbar">
+      <div class="demo-toolbar-label">Taal</div>
+      <div class="lang-selector">
+        <button class="lang-opt active" onclick="setDemo('nl','BE')" id="lo-nl">🇳🇱 NL</button>
+        <button class="lang-opt" onclick="setDemo('fr','BE')" id="lo-fr">🇫🇷 FR</button>
+        <button class="lang-opt" onclick="setDemo('en','BE')" id="lo-en">🇬🇧 EN</button>
+      </div>
+      <div class="demo-toolbar-label">Land</div>
+      <div class="country-selector">
+        <button class="country-opt active" onclick="setCountry('BE')" id="co-BE">🇧🇪 België</button>
+        <button class="country-opt" onclick="setCountry('NL')" id="co-NL">🇳🇱 Nederland</button>
+        <button class="country-opt" onclick="setCountry('FR')" id="co-FR">🇫🇷 France</button>
+        <button class="country-opt" onclick="setCountry('DE')" id="co-DE">🇩🇪 Deutschland</button>
+      </div>
+    </div>
+    <div class="demo-body">
+      <div class="preview-card">
+        <div class="preview-eyebrow" id="p-eyebrow">Escrow platform voor de bouwsector</div>
+        <div class="preview-headline" id="p-headline">Verbouw zonder financieel risico</div>
+        <div class="preview-sub" id="p-sub">Jouw geld staat veilig in escrow. De aannemer krijgt pas betaald wanneer jij het werk goedkeurt — milestone per milestone.</div>
+        <div class="preview-btns">
+          <button class="preview-btn pbtn-primary" id="p-cta1">Bescherm mijn verbouwing →</button>
+          <button class="preview-btn pbtn-ghost" id="p-cta2">Hoe werkt het?</button>
+        </div>
+        <div class="preview-meta">
+          <div class="preview-meta-item">
+            <div class="preview-meta-label" id="p-pay-label">Betaalmethode</div>
+            <div class="preview-meta-value" id="p-pay-value">Bancontact / SEPA</div>
+          </div>
+          <div class="preview-meta-item">
+            <div class="preview-meta-label" id="p-kyc-label">Bedrijfsregistratie</div>
+            <div class="preview-meta-value" id="p-kyc-value">KBO-uittreksel</div>
+          </div>
+          <div class="preview-meta-item">
+            <div class="preview-meta-label" id="p-law-label">Toepasselijk recht</div>
+            <div class="preview-meta-value" id="p-law-value">Belgisch recht · art. 1792 BW</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COUNTRY CONFIG DISPLAY -->
+  <div class="config-grid">
+    <div class="config-card">
+      <div class="config-card-head">
+        <span id="config-flag">🇧🇪</span>
+        <div class="config-card-title" id="config-title">België — Landconfiguratie</div>
+      </div>
+      <div class="config-card-body">
+        <div class="country-config" id="country-config-display"></div>
+      </div>
+    </div>
+    <div class="config-card">
+      <div class="config-card-head">
+        <span>📊</span>
+        <div class="config-card-title">Vertalingen vergelijken</div>
+      </div>
+      <div class="config-card-body" style="padding:0;">
+        <table class="trans-table">
+          <thead><tr><th>Sleutel</th><th style="color:var(--navy);">NL</th><th style="color:var(--teal);">FR</th><th style="color:var(--slate);">EN</th></tr></thead>
+          <tbody id="trans-compare"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- CODE FILES -->
+  <div class="code-wrap">
+    <div class="code-tabs-bar">
+      <button class="ctab active" onclick="showTab('i18n')" id="tab-i18n">i18n.js</button>
+      <button class="ctab" onclick="showTab('countries')" id="tab-countries">countries.js</button>
+      <button class="ctab" onclick="showTab('legal')" id="tab-legal">legal.js</button>
+      <button class="ctab" onclick="showTab('react')" id="tab-react">useTranslation.js</button>
+      <button class="ctab" onclick="showTab('middleware')" id="tab-middleware">i18nMiddleware.js</button>
+    </div>
+
+    <!-- i18n.js -->
+    <div id="code-i18n" class="code-block">
+      <button class="code-copy" onclick="copyTab('i18n')">Kopiëren</button>
+      <pre><span class="cmt">// buildpay/i18n/i18n.js</span>
+<span class="cmt">// Centrale vertalingenbibliotheek — alle UI teksten voor NL/FR/EN</span>
+<span class="cmt">// Voeg nieuwe talen toe door een extra taalsleutel te definiëren</span>
+
+<span class="kw">const</span> <span class="obj">translations</span> = {
+
+  <span class="cmt">// ==================== ALGEMEEN ====================</span>
+  <span class="prop">common</span>: {
+    <span class="prop">appName</span>:       { nl: <span class="str">'Buildpay'</span>,        fr: <span class="str">'Buildpay'</span>,       en: <span class="str">'Buildpay'</span> },
+    <span class="prop">tagline</span>:       { nl: <span class="str">'Uw geld, veilig bewaard'</span>, fr: <span class="str">'Votre argent, sécurisé'</span>, en: <span class="str">'Your money, held until earned'</span> },
+    <span class="prop">login</span>:         { nl: <span class="str">'Inloggen'</span>,       fr: <span class="str">'Se connecter'</span>,   en: <span class="str">'Log in'</span> },
+    <span class="prop">register</span>:      { nl: <span class="str">'Registreren'</span>,   fr: <span class="str">'S\'inscrire'</span>,    en: <span class="str">'Register'</span> },
+    <span class="prop">getStarted</span>:    { nl: <span class="str">'Gratis starten'</span>, fr: <span class="str">'Commencer gratuitement'</span>, en: <span class="str">'Get started free'</span> },
+    <span class="prop">learnMore</span>:     { nl: <span class="str">'Meer info'</span>,      fr: <span class="str">'En savoir plus'</span>, en: <span class="str">'Learn more'</span> },
+    <span class="prop">save</span>:          { nl: <span class="str">'Opslaan'</span>,       fr: <span class="str">'Enregistrer'</span>,   en: <span class="str">'Save'</span> },
+    <span class="prop">cancel</span>:        { nl: <span class="str">'Annuleren'</span>,     fr: <span class="str">'Annuler'</span>,       en: <span class="str">'Cancel'</span> },
+    <span class="prop">loading</span>:       { nl: <span class="str">'Laden...'</span>,       fr: <span class="str">'Chargement...'</span>, en: <span class="str">'Loading...'</span> },
+    <span class="prop">error</span>:         { nl: <span class="str">'Er is een fout opgetreden'</span>, fr: <span class="str">'Une erreur est survenue'</span>, en: <span class="str">'An error occurred'</span> },
+  },
+
+  <span class="cmt">// ==================== ROLLEN ====================</span>
+  <span class="prop">roles</span>: {
+    <span class="prop">client</span>:        { nl: <span class="str">'Klant'</span>,          fr: <span class="str">'Client'</span>,        en: <span class="str">'Client'</span> },
+    <span class="prop">contractor</span>:    { nl: <span class="str">'Aannemer'</span>,      fr: <span class="str">'Entrepreneur'</span>,  en: <span class="str">'Contractor'</span> },
+    <span class="prop">architect</span>:     { nl: <span class="str">'Architect'</span>,     fr: <span class="str">'Architecte'</span>,    en: <span class="str">'Architect'</span> },
+    <span class="prop">admin</span>:         { nl: <span class="str">'Beheerder'</span>,     fr: <span class="str">'Administrateur'</span>, en: <span class="str">'Admin'</span> },
+  },
+
+  <span class="cmt">// ==================== HERO SECTION ====================</span>
+  <span class="prop">hero</span>: {
+    <span class="prop">eyebrow</span>:       { nl: <span class="str">'Escrow platform voor de bouwsector'</span>, fr: <span class="str">'Plateforme d\'escrow pour la construction'</span>, en: <span class="str">'Escrow platform for construction'</span> },
+    <span class="prop">client</span>: {
+      <span class="prop">headline</span>:    { nl: <span class="str">'Verbouw zonder financieel risico'</span>, fr: <span class="str">'Rénover sans risque financier'</span>, en: <span class="str">'Renovate without financial risk'</span> },
+      <span class="prop">sub</span>:         { nl: <span class="str">'Jouw geld staat veilig in escrow. De aannemer krijgt pas betaald wanneer jij het werk goedkeurt.'</span>, fr: <span class="str">'Votre argent est sécurisé en escrow. L\'entrepreneur n\'est payé que lorsque vous approuvez le travail.'</span>, en: <span class="str">'Your money sits safely in escrow. The contractor only gets paid when you approve the work.'</span> },
+      <span class="prop">cta</span>:         { nl: <span class="str">'Bescherm mijn verbouwing →'</span>, fr: <span class="str">'Protéger mes travaux →'</span>, en: <span class="str">'Protect my renovation →'</span> },
+    },
+    <span class="prop">contractor</span>: {
+      <span class="prop">headline</span>:    { nl: <span class="str">'Gegarandeerde betaling voor goed werk'</span>, fr: <span class="str">'Paiement garanti pour un bon travail'</span>, en: <span class="str">'Guaranteed payment for good work'</span> },
+      <span class="prop">sub</span>:         { nl: <span class="str">'Het geld staat klaar vóór je begint. Lever goed werk en ontvang betaling binnen 24u.'</span>, fr: <span class="str">'L\'argent est prêt avant que vous commenciez. Faites du bon travail et recevez le paiement en 24h.'</span>, en: <span class="str">'Money is ready before you start. Deliver good work and receive payment within 24h.'</span> },
+      <span class="prop">cta</span>:         { nl: <span class="str">'Garandeer mijn betaling →'</span>, fr: <span class="str">'Garantir mon paiement →'</span>, en: <span class="str">'Guarantee my payment →'</span> },
+    },
+    <span class="prop">architect</span>: {
+      <span class="prop">headline</span>:    { nl: <span class="str">'Begeleid projecten als neutrale expert'</span>, fr: <span class="str">'Guidez les projets en tant qu\'expert neutre'</span>, en: <span class="str">'Guide projects as neutral expert'</span> },
+      <span class="prop">sub</span>:         { nl: <span class="str">'Valideer milestones technisch, bewaar de vrede en verdien een vergoeding.'</span>, fr: <span class="str">'Validez les jalons techniquement, maintenez la paix et gagnez une commission.'</span>, en: <span class="str">'Validate milestones technically, keep the peace and earn a fee.'</span> },
+      <span class="prop">cta</span>:         { nl: <span class="str">'Start als architect →'</span>, fr: <span class="str">'Commencer comme architecte →'</span>, en: <span class="str">'Start as architect →'</span> },
+    },
+  },
+
+  <span class="cmt">// ==================== ESCROW ====================</span>
+  <span class="prop">escrow</span>: {
+    <span class="prop">title</span>:         { nl: <span class="str">'Escrow saldo'</span>,    fr: <span class="str">'Solde escrow'</span>,   en: <span class="str">'Escrow balance'</span> },
+    <span class="prop">released</span>:      { nl: <span class="str">'Vrijgegeven'</span>,    fr: <span class="str">'Libéré'</span>,        en: <span class="str">'Released'</span> },
+    <span class="prop">locked</span>:        { nl: <span class="str">'Geblokkeerd'</span>,    fr: <span class="str">'Bloqué'</span>,        en: <span class="str">'Locked'</span> },
+    <span class="prop">pending</span>:       { nl: <span class="str">'In behandeling'</span>, fr: <span class="str">'En cours'</span>,      en: <span class="str">'Processing'</span> },
+    <span class="prop">deposit</span>:       { nl: <span class="str">'Storten'</span>,        fr: <span class="str">'Déposer'</span>,       en: <span class="str">'Deposit'</span> },
+    <span class="prop">release</span>:       { nl: <span class="str">'Vrijgeven'</span>,      fr: <span class="str">'Libérer'</span>,       en: <span class="str">'Release'</span> },
+    <span class="prop">refund</span>:        { nl: <span class="str">'Terugbetalen'</span>,   fr: <span class="str">'Rembourser'</span>,    en: <span class="str">'Refund'</span> },
+  },
+
+  <span class="cmt">// ==================== MILESTONES ====================</span>
+  <span class="prop">milestone</span>: {
+    <span class="prop">title</span>:         { nl: <span class="str">'Milestone'</span>,      fr: <span class="str">'Jalon'</span>,         en: <span class="str">'Milestone'</span> },
+    <span class="prop">approve</span>:       { nl: <span class="str">'Goedkeuren'</span>,    fr: <span class="str">'Approuver'</span>,     en: <span class="str">'Approve'</span> },
+    <span class="prop">dispute</span>:       { nl: <span class="str">'Betwisten'</span>,     fr: <span class="str">'Contester'</span>,     en: <span class="str">'Dispute'</span> },
+    <span class="prop">submit</span>:        { nl: <span class="str">'Indienen'</span>,      fr: <span class="str">'Soumettre'</span>,     en: <span class="str">'Submit'</span> },
+    <span class="prop">proof</span>:         { nl: <span class="str">'Bewijs'</span>,         fr: <span class="str">'Preuve'</span>,        en: <span class="str">'Proof'</span> },
+    <span class="prop">validate</span>:      { nl: <span class="str">'Valideren'</span>,     fr: <span class="str">'Valider'</span>,       en: <span class="str">'Validate'</span> },
+    <span class="prop">statusDone</span>:    { nl: <span class="str">'Vrijgegeven'</span>,   fr: <span class="str">'Libéré'</span>,        en: <span class="str">'Released'</span> },
+    <span class="prop">statusActive</span>:  { nl: <span class="str">'In uitvoering'</span>, fr: <span class="str">'En cours'</span>,      en: <span class="str">'In progress'</span> },
+    <span class="prop">statusPending</span>: { nl: <span class="str">'Wacht'</span>,          fr: <span class="str">'En attente'</span>,    en: <span class="str">'Pending'</span> },
+  },
+
+  <span class="cmt">// ==================== CONTRACT ====================</span>
+  <span class="prop">contract</span>: {
+    <span class="prop">title</span>:         { nl: <span class="str">'Aannemingsovereenkomst'</span>, fr: <span class="str">'Contrat d\'entreprise'</span>, en: <span class="str">'Construction contract'</span> },
+    <span class="prop">parties</span>:       { nl: <span class="str">'Partijen'</span>,       fr: <span class="str">'Parties'</span>,       en: <span class="str">'Parties'</span> },
+    <span class="prop">scope</span>:         { nl: <span class="str">'Scope van werken'</span>, fr: <span class="str">'Étendue des travaux'</span>, en: <span class="str">'Scope of works'</span> },
+    <span class="prop">startDate</span>:     { nl: <span class="str">'Startdatum'</span>,     fr: <span class="str">'Date de début'</span>, en: <span class="str">'Start date'</span> },
+    <span class="prop">endDate</span>:       { nl: <span class="str">'Einddatum'</span>,      fr: <span class="str">'Date de fin'</span>,   en: <span class="str">'End date'</span> },
+    <span class="prop">additionalWork</span>:{ nl: <span class="str">'Meerwerken'</span>,    fr: <span class="str">'Travaux supplémentaires'</span>, en: <span class="str">'Additional works'</span> },
+    <span class="prop">warranty</span>:      { nl: <span class="str">'Garantie'</span>,       fr: <span class="str">'Garantie'</span>,      en: <span class="str">'Warranty'</span> },
+    <span class="prop">disputes</span>:      { nl: <span class="str">'Geschillenregeling'</span>, fr: <span class="str">'Règlement des litiges'</span>, en: <span class="str">'Dispute resolution'</span> },
+  },
+
+  <span class="cmt">// ==================== NAVIGATIE ====================</span>
+  <span class="prop">nav</span>: {
+    <span class="prop">overview</span>:      { nl: <span class="str">'Overzicht'</span>,     fr: <span class="str">'Vue d\'ensemble'</span>, en: <span class="str">'Overview'</span> },
+    <span class="prop">projects</span>:      { nl: <span class="str">'Projecten'</span>,     fr: <span class="str">'Projets'</span>,       en: <span class="str">'Projects'</span> },
+    <span class="prop">milestones</span>:    { nl: <span class="str">'Milestones'</span>,    fr: <span class="str">'Jalons'</span>,        en: <span class="str">'Milestones'</span> },
+    <span class="prop">documents</span>:     { nl: <span class="str">'Documenten'</span>,    fr: <span class="str">'Documents'</span>,     en: <span class="str">'Documents'</span> },
+    <span class="prop">messages</span>:      { nl: <span class="str">'Berichten'</span>,     fr: <span class="str">'Messages'</span>,      en: <span class="str">'Messages'</span> },
+    <span class="prop">payments</span>:      { nl: <span class="str">'Betalingen'</span>,    fr: <span class="str">'Paiements'</span>,     en: <span class="str">'Payments'</span> },
+    <span class="prop">settings</span>:      { nl: <span class="str">'Instellingen'</span>,  fr: <span class="str">'Paramètres'</span>,    en: <span class="str">'Settings'</span> },
+    <span class="prop">logout</span>:        { nl: <span class="str">'Uitloggen'</span>,     fr: <span class="str">'Se déconnecter'</span>, en: <span class="str">'Log out'</span> },
+  },
+
+  <span class="cmt">// ==================== PRICING ====================</span>
+  <span class="prop">pricing</span>: {
+    <span class="prop">free</span>:           { nl: <span class="str">'Gratis'</span>,         fr: <span class="str">'Gratuit'</span>,       en: <span class="str">'Free'</span> },
+    <span class="prop">commission</span>:    { nl: <span class="str">'commissie per vrijgegeven betaling'</span>, fr: <span class="str">'commission par paiement libéré'</span>, en: <span class="str">'commission per released payment'</span> },
+    <span class="prop">noMonthly</span>:     { nl: <span class="str">'Geen maandkosten'</span>, fr: <span class="str">'Pas d\'abonnement mensuel'</span>, en: <span class="str">'No monthly fees'</span> },
+    <span class="prop">expertFee</span>:     { nl: <span class="str">'bij activatie geschil'</span>, fr: <span class="str">'lors de l\'activation d\'un litige'</span>, en: <span class="str">'upon dispute activation'</span> },
+  },
+};
+
+<span class="cmt">/**
+ * t() — Vertaalfunctie
+ * Gebruik: t('hero.client.headline') → string in huidige taal
+ */</span>
+<span class="kw">function</span> <span class="fn">t</span>(key, lang <span class="op">=</span> <span class="fn">getCurrentLang</span>()) {
+  <span class="kw">const</span> parts <span class="op">=</span> key.<span class="fn">split</span>(<span class="str">'.'</span>);
+  <span class="kw">let</span> node <span class="op">=</span> <span class="obj">translations</span>;
+  <span class="kw">for</span> (<span class="kw">const</span> part <span class="kw">of</span> parts) {
+    node <span class="op">=</span> node?.[part];
+    <span class="kw">if</span> (<span class="op">!</span>node) <span class="kw">return</span> <span class="str">`[${</span>key<span class="str">}]`</span>; <span class="cmt">// Fallback</span>
+  }
+  <span class="kw">return</span> node?.[lang] <span class="op">??</span> node?.[<span class="str">'en'</span>] <span class="op">??</span> key;
+}
+
+<span class="kw">function</span> <span class="fn">getCurrentLang</span>() {
+  <span class="kw">return</span> localStorage.<span class="fn">getItem</span>(<span class="str">'buildpay_lang'</span>) <span class="op">||</span> <span class="str">'nl'</span>;
+}
+
+<span class="kw">function</span> <span class="fn">setLang</span>(lang) {
+  localStorage.<span class="fn">setItem</span>(<span class="str">'buildpay_lang'</span>, lang);
+  document.<span class="prop">documentElement</span>.<span class="prop">lang</span> <span class="op">=</span> lang;
+  <span class="fn">updateAllTranslations</span>();
+}
+
+<span class="cmt">// Auto-update alle [data-i18n] elementen in de DOM</span>
+<span class="kw">function</span> <span class="fn">updateAllTranslations</span>() {
+  <span class="obj">document</span>.<span class="fn">querySelectorAll</span>(<span class="str">'[data-i18n]'</span>).<span class="fn">forEach</span>(el <span class="op">=></span> {
+    <span class="kw">const</span> key <span class="op">=</span> el.<span class="prop">dataset</span>.<span class="prop">i18n</span>;
+    el.<span class="prop">textContent</span> <span class="op">=</span> <span class="fn">t</span>(key);
+  });
+  <span class="cmt">// Placeholders</span>
+  <span class="obj">document</span>.<span class="fn">querySelectorAll</span>(<span class="str">'[data-i18n-placeholder]'</span>).<span class="fn">forEach</span>(el <span class="op">=></span> {
+    el.<span class="prop">placeholder</span> <span class="op">=</span> <span class="fn">t</span>(el.<span class="prop">dataset</span>.<span class="prop">i18nPlaceholder</span>);
+  });
+}
+
+<span class="obj">module</span>.<span class="prop">exports</span> <span class="op">=</span> { translations, t, setLang, getCurrentLang };
+</pre>
+    </div>
+
+    <!-- countries.js -->
+    <div id="code-countries" class="code-block" style="display:none;">
+      <button class="code-copy" onclick="copyTab('countries')">Kopiëren</button>
+      <pre><span class="cmt">// buildpay/i18n/countries.js</span>
+<span class="cmt">// Landspecifieke configuratie — betaalmethodes, KYC, sectororganisaties</span>
+
+<span class="kw">const</span> <span class="obj">COUNTRIES</span> = {
+
+  <span class="prop">BE</span>: {
+    <span class="prop">name</span>:           { nl: <span class="str">'België'</span>, fr: <span class="str">'Belgique'</span>, en: <span class="str">'Belgium'</span> },
+    <span class="prop">flag</span>:           <span class="str">'🇧🇪'</span>,
+    <span class="prop">defaultLang</span>:   [<span class="str">'nl'</span>, <span class="str">'fr'</span>],
+    <span class="prop">currency</span>:       <span class="str">'EUR'</span>,
+    <span class="prop">locale</span>:         <span class="str">'nl-BE'</span>,
+
+    <span class="prop">payment</span>: {
+      <span class="prop">methods</span>:      [<span class="str">'BANCONTACT'</span>, <span class="str">'SEPA'</span>, <span class="str">'CREDIT_CARD'</span>],
+      <span class="prop">preferred</span>:    <span class="str">'BANCONTACT'</span>,
+      <span class="prop">labels</span>:       { nl: <span class="str">'Bancontact / SEPA'</span>, fr: <span class="str">'Bancontact / SEPA'</span>, en: <span class="str">'Bancontact / SEPA'</span> },
+    },
+
+    <span class="prop">kyc</span>: {
+      <span class="prop">companyReg</span>:   { nl: <span class="str">'KBO-uittreksel'</span>, fr: <span class="str">'Extrait BCE'</span>, en: <span class="str">'BCE extract'</span> },
+      <span class="prop">vatLabel</span>:     { nl: <span class="str">'BTW-nummer'</span>, fr: <span class="str">'Numéro TVA'</span>, en: <span class="str">'VAT number'</span> },
+      <span class="prop">vatFormat</span>:    <span class="str">'BE0XXX.XXX.XXX'</span>,
+      <span class="prop">vatRegex</span>:     <span class="str">/^BE\d{10}$/'</span>,
+    },
+
+    <span class="prop">legal</span>: {
+      <span class="prop">jurisdiction</span>: { nl: <span class="str">'Belgisch recht'</span>, fr: <span class="str">'Droit belge'</span>, en: <span class="str">'Belgian law'</span> },
+      <span class="prop">warrantyLong</span>: { nl: <span class="str">'10 jaar (art. 1792 BW)'</span>, fr: <span class="str">'10 ans (art. 1792 CC)'</span>, en: <span class="str">'10 years (art. 1792 CC)'</span> },
+      <span class="prop">warrantyShort</span>:{ nl: <span class="str">'2 jaar overige gebreken'</span>, fr: <span class="str">'2 ans autres défauts'</span>, en: <span class="str">'2 years other defects'</span> },
+      <span class="prop">court</span>:         { nl: <span class="str">'Rechtbank van Koophandel'</span>, fr: <span class="str">'Tribunal de commerce'</span>, en: <span class="str">'Commercial court'</span> },
+    },
+
+    <span class="prop">sector</span>: {
+      <span class="prop">contractors</span>:  <span class="str">'Confederatie Bouw'</span>,
+      <span class="prop">architects</span>:   <span class="str">'Orde van Architecten'</span>,
+      <span class="prop">url</span>:           <span class="str">'confederatiebouw.be'</span>,
+    },
+
+    <span class="prop">mangopay</span>: {
+      <span class="prop">clientId</span>:     <span class="obj">process</span>.<span class="prop">env</span>.<span class="prop">MP_CLIENT_ID_BE</span>,
+      <span class="prop">commissionRate</span>: <span class="num">0.015</span>,  <span class="cmt">// 1.5%</span>
+      <span class="prop">architectRate</span>: <span class="num">0.0025</span>, <span class="cmt">// 0.25%</span>
+      <span class="prop">minCommission</span>: <span class="num">5000</span>,   <span class="cmt">// €50 minimum in centen</span>
+    },
+  },
+
+  <span class="prop">NL</span>: {
+    <span class="prop">name</span>:           { nl: <span class="str">'Nederland'</span>, fr: <span class="str">'Pays-Bas'</span>, en: <span class="str">'Netherlands'</span> },
+    <span class="prop">flag</span>:           <span class="str">'🇳🇱'</span>,
+    <span class="prop">defaultLang</span>:   [<span class="str">'nl'</span>],
+    <span class="prop">currency</span>:       <span class="str">'EUR'</span>,
+    <span class="prop">locale</span>:         <span class="str">'nl-NL'</span>,
+
+    <span class="prop">payment</span>: {
+      <span class="prop">methods</span>:      [<span class="str">'IDEAL'</span>, <span class="str">'SEPA'</span>, <span class="str">'CREDIT_CARD'</span>],
+      <span class="prop">preferred</span>:    <span class="str">'IDEAL'</span>,
+      <span class="prop">labels</span>:       { nl: <span class="str">'iDEAL / SEPA'</span>, fr: <span class="str">'iDEAL / SEPA'</span>, en: <span class="str">'iDEAL / SEPA'</span> },
+    },
+
+    <span class="prop">kyc</span>: {
+      <span class="prop">companyReg</span>:   { nl: <span class="str">'KvK-uittreksel'</span>, fr: <span class="str">'Extrait KvK'</span>, en: <span class="str">'KvK extract'</span> },
+      <span class="prop">vatLabel</span>:     { nl: <span class="str">'BTW-nummer'</span>, fr: <span class="str">'Numéro TVA'</span>, en: <span class="str">'VAT number'</span> },
+      <span class="prop">vatFormat</span>:    <span class="str">'NL000000000B00'</span>,
+      <span class="prop">vatRegex</span>:     <span class="str">/^NL\d{9}B\d{2}$/'</span>,
+    },
+
+    <span class="prop">legal</span>: {
+      <span class="prop">jurisdiction</span>: { nl: <span class="str">'Nederlands recht'</span>, fr: <span class="str">'Droit néerlandais'</span>, en: <span class="str">'Dutch law'</span> },
+      <span class="prop">warrantyLong</span>: { nl: <span class="str">'10 jaar (art. 7:758 BW)'</span>, fr: <span class="str">'10 ans (art. 7:758 BW)'</span>, en: <span class="str">'10 years (art. 7:758 BW)'</span> },
+      <span class="prop">warrantyShort</span>:{ nl: <span class="str">'2 jaar overige gebreken'</span>, fr: <span class="str">'2 ans autres défauts'</span>, en: <span class="str">'2 years other defects'</span> },
+      <span class="prop">court</span>:         { nl: <span class="str">'Rechtbank Amsterdam'</span>, fr: <span class="str">'Tribunal d\'Amsterdam'</span>, en: <span class="str">'Amsterdam court'</span> },
+    },
+
+    <span class="prop">sector</span>: {
+      <span class="prop">contractors</span>:  <span class="str">'Bouwend Nederland'</span>,
+      <span class="prop">architects</span>:   <span class="str">'BNA'</span>,
+      <span class="prop">url</span>:           <span class="str">'bouwendnederland.nl'</span>,
+    },
+
+    <span class="prop">mangopay</span>: {
+      <span class="prop">clientId</span>:     <span class="obj">process</span>.<span class="prop">env</span>.<span class="prop">MP_CLIENT_ID_NL</span>,
+      <span class="prop">commissionRate</span>: <span class="num">0.015</span>,
+      <span class="prop">architectRate</span>: <span class="num">0.0025</span>,
+      <span class="prop">minCommission</span>: <span class="num">5000</span>,
+    },
+  },
+
+  <span class="prop">FR</span>: {
+    <span class="prop">name</span>:           { nl: <span class="str">'Frankrijk'</span>, fr: <span class="str">'France'</span>, en: <span class="str">'France'</span> },
+    <span class="prop">flag</span>:           <span class="str">'🇫🇷'</span>,
+    <span class="prop">defaultLang</span>:   [<span class="str">'fr'</span>],
+    <span class="prop">currency</span>:       <span class="str">'EUR'</span>,
+    <span class="prop">locale</span>:         <span class="str">'fr-FR'</span>,
+
+    <span class="prop">payment</span>: {
+      <span class="prop">methods</span>:      [<span class="str">'CARD'</span>, <span class="str">'SEPA'</span>],
+      <span class="prop">preferred</span>:    <span class="str">'CARD'</span>,
+      <span class="prop">labels</span>:       { nl: <span class="str">'Carte bancaire / SEPA'</span>, fr: <span class="str">'Carte bancaire / SEPA'</span>, en: <span class="str">'Card / SEPA'</span> },
+    },
+
+    <span class="prop">kyc</span>: {
+      <span class="prop">companyReg</span>:   { nl: <span class="str">'KBIS-uittreksel'</span>, fr: <span class="str">'Extrait Kbis'</span>, en: <span class="str">'Kbis extract'</span> },
+      <span class="prop">vatLabel</span>:     { nl: <span class="str">'SIRET-nummer'</span>, fr: <span class="str">'Numéro SIRET'</span>, en: <span class="str">'SIRET number'</span> },
+      <span class="prop">vatFormat</span>:    <span class="str">'FR00000000000'</span>,
+    },
+
+    <span class="prop">legal</span>: {
+      <span class="prop">jurisdiction</span>: { nl: <span class="str">'Frans recht'</span>, fr: <span class="str">'Droit français'</span>, en: <span class="str">'French law'</span> },
+      <span class="prop">warrantyLong</span>: { nl: <span class="str">'10 jaar (art. 1792 CC)'</span>, fr: <span class="str">'10 ans (art. 1792 CC)'</span>, en: <span class="str">'10 years (art. 1792 CC)'</span> },
+      <span class="prop">warrantyShort</span>:{ nl: <span class="str">'2 jaar (art. 1792-3 CC)'</span>, fr: <span class="str">'2 ans (art. 1792-3 CC)'</span>, en: <span class="str">'2 years (art. 1792-3 CC)'</span> },
+      <span class="prop">court</span>:         { nl: <span class="str">'Tribunal de commerce'</span>, fr: <span class="str">'Tribunal de commerce'</span>, en: <span class="str">'Commercial court'</span> },
+    },
+
+    <span class="prop">sector</span>: {
+      <span class="prop">contractors</span>:  <span class="str">'Fédération Française du Bâtiment'</span>,
+      <span class="prop">architects</span>:   <span class="str">'UNSFA'</span>,
+      <span class="prop">url</span>:           <span class="str">'ffbatiment.fr'</span>,
+    },
+
+    <span class="prop">mangopay</span>: {
+      <span class="prop">clientId</span>:     <span class="obj">process</span>.<span class="prop">env</span>.<span class="prop">MP_CLIENT_ID_FR</span>,
+      <span class="prop">commissionRate</span>: <span class="num">0.015</span>,
+      <span class="prop">architectRate</span>: <span class="num">0.0025</span>,
+      <span class="prop">minCommission</span>: <span class="num">5000</span>,
+    },
+  },
+
+  <span class="prop">DE</span>: {
+    <span class="prop">name</span>:           { nl: <span class="str">'Duitsland'</span>, fr: <span class="str">'Allemagne'</span>, en: <span class="str">'Germany'</span> },
+    <span class="prop">flag</span>:           <span class="str">'🇩🇪'</span>,
+    <span class="prop">defaultLang</span>:   [<span class="str">'de'</span>],
+    <span class="prop">currency</span>:       <span class="str">'EUR'</span>,
+    <span class="prop">locale</span>:         <span class="str">'de-DE'</span>,
+
+    <span class="prop">payment</span>: {
+      <span class="prop">methods</span>:      [<span class="str">'SOFORT'</span>, <span class="str">'SEPA'</span>, <span class="str">'GIROPAY'</span>],
+      <span class="prop">preferred</span>:    <span class="str">'SEPA'</span>,
+      <span class="prop">labels</span>:       { nl: <span class="str">'SEPA / Sofort'</span>, fr: <span class="str">'SEPA / Sofort'</span>, en: <span class="str">'SEPA / Sofort'</span> },
+    },
+
+    <span class="prop">kyc</span>: {
+      <span class="prop">companyReg</span>:   { nl: <span class="str">'Handelsregister-uittreksel'</span>, fr: <span class="str">'Extrait du registre du commerce'</span>, en: <span class="str">'Commercial register extract'</span> },
+      <span class="prop">vatLabel</span>:     { nl: <span class="str">'USt-IdNr.'</span>, fr: <span class="str">'N° TVA'</span>, en: <span class="str">'VAT number'</span> },
+      <span class="prop">vatFormat</span>:    <span class="str">'DE000000000'</span>,
+    },
+
+    <span class="prop">legal</span>: {
+      <span class="prop">jurisdiction</span>: { nl: <span class="str">'Duits recht (VOB/B)'</span>, fr: <span class="str">'Droit allemand (VOB/B)'</span>, en: <span class="str">'German law (VOB/B)'</span> },
+      <span class="prop">warrantyLong</span>: { nl: <span class="str">'5 jaar (§ 634a BGB)'</span>, fr: <span class="str">'5 ans (§ 634a BGB)'</span>, en: <span class="str">'5 years (§ 634a BGB)'</span> },
+    },
+
+    <span class="prop">sector</span>: {
+      <span class="prop">contractors</span>:  <span class="str">'ZDB'</span>,
+      <span class="prop">architects</span>:   <span class="str">'BAK'</span>,
+      <span class="prop">url</span>:           <span class="str">'zdb.de'</span>,
+    },
+
+    <span class="prop">mangopay</span>: {
+      <span class="prop">clientId</span>:     <span class="obj">process</span>.<span class="prop">env</span>.<span class="prop">MP_CLIENT_ID_DE</span>,
+      <span class="prop">commissionRate</span>: <span class="num">0.015</span>,
+      <span class="prop">architectRate</span>: <span class="num">0.0025</span>,
+      <span class="prop">minCommission</span>: <span class="num">5000</span>,
+    },
+  },
+};
+
+<span class="kw">function</span> <span class="fn">getCountryConfig</span>(countryCode) {
+  <span class="kw">return</span> <span class="obj">COUNTRIES</span>[countryCode] <span class="op">??</span> <span class="obj">COUNTRIES</span>.<span class="prop">BE</span>;
+}
+
+<span class="obj">module</span>.<span class="prop">exports</span> <span class="op">=</span> { <span class="obj">COUNTRIES</span>, getCountryConfig };
+</pre>
+    </div>
+
+    <!-- legal.js -->
+    <div id="code-legal" class="code-block" style="display:none;">
+      <button class="code-copy" onclick="copyTab('legal')">Kopiëren</button>
+      <pre><span class="cmt">// buildpay/i18n/legal.js</span>
+<span class="cmt">// Juridische contract templates per land</span>
+<span class="cmt">// De wizard laadt automatisch de juiste clausules op basis van country config</span>
+
+<span class="kw">const</span> { getCountryConfig } <span class="op">=</span> <span class="fn">require</span>(<span class="str">'./countries'</span>);
+<span class="kw">const</span> { t } <span class="op">=</span> <span class="fn">require</span>(<span class="str">'./i18n'</span>);
+
+<span class="cmt">/**
+ * Genereer de juridische clausules voor het aannemingscontract
+ * op basis van het geselecteerde land
+ */</span>
+<span class="kw">function</span> <span class="fn">getLegalClauses</span>(countryCode, lang) {
+  <span class="kw">const</span> config <span class="op">=</span> <span class="fn">getCountryConfig</span>(countryCode);
+  <span class="kw">const</span> legal <span class="op">=</span> config.<span class="prop">legal</span>;
+
+  <span class="kw">return</span> {
+
+    <span class="prop">warrantyClause</span>: {
+      <span class="prop">title</span>: { nl: <span class="str">'Garantieclausule'</span>, fr: <span class="str">'Clause de garantie'</span>, en: <span class="str">'Warranty clause'</span> }[lang],
+      <span class="prop">text</span>: {
+        nl: <span class="str">`De aannemer is aansprakelijk voor verborgen gebreken gedurende ${</span>legal.<span class="prop">warrantyLong</span>.<span class="prop">nl</span><span class="str">}. ${</span>legal.<span class="prop">warrantyShort</span>?.<span class="prop">nl</span> <span class="op">||</span> <span class="str">''</span><span class="str">} Toepasselijk recht: ${</span>legal.<span class="prop">jurisdiction</span>.<span class="prop">nl</span><span class="str">}.`</span>,
+        fr: <span class="str">`L'entrepreneur est responsable des vices cachés pendant ${</span>legal.<span class="prop">warrantyLong</span>.<span class="prop">fr</span><span class="str">}. ${</span>legal.<span class="prop">warrantyShort</span>?.<span class="prop">fr</span> <span class="op">||</span> <span class="str">''</span><span class="str">} Droit applicable: ${</span>legal.<span class="prop">jurisdiction</span>.<span class="prop">fr</span><span class="str">}.`</span>,
+        en: <span class="str">`The contractor is liable for hidden defects for ${</span>legal.<span class="prop">warrantyLong</span>.<span class="prop">en</span><span class="str">}. ${</span>legal.<span class="prop">warrantyShort</span>?.<span class="prop">en</span> <span class="op">||</span> <span class="str">''</span><span class="str">} Applicable law: ${</span>legal.<span class="prop">jurisdiction</span>.<span class="prop">en</span><span class="str">}.`</span>,
+      }[lang],
+    },
+
+    <span class="prop">disputeClause</span>: {
+      <span class="prop">title</span>: { nl: <span class="str">'Geschillenregeling'</span>, fr: <span class="str">'Règlement des litiges'</span>, en: <span class="str">'Dispute resolution'</span> }[lang],
+      <span class="prop">text</span>: {
+        nl: <span class="str">`Bij betwisting doorlopen partijen verplicht de Buildpay geschillenprocedure alvorens ${</span>legal.<span class="prop">court</span>.<span class="prop">nl</span><span class="str">} te vatten.`</span>,
+        fr: <span class="str">`En cas de litige, les parties suivent obligatoirement la procédure Buildpay avant de saisir le ${</span>legal.<span class="prop">court</span>.<span class="prop">fr</span><span class="str">}.`</span>,
+        en: <span class="str">`In case of dispute, parties must follow the Buildpay dispute procedure before approaching ${</span>legal.<span class="prop">court</span>.<span class="prop">en</span><span class="str">}.`</span>,
+      }[lang],
+    },
+
+    <span class="prop">jurisdictionClause</span>: {
+      <span class="prop">title</span>: { nl: <span class="str">'Toepasselijk recht'</span>, fr: <span class="str">'Droit applicable'</span>, en: <span class="str">'Applicable law'</span> }[lang],
+      <span class="prop">text</span>: legal.<span class="prop">jurisdiction</span>[lang],
+    },
+  };
+}
+
+<span class="cmt">/**
+ * Genereer KYC vereisten per land en gebruikerstype
+ */</span>
+<span class="kw">function</span> <span class="fn">getKycRequirements</span>(countryCode, userType, lang) {
+  <span class="kw">const</span> config <span class="op">=</span> <span class="fn">getCountryConfig</span>(countryCode);
+  <span class="kw">const</span> kyc <span class="op">=</span> config.<span class="prop">kyc</span>;
+
+  <span class="kw">const</span> base <span class="op">=</span> [
+    { doc: <span class="str">'IDENTITY_PROOF'</span>, label: { nl: <span class="str">'Identiteitskaart'</span>, fr: <span class="str">'Carte d\'identité'</span>, en: <span class="str">'Identity card'</span> }[lang], required: <span class="kw">true</span> }
+  ];
+
+  <span class="kw">if</span> (userType <span class="op">===</span> <span class="str">'LEGAL'</span>) {
+    base.<span class="fn">push</span>(
+      { doc: <span class="str">'REGISTRATION_PROOF'</span>, label: kyc.<span class="prop">companyReg</span>[lang], required: <span class="kw">true</span> },
+      { doc: <span class="str">'ARTICLES_OF_ASSOCIATION'</span>, label: { nl: <span class="str">'Statuten'</span>, fr: <span class="str">'Statuts'</span>, en: <span class="str">'Articles of association'</span> }[lang], required: countryCode <span class="op">!==</span> <span class="str">'FR'</span> },
+    );
+  }
+
+  <span class="kw">return</span> base;
+}
+
+<span class="obj">module</span>.<span class="prop">exports</span> <span class="op">=</span> { getLegalClauses, getKycRequirements };
+</pre>
+    </div>
+
+    <!-- useTranslation.js (React hook) -->
+    <div id="code-react" class="code-block" style="display:none;">
+      <button class="code-copy" onclick="copyTab('react')">Kopiëren</button>
+      <pre><span class="cmt">// buildpay/hooks/useTranslation.js</span>
+<span class="cmt">// React hook voor i18n — gebruik in alle componenten</span>
+
+<span class="kw">import</span> { useState, useEffect, useCallback } <span class="kw">from</span> <span class="str">'react'</span>;
+<span class="kw">import</span> { translations } <span class="kw">from</span> <span class="str">'../i18n/i18n'</span>;
+<span class="kw">import</span> { getCountryConfig } <span class="kw">from</span> <span class="str">'../i18n/countries'</span>;
+
+<span class="cmt">/**
+ * useTranslation hook
+ * 
+ * Gebruik in componenten:
+ * const { t, lang, country, setLang, setCountry, config } = useTranslation();
+ * 
+ * &lt;h1&gt;{t('hero.client.headline')}&lt;/h1&gt;
+ * &lt;p&gt;{t('common.getStarted')}&lt;/p&gt;
+ */</span>
+<span class="kw">export function</span> <span class="fn">useTranslation</span>() {
+  <span class="kw">const</span> [lang, setLangState] <span class="op">=</span> <span class="fn">useState</span>(
+    () <span class="op">=></span> localStorage.<span class="fn">getItem</span>(<span class="str">'bp_lang'</span>) <span class="op">||</span> <span class="fn">detectBrowserLang</span>()
+  );
+  <span class="kw">const</span> [country, setCountryState] <span class="op">=</span> <span class="fn">useState</span>(
+    () <span class="op">=></span> localStorage.<span class="fn">getItem</span>(<span class="str">'bp_country'</span>) <span class="op">||</span> <span class="str">'BE'</span>
+  );
+
+  <span class="kw">const</span> config <span class="op">=</span> <span class="fn">getCountryConfig</span>(country);
+
+  <span class="cmt">// Vertaalfunctie met dot-notatie</span>
+  <span class="kw">const</span> t <span class="op">=</span> <span class="fn">useCallback</span>((key) <span class="op">=></span> {
+    <span class="kw">const</span> parts <span class="op">=</span> key.<span class="fn">split</span>(<span class="str">'.'</span>);
+    <span class="kw">let</span> node <span class="op">=</span> translations;
+    <span class="kw">for</span> (<span class="kw">const</span> part <span class="kw">of</span> parts) {
+      node <span class="op">=</span> node?.[part];
+      <span class="kw">if</span> (<span class="op">!</span>node) <span class="kw">return</span> <span class="str">`[${</span>key<span class="str">}]`</span>;
+    }
+    <span class="kw">return</span> node?.[lang] <span class="op">??</span> node?.en <span class="op">??</span> key;
+  }, [lang]);
+
+  <span class="kw">const</span> setLang <span class="op">=</span> <span class="fn">useCallback</span>((newLang) <span class="op">=></span> {
+    localStorage.<span class="fn">setItem</span>(<span class="str">'bp_lang'</span>, newLang);
+    document.<span class="prop">documentElement</span>.<span class="prop">lang</span> <span class="op">=</span> newLang;
+    <span class="fn">setLangState</span>(newLang);
+  }, []);
+
+  <span class="kw">const</span> setCountry <span class="op">=</span> <span class="fn">useCallback</span>((newCountry) <span class="op">=></span> {
+    localStorage.<span class="fn">setItem</span>(<span class="str">'bp_country'</span>, newCountry);
+    <span class="kw">const</span> cc <span class="op">=</span> <span class="fn">getCountryConfig</span>(newCountry);
+    <span class="cmt">// Zet standaard taal voor dat land</span>
+    <span class="kw">if</span> (cc.<span class="prop">defaultLang</span>.<span class="prop">length</span> <span class="op">></span> <span class="num">0</span>) <span class="fn">setLang</span>(cc.<span class="prop">defaultLang</span>[<span class="num">0</span>]);
+    <span class="fn">setCountryState</span>(newCountry);
+  }, []);
+
+  <span class="kw">const</span> formatCurrency <span class="op">=</span> <span class="fn">useCallback</span>((amount) <span class="op">=></span> {
+    <span class="kw">return new</span> <span class="cls">Intl</span>.<span class="fn">NumberFormat</span>(config.<span class="prop">locale</span>, {
+      style: <span class="str">'currency'</span>,
+      currency: config.<span class="prop">currency</span>,
+    }).<span class="fn">format</span>(amount);
+  }, [config]);
+
+  <span class="kw">return</span> { t, lang, country, setLang, setCountry, config, formatCurrency };
+}
+
+<span class="cmt">// Auto-detect browsertaal</span>
+<span class="kw">function</span> <span class="fn">detectBrowserLang</span>() {
+  <span class="kw">const</span> browserLang <span class="op">=</span> navigator.<span class="prop">language</span>.<span class="fn">split</span>(<span class="str">'-'</span>)[<span class="num">0</span>];
+  <span class="kw">const</span> supported <span class="op">=</span> [<span class="str">'nl'</span>, <span class="str">'fr'</span>, <span class="str">'en'</span>, <span class="str">'de'</span>];
+  <span class="kw">return</span> supported.<span class="fn">includes</span>(browserLang) ? browserLang : <span class="str">'nl'</span>;
+}
+
+<span class="cmt">// Voorbeeld gebruik in component:</span>
+<span class="cmt">/*
+export function HeroSection({ audience }) {
+  const { t, lang, country, config } = useTranslation();
+  
+  return (
+    &lt;section&gt;
+      &lt;p&gt;{t('hero.eyebrow')}&lt;/p&gt;
+      &lt;h1&gt;{t(`hero.${audience}.headline`)}&lt;/h1&gt;
+      &lt;p&gt;{t(`hero.${audience}.sub`)}&lt;/p&gt;
+      &lt;p&gt;Betaal via: {config.payment.labels[lang]}&lt;/p&gt;
+      &lt;button&gt;{t(`hero.${audience}.cta`)}&lt;/button&gt;
+    &lt;/section&gt;
+  );
+}
+*/</span>
+</pre>
+    </div>
+
+    <!-- middleware -->
+    <div id="code-middleware" class="code-block" style="display:none;">
+      <button class="code-copy" onclick="copyTab('middleware')">Kopiëren</button>
+      <pre><span class="cmt">// buildpay/middleware/i18nMiddleware.js</span>
+<span class="cmt">// Express middleware — detecteert land + taal automatisch</span>
+
+<span class="kw">const</span> { <span class="obj">COUNTRIES</span> } <span class="op">=</span> <span class="fn">require</span>(<span class="str">'../i18n/countries'</span>);
+
+<span class="cmt">// IP → land mapping via MaxMind GeoIP of Cloudflare CF-IPCountry header</span>
+<span class="kw">function</span> <span class="fn">i18nMiddleware</span>(req, res, next) {
+
+  <span class="cmt">// 1. Land detecteren</span>
+  <span class="kw">const</span> countryFromHeader <span class="op">=</span> req.<span class="prop">headers</span>[<span class="str">'cf-ipcountry'</span>]; <span class="cmt">// Cloudflare</span>
+  <span class="kw">const</span> countryFromCookie <span class="op">=</span> req.<span class="prop">cookies</span>?.[<span class="str">'bp_country'</span>];
+  <span class="kw">const</span> country <span class="op">=</span> countryFromCookie
+    <span class="op">||</span> (<span class="obj">COUNTRIES</span>[countryFromHeader] ? countryFromHeader : <span class="str">'BE'</span>);
+
+  <span class="cmt">// 2. Taal detecteren</span>
+  <span class="kw">const</span> langFromCookie <span class="op">=</span> req.<span class="prop">cookies</span>?.[<span class="str">'bp_lang'</span>];
+  <span class="kw">const</span> langFromHeader <span class="op">=</span> req.<span class="prop">headers</span>[<span class="str">'accept-language'</span>]
+    ?.<span class="fn">split</span>(<span class="str">','</span>)[<span class="num">0</span>]?.<span class="fn">split</span>(<span class="str">'-'</span>)[<span class="num">0</span>];
+  <span class="kw">const</span> supported <span class="op">=</span> [<span class="str">'nl'</span>, <span class="str">'fr'</span>, <span class="str">'en'</span>, <span class="str">'de'</span>];
+  <span class="kw">const</span> lang <span class="op">=</span> langFromCookie
+    <span class="op">||</span> (supported.<span class="fn">includes</span>(langFromHeader) ? langFromHeader : <span class="str">'nl'</span>);
+
+  <span class="cmt">// 3. Attach aan request object</span>
+  req.<span class="prop">i18n</span> <span class="op">=</span> { country, lang };
+
+  <span class="cmt">// 4. SEO: stel juiste hreflang headers in</span>
+  res.<span class="fn">setHeader</span>(<span class="str">'Content-Language'</span>, lang);
+  res.<span class="fn">setHeader</span>(<span class="str">'X-Buildpay-Country'</span>, country);
+
+  <span class="fn">next</span>();
+}
+
+<span class="cmt">/**
+ * URL structuur voor SEO:
+ * buildpay.be/nl/klant         → NL, BE
+ * buildpay.be/fr/client        → FR, BE
+ * buildpay.nl/nl/aannemer      → NL, NL
+ * buildpay.fr/fr/entrepreneur  → FR, FR
+ * 
+ * Subdomain strategie (later):
+ * nl.buildpay.com → NL
+ * fr.buildpay.com → FR
+ * de.buildpay.com → DE
+ */</span>
+<span class="kw">function</span> <span class="fn">langRouter</span>(req, res, next) {
+  <span class="kw">const</span> [, langFromUrl] <span class="op">=</span> req.<span class="prop">path</span>.<span class="fn">split</span>(<span class="str">'/'</span>);
+  <span class="kw">if</span> ([<span class="str">'nl'</span>, <span class="str">'fr'</span>, <span class="str">'en'</span>, <span class="str">'de'</span>].<span class="fn">includes</span>(langFromUrl)) {
+    req.<span class="prop">i18n</span>.<span class="prop">lang</span> <span class="op">=</span> langFromUrl;
+  }
+  <span class="fn">next</span>();
+}
+
+<span class="cmt">// Hreflang tags genereren voor &lt;head&gt; (SEO)</span>
+<span class="kw">function</span> <span class="fn">generateHreflangTags</span>(baseUrl, currentPath) {
+  <span class="kw">const</span> langs <span class="op">=</span> [
+    { lang: <span class="str">'nl'</span>, country: <span class="str">'BE'</span>, domain: <span class="str">'buildpay.be'</span> },
+    { lang: <span class="str">'fr'</span>, country: <span class="str">'BE'</span>, domain: <span class="str">'buildpay.be'</span> },
+    { lang: <span class="str">'nl'</span>, country: <span class="str">'NL'</span>, domain: <span class="str">'buildpay.nl'</span> },
+    { lang: <span class="str">'fr'</span>, country: <span class="str">'FR'</span>, domain: <span class="str">'buildpay.fr'</span> },
+    { lang: <span class="str">'en'</span>, country: <span class="str">'GB'</span>, domain: <span class="str">'buildpay.co.uk'</span> },
+  ];
+
+  <span class="kw">return</span> langs.<span class="fn">map</span>(({ lang, country, domain }) <span class="op">=></span>
+    <span class="str">`&lt;link rel="alternate" hreflang="${</span>lang<span class="str">}-${</span>country<span class="str">}" href="https://${</span>domain<span class="str">}/${</span>lang<span class="str">}${</span>currentPath<span class="str">}"&gt;`</span>
+  ).<span class="fn">join</span>(<span class="str">'\n'</span>);
+}
+
+<span class="obj">module</span>.<span class="prop">exports</span> <span class="op">=</span> { i18nMiddleware, langRouter, generateHreflangTags };
+</pre>
+    </div>
+  </div>
+
+  <!-- INFO BOXES -->
+  <div class="two-col">
+    <div>
+      <div class="info-box ib-green">
+        ✅ <strong>Wat al klaar is:</strong> NL/EN toggle in alle dashboards, Mangopay voor BE/NL/FR/DE, modulaire contract wizard met country parameter, architect vergoeding per vrijgave.
+      </div>
+      <div class="info-box ib-blue">
+        🔧 <strong>Volgende stap — FR toevoegen:</strong> Vertalingen in <code style="font-family:'JetBrains Mono',monospace;">i18n.js</code> zijn klaar voor FR. Je hoeft alleen de bestaande <code>[data-nl]</code>/<code>[data-en]</code> HTML attributen te vervangen door <code>[data-i18n="sleutel"]</code> en <code>updateAllTranslations()</code> aan te roepen.
+      </div>
+    </div>
+    <div>
+      <div class="info-box ib-amber">
+        🌍 <strong>Domeinenstrategie:</strong><br>
+        <code style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;">buildpay.be</code> → België (NL + FR)<br>
+        <code style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;">buildpay.nl</code> → Nederland<br>
+        <code style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;">buildpay.fr</code> → Frankrijk (later)<br>
+        <code style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;">buildpay.de</code> → Duitsland (later)<br><br>
+        Mangopay client ID per land = aparte account maar zelfde platform.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ===== TRANSLATIONS DATA (subset for demo) =====
+const TRANSLATIONS = {
+  nl: {
+    eyebrow: 'Escrow platform voor de bouwsector',
+    client_headline: 'Verbouw zonder financieel risico',
+    client_sub: 'Jouw geld staat veilig in escrow. De aannemer krijgt pas betaald wanneer jij het werk goedkeurt — milestone per milestone.',
+    client_cta: 'Bescherm mijn verbouwing →',
+    how: 'Hoe werkt het?',
+    pay_label: 'Betaalmethode',
+    kyc_label: 'Bedrijfsregistratie',
+    law_label: 'Toepasselijk recht',
+  },
+  fr: {
+    eyebrow: 'Plateforme d\'escrow pour la construction',
+    client_headline: 'Rénover sans risque financier',
+    client_sub: 'Votre argent est sécurisé en escrow. L\'entrepreneur n\'est payé que lorsque vous approuvez le travail — jalon par jalon.',
+    client_cta: 'Protéger mes travaux →',
+    how: 'Comment ça marche ?',
+    pay_label: 'Mode de paiement',
+    kyc_label: 'Enregistrement entreprise',
+    law_label: 'Droit applicable',
+  },
+  en: {
+    eyebrow: 'Escrow platform for the construction sector',
+    client_headline: 'Renovate without financial risk',
+    client_sub: 'Your money sits safely in escrow. The contractor only gets paid when you approve the work — milestone by milestone.',
+    client_cta: 'Protect my renovation →',
+    how: 'How does it work?',
+    pay_label: 'Payment method',
+    kyc_label: 'Company registration',
+    law_label: 'Applicable law',
+  },
+};
+
+const COUNTRIES_CONFIG = {
+  BE: {
+    flag: '🇧🇪',
+    name: { nl:'België', fr:'Belgique', en:'Belgium' },
+    payment: { nl:'Bancontact / SEPA', fr:'Bancontact / SEPA', en:'Bancontact / SEPA' },
+    kyc: { nl:'KBO-uittreksel', fr:'Extrait BCE', en:'BCE extract' },
+    vat: 'BE0XXX.XXX.XXX',
+    law: { nl:'Belgisch recht · art. 1792 BW', fr:'Droit belge · art. 1792 CC', en:'Belgian law · art. 1792 CC' },
+    warranty: { nl:'10 jaar', fr:'10 ans', en:'10 years' },
+    sector: 'Confederatie Bouw',
+    commission: '1.5%',
+    preferred: 'Bancontact',
+  },
+  NL: {
+    flag: '🇳🇱',
+    name: { nl:'Nederland', fr:'Pays-Bas', en:'Netherlands' },
+    payment: { nl:'iDEAL / SEPA', fr:'iDEAL / SEPA', en:'iDEAL / SEPA' },
+    kyc: { nl:'KvK-uittreksel', fr:'Extrait KvK', en:'KvK extract' },
+    vat: 'NL000000000B00',
+    law: { nl:'Nederlands recht · art. 7:758 BW', fr:'Droit néerlandais · art. 7:758 BW', en:'Dutch law · art. 7:758 BW' },
+    warranty: { nl:'10 jaar', fr:'10 ans', en:'10 years' },
+    sector: 'Bouwend Nederland',
+    commission: '1.5%',
+    preferred: 'iDEAL',
+  },
+  FR: {
+    flag: '🇫🇷',
+    name: { nl:'Frankrijk', fr:'France', en:'France' },
+    payment: { nl:'Carte bancaire / SEPA', fr:'Carte bancaire / SEPA', en:'Card / SEPA' },
+    kyc: { nl:'KBIS-uittreksel', fr:'Extrait Kbis', en:'Kbis extract' },
+    vat: 'FR00000000000 (SIRET)',
+    law: { nl:'Frans recht · art. 1792 CC', fr:'Droit français · art. 1792 CC', en:'French law · art. 1792 CC' },
+    warranty: { nl:'10 jaar', fr:'10 ans', en:'10 years' },
+    sector: 'Fédération Française du Bâtiment',
+    commission: '1.5%',
+    preferred: 'Carte bancaire',
+  },
+  DE: {
+    flag: '🇩🇪',
+    name: { nl:'Duitsland', fr:'Allemagne', en:'Germany' },
+    payment: { nl:'SEPA / Sofort', fr:'SEPA / Sofort', en:'SEPA / Sofort' },
+    kyc: { nl:'Handelsregister-uittreksel', fr:'Extrait du registre du commerce', en:'Commercial register extract' },
+    vat: 'DE000000000',
+    law: { nl:'Duits recht · § 634a BGB (VOB/B)', fr:'Droit allemand · § 634a BGB', en:'German law · § 634a BGB (VOB/B)' },
+    warranty: { nl:'5 jaar (§ 634a BGB)', fr:'5 ans (§ 634a BGB)', en:'5 years (§ 634a BGB)' },
+    sector: 'ZDB',
+    commission: '1.5%',
+    preferred: 'SEPA',
+  },
+};
+
+const TRANS_COMPARE_KEYS = [
+  { key: 'nav.overview',         nl:'Overzicht',        fr:'Vue d\'ensemble',     en:'Overview' },
+  { key: 'roles.contractor',     nl:'Aannemer',         fr:'Entrepreneur',        en:'Contractor' },
+  { key: 'milestone.approve',    nl:'Goedkeuren',       fr:'Approuver',           en:'Approve' },
+  { key: 'escrow.released',      nl:'Vrijgegeven',      fr:'Libéré',              en:'Released' },
+  { key: 'contract.title',       nl:'Aannemingsovereenkomst', fr:'Contrat d\'entreprise', en:'Construction contract' },
+  { key: 'milestone.statusDone', nl:'Vrijgegeven',      fr:'Libéré',              en:'Released' },
+  { key: 'common.getStarted',    nl:'Gratis starten',   fr:'Commencer gratuitement', en:'Get started free' },
+  { key: 'pricing.free',         nl:'Gratis',           fr:'Gratuit',             en:'Free' },
+];
+
+let currentLang = 'nl';
+let currentCountry = 'BE';
+
+function setDemo(lang, country) {
+  currentLang = lang;
+  updateLangUI();
+  updateCountryUI(country || currentCountry);
+}
+
+function setCountry(country) {
+  currentCountry = country;
+  updateCountryUI(country);
+  // Update country buttons
+  document.querySelectorAll('.country-opt').forEach(b => b.classList.remove('active'));
+  document.getElementById('co-'+country).classList.add('active');
+}
+
+function updateLangUI() {
+  const tr = TRANSLATIONS[currentLang];
+  const cc = COUNTRIES_CONFIG[currentCountry];
+
+  document.getElementById('p-eyebrow').textContent = tr.eyebrow;
+  document.getElementById('p-headline').textContent = tr.client_headline;
+  document.getElementById('p-sub').textContent = tr.client_sub;
+  document.getElementById('p-cta1').textContent = tr.client_cta;
+  document.getElementById('p-cta2').textContent = tr.how;
+  document.getElementById('p-pay-label').textContent = tr.pay_label;
+  document.getElementById('p-kyc-label').textContent = tr.kyc_label;
+  document.getElementById('p-law-label').textContent = tr.law_label;
+
+  if (cc) {
+    document.getElementById('p-pay-value').textContent = cc.payment[currentLang] || cc.payment.nl;
+    document.getElementById('p-kyc-value').textContent = cc.kyc[currentLang] || cc.kyc.nl;
+    document.getElementById('p-law-value').textContent = cc.law[currentLang] || cc.law.nl;
+  }
+
+  // Update lang buttons
+  document.querySelectorAll('.lang-opt').forEach(b => b.classList.remove('active'));
+  document.getElementById('lo-'+currentLang).classList.add('active');
+
+  // Update translation compare
+  renderTransCompare();
+}
+
+function updateCountryUI(country) {
+  currentCountry = country;
+  const cc = COUNTRIES_CONFIG[country];
+  if (!cc) return;
+
+  // Update flag + title
+  document.getElementById('config-flag').textContent = cc.flag;
+  document.getElementById('config-title').textContent = (cc.name[currentLang] || cc.name.nl) + ' — Landconfiguratie';
+
+  // Update preview
+  document.getElementById('p-pay-value').textContent = cc.payment[currentLang] || cc.payment.nl;
+  document.getElementById('p-kyc-value').textContent = cc.kyc[currentLang] || cc.kyc.nl;
+  document.getElementById('p-law-value').textContent = cc.law[currentLang] || cc.law.nl;
+
+  // Render config
+  const configEl = document.getElementById('country-config-display');
+  configEl.innerHTML = [
+    { k: 'payment.preferred', v: cc.preferred, cls: 'blue' },
+    { k: 'kyc.companyReg', v: cc.kyc[currentLang] || cc.kyc.nl, cls: '' },
+    { k: 'kyc.vatFormat', v: cc.vat, cls: '' },
+    { k: 'legal.warranty', v: cc.warranty[currentLang] || cc.warranty.nl, cls: 'green' },
+    { k: 'legal.jurisdiction', v: cc.law[currentLang] || cc.law.nl, cls: '' },
+    { k: 'mangopay.commissionRate', v: cc.commission, cls: 'green' },
+    { k: 'sector.contractors', v: cc.sector, cls: 'amber' },
+  ].map(({ k, v, cls }) => `
+    <div class="config-row">
+      <span class="config-key">${k}</span>
+      <span class="config-val ${cls}">${v}</span>
+    </div>`).join('');
+}
+
+function renderTransCompare() {
+  const tbody = document.getElementById('trans-compare');
+  tbody.innerHTML = TRANS_COMPARE_KEYS.map(item => `
+    <tr>
+      <td class="trans-key">${item.key}</td>
+      <td class="trans-nl">${item.nl}</td>
+      <td class="trans-fr">${item.fr}</td>
+      <td class="trans-en">${item.en}</td>
+    </tr>`).join('');
+}
+
+function showTab(name) {
+  ['i18n','countries','legal','react','middleware'].forEach(t => {
+    document.getElementById('code-'+t).style.display = t===name ? 'block' : 'none';
+    document.getElementById('tab-'+t).classList.toggle('active', t===name);
+  });
+}
+
+function copyTab(name) {
+  const el = document.getElementById('code-'+name);
+  if (!el) return;
+  navigator.clipboard.writeText(el.innerText).then(() => {
+    const btn = el.querySelector('.code-copy');
+    if (btn) { btn.textContent = 'Gekopieerd ✓'; setTimeout(() => btn.textContent='Kopiëren', 2000); }
+  });
+}
+
+// Init
+updateLangUI();
+updateCountryUI('BE');
+renderTransCompare();
+showTab('i18n');
+</script>
+</body>
+</html>

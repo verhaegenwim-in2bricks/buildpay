@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buildpay — Mangopay Integratie</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0A1628;--blue:#2563EB;--blue-light:#EFF6FF;
+  --teal:#0D9488;--teal-light:#F0FDFA;
+  --success:#10B981;--success-light:#D1FAE5;
+  --warning:#F59E0B;--warning-light:#FEF3C7;
+  --error:#EF4444;--error-light:#FEE2E2;
+  --white:#FFFFFF;--off-white:#F8FAFC;
+  --slate:#64748B;--slate-light:#94A3B8;--border:#E2E8F0;
+  --code-bg:#0F172A;--code-green:#4ADE80;--code-blue:#60A5FA;
+  --code-yellow:#FCD34D;--code-purple:#C084FC;--code-orange:#FB923C;--code-gray:#94A3B8;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--off-white);color:var(--navy);}
+
+/* NAV */
+.topnav{background:var(--navy);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;}
+.topnav-logo{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--white);text-decoration:none;}
+.topnav-logo span{color:#60A5FA;}
+.topnav-badge{display:flex;align-items:center;gap:0.5rem;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);border-radius:100px;padding:0.3rem 0.85rem;font-size:0.72rem;font-weight:600;color:#4ADE80;}
+.topnav-badge-dot{width:6px;height:6px;border-radius:50%;background:#4ADE80;animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+
+/* LAYOUT */
+.page-wrap{max-width:1200px;margin:0 auto;padding:2rem;}
+.page-title{font-family:'Syne',sans-serif;font-size:1.75rem;font-weight:800;color:var(--navy);margin-bottom:0.5rem;}
+.page-sub{font-size:0.95rem;color:var(--slate);margin-bottom:2rem;line-height:1.7;}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.25rem;margin-bottom:1.5rem;}
+
+/* CARDS */
+.card{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.5rem;}
+.card-head{padding:1.1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;color:var(--navy);}
+.card-body{padding:1.5rem;}
+
+/* STATUS PILLS */
+.pill{font-size:0.68rem;font-weight:600;padding:0.22rem 0.6rem;border-radius:100px;white-space:nowrap;}
+.pill-green{background:var(--success-light);color:#065F46;}
+.pill-yellow{background:var(--warning-light);color:#92400E;}
+.pill-blue{background:var(--blue-light);color:var(--blue);}
+.pill-red{background:var(--error-light);color:#991B1B;}
+.pill-gray{background:var(--off-white);color:var(--slate);}
+
+/* FLOW DIAGRAM */
+.flow-wrap{background:var(--navy);border-radius:12px;padding:2rem;margin-bottom:1.5rem;}
+.flow-title{font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1.5rem;}
+.flow-steps{display:flex;align-items:center;gap:0;overflow-x:auto;}
+.flow-step{display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.flow-node{width:3.5rem;height:3.5rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.25rem;border:2px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);position:relative;z-index:1;cursor:pointer;transition:all 0.2s;}
+.flow-node:hover{transform:scale(1.1);}
+.flow-node.active{border-color:var(--success);box-shadow:0 0 20px rgba(16,185,129,0.4);}
+.flow-node.pending{border-color:var(--warning);box-shadow:0 0 12px rgba(245,158,11,0.3);}
+.flow-node.done{border-color:var(--success);background:rgba(16,185,129,0.15);}
+.flow-label{font-size:0.68rem;color:rgba(255,255,255,0.45);margin-top:0.5rem;text-align:center;max-width:70px;line-height:1.3;}
+.flow-arrow{flex:1;height:2px;background:rgba(255,255,255,0.1);min-width:2rem;position:relative;}
+.flow-arrow.done{background:rgba(16,185,129,0.4);}
+.flow-arrow::after{content:'▶';position:absolute;right:-6px;top:-7px;font-size:0.65rem;color:rgba(255,255,255,0.2);}
+.flow-arrow.done::after{color:rgba(16,185,129,0.6);}
+
+/* DEMO SECTION */
+.demo-wrap{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;}
+.demo-panel{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.demo-panel-head{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.6rem;}
+.demo-panel-title{font-family:'Syne',sans-serif;font-size:0.88rem;font-weight:700;color:var(--navy);}
+.demo-panel-body{padding:1.25rem;}
+
+/* FORM */
+.form-group{margin-bottom:0.85rem;}
+.form-group label{display:block;font-size:0.75rem;font-weight:600;color:var(--navy);margin-bottom:0.3rem;}
+.form-group input,.form-group select{width:100%;padding:0.55rem 0.8rem;border:1.5px solid var(--border);border-radius:7px;font-size:0.83rem;font-family:'DM Sans',sans-serif;color:var(--navy);outline:none;transition:border-color 0.2s;background:var(--white);}
+.form-group input:focus,.form-group select:focus{border-color:var(--blue);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;}
+
+/* BUTTONS */
+.btn{padding:0.6rem 1.25rem;border-radius:7px;font-size:0.83rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;border:none;display:inline-flex;align-items:center;gap:0.4rem;}
+.btn-navy{background:var(--navy);color:var(--white);}
+.btn-navy:hover{background:#0F2952;}
+.btn-blue{background:var(--blue);color:var(--white);}
+.btn-blue:hover{background:#1D4ED8;}
+.btn-teal{background:var(--teal);color:var(--white);}
+.btn-teal:hover{background:#0F766E;}
+.btn-success{background:var(--success);color:var(--white);}
+.btn-success:hover{background:#059669;}
+.btn-outline{background:none;color:var(--slate);border:1.5px solid var(--border);}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue);}
+.btn-sm{padding:0.35rem 0.8rem;font-size:0.75rem;}
+.btn:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
+.btn-loading{position:relative;color:transparent!important;}
+.btn-loading::after{content:'';position:absolute;top:50%;left:50%;margin:-8px 0 0 -8px;width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:var(--white);border-radius:50%;animation:spin 0.7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* WALLET DISPLAY */
+.wallet-card{background:var(--navy);border-radius:10px;padding:1.25rem;color:var(--white);margin-bottom:0.75rem;position:relative;overflow:hidden;}
+.wallet-card::before{content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,0.3),transparent);}
+.wallet-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.4);margin-bottom:0.3rem;}
+.wallet-amount{font-family:'Syne',sans-serif;font-size:1.75rem;font-weight:800;letter-spacing:-0.02em;}
+.wallet-id{font-size:0.65rem;color:rgba(255,255,255,0.3);margin-top:0.2rem;font-family:'JetBrains Mono',monospace;}
+.wallet-status{position:absolute;top:1rem;right:1rem;}
+
+/* TRANSACTION LOG */
+.tx-log{background:var(--off-white);border-radius:8px;padding:0.75rem;max-height:200px;overflow-y:auto;font-family:'JetBrains Mono',monospace;font-size:0.72rem;}
+.tx-log::-webkit-scrollbar{width:3px;}
+.tx-log::-webkit-scrollbar-thumb{background:var(--border);border-radius:100px;}
+.tx-entry{padding:0.3rem 0;border-bottom:1px solid var(--border);color:var(--slate);line-height:1.5;}
+.tx-entry:last-child{border-bottom:none;}
+.tx-entry .ts{color:var(--slate-light);}
+.tx-entry .ok{color:var(--success);}
+.tx-entry .warn{color:var(--warning);}
+.tx-entry .err{color:var(--error);}
+.tx-entry .info{color:var(--blue);}
+
+/* CODE BLOCKS */
+.code-section{margin-bottom:1.5rem;}
+.code-tabs{display:flex;gap:0;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:0;}
+.code-tab{padding:0.6rem 1.1rem;font-size:0.75rem;font-weight:500;cursor:pointer;border:none;background:none;color:rgba(255,255,255,0.4);font-family:'DM Sans',sans-serif;transition:all 0.15s;border-bottom:2px solid transparent;}
+.code-tab.active{color:var(--white);border-bottom-color:var(--blue);}
+.code-block{background:var(--code-bg);border-radius:0 0 10px 10px;padding:1.5rem;overflow-x:auto;position:relative;}
+.code-block pre{font-family:'JetBrains Mono',monospace;font-size:0.78rem;line-height:1.7;margin:0;}
+.code-copy{position:absolute;top:0.75rem;right:0.75rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:5px;padding:0.3rem 0.65rem;font-size:0.7rem;color:rgba(255,255,255,0.5);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+.code-copy:hover{background:rgba(255,255,255,0.15);color:var(--white);}
+.code-block-wrap{background:var(--code-bg);border-radius:10px;overflow:hidden;}
+.code-file-tab{display:flex;align-items:center;gap:0.5rem;padding:0.6rem 1.1rem;background:rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.06);}
+.code-file-dot{width:8px;height:8px;border-radius:50%;}
+.code-file-name{font-size:0.72rem;color:rgba(255,255,255,0.4);font-family:'JetBrains Mono',monospace;}
+
+/* SYNTAX */
+.kw{color:var(--code-purple);}
+.fn{color:var(--code-blue);}
+.str{color:var(--code-green);}
+.num{color:var(--code-orange);}
+.cmt{color:#475569;font-style:italic;}
+.obj{color:var(--code-yellow);}
+.prop{color:var(--code-blue);}
+.op{color:var(--code-gray);}
+.cls{color:var(--code-yellow);}
+
+/* MILESTONE PROGRESS */
+.ms-flow{display:flex;flex-direction:column;gap:0.6rem;}
+.ms-row{display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;border:1.5px solid var(--border);border-radius:8px;background:var(--white);transition:all 0.2s;}
+.ms-row.active{border-color:var(--warning);background:var(--warning-light);}
+.ms-row.done{border-color:var(--success);background:var(--success-light);}
+.ms-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.ms-dot-done{background:var(--success);}
+.ms-dot-active{background:var(--warning);animation:blink 1.5s infinite;}
+.ms-dot-pending{background:var(--border);}
+.ms-name{flex:1;font-size:0.82rem;font-weight:600;color:var(--navy);}
+.ms-amount{font-size:0.82rem;font-weight:700;color:var(--navy);}
+
+/* KYC STATUS */
+.kyc-item{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 0;border-bottom:1px solid var(--border);}
+.kyc-item:last-child{border-bottom:none;}
+.kyc-icon{width:2rem;height:2rem;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0;}
+.kyc-label{flex:1;font-size:0.82rem;font-weight:500;color:var(--navy);}
+.kyc-sub{font-size:0.7rem;color:var(--slate-light);}
+
+/* INFO BOX */
+.info-box{border-radius:8px;padding:0.85rem 1.1rem;font-size:0.78rem;line-height:1.6;margin-bottom:1rem;}
+.info-box.blue{background:var(--blue-light);border:1px solid #BFDBFE;color:#1E40AF;}
+.info-box.teal{background:var(--teal-light);border:1px solid #99F6E4;color:#0F766E;}
+.info-box.warning{background:var(--warning-light);border:1px solid #FDE68A;color:#92400E;}
+.info-box.success{background:var(--success-light);border:1px solid #BBF7D0;color:#065F46;}
+
+/* ARCHITECTURE DIAGRAM */
+.arch-diagram{background:var(--navy);border-radius:12px;padding:2rem;margin-bottom:1.5rem;}
+.arch-layer{border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:1rem 1.25rem;margin-bottom:0.75rem;}
+.arch-layer:last-child{margin-bottom:0;}
+.arch-layer-title{font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:0.75rem;}
+.arch-boxes{display:flex;gap:0.75rem;flex-wrap:wrap;}
+.arch-box{padding:0.5rem 0.9rem;border-radius:6px;font-size:0.75rem;font-weight:600;font-family:'JetBrains Mono',monospace;}
+.ab-blue{background:rgba(37,99,235,0.2);color:#93C5FD;border:1px solid rgba(37,99,235,0.3);}
+.ab-teal{background:rgba(13,148,136,0.2);color:#5EEAD4;border:1px solid rgba(13,148,136,0.3);}
+.ab-green{background:rgba(16,185,129,0.2);color:#6EE7B7;border:1px solid rgba(16,185,129,0.3);}
+.ab-yellow{background:rgba(245,158,11,0.2);color:#FCD34D;border:1px solid rgba(245,158,11,0.3);}
+.ab-purple{background:rgba(168,85,247,0.2);color:#D8B4FE;border:1px solid rgba(168,85,247,0.3);}
+.arch-arrow{text-align:center;color:rgba(255,255,255,0.15);font-size:1.1rem;margin:0.25rem 0;}
+
+/* COST TABLE */
+.cost-table{width:100%;border-collapse:collapse;}
+.cost-table th{text-align:left;padding:0.6rem 1rem;font-size:0.7rem;font-weight:600;color:var(--slate);text-transform:uppercase;letter-spacing:0.08em;background:var(--off-white);border-bottom:1px solid var(--border);}
+.cost-table td{padding:0.75rem 1rem;font-size:0.82rem;color:var(--navy);border-bottom:1px solid var(--border);}
+.cost-table tr:last-child td{border-bottom:none;}
+.cost-table .highlight{font-weight:700;color:var(--success);}
+
+@media(max-width:900px){
+  .two-col,.demo-wrap,.three-col{grid-template-columns:1fr;}
+  .flow-steps{gap:0.25rem;}
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a href="buildpay-landing.html" class="topnav-logo">Build<span>pay</span></a>
+  <div class="topnav-badge"><div class="topnav-badge-dot"></div>Mangopay Integratie Documentatie</div>
+</nav>
+
+<div class="page-wrap">
+  <div class="page-title">💳 Mangopay Escrow Integratie</div>
+  <p class="page-sub">Volledige technische documentatie en interactieve demo van de Buildpay ↔ Mangopay escrow flow. Inclusief Node.js backend code, API calls en webhook handling.</p>
+
+  <!-- ARCHITECTURE -->
+  <div class="arch-diagram">
+    <div style="font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1.25rem;">Architectuur overzicht</div>
+    <div class="arch-layer">
+      <div class="arch-layer-title">Frontend (Buildpay Dashboard)</div>
+      <div class="arch-boxes">
+        <div class="arch-box ab-blue">React / HTML</div>
+        <div class="arch-box ab-blue">Project wizard</div>
+        <div class="arch-box ab-blue">Milestone UI</div>
+        <div class="arch-box ab-blue">Ondertekening</div>
+      </div>
+    </div>
+    <div class="arch-arrow">↕ REST API calls</div>
+    <div class="arch-layer">
+      <div class="arch-layer-title">Buildpay Backend (Node.js / Express)</div>
+      <div class="arch-boxes">
+        <div class="arch-box ab-teal">Project service</div>
+        <div class="arch-box ab-teal">Escrow service</div>
+        <div class="arch-box ab-teal">KYC service</div>
+        <div class="arch-box ab-teal">Webhook handler</div>
+        <div class="arch-box ab-teal">Notification service</div>
+      </div>
+    </div>
+    <div class="arch-arrow">↕ Mangopay SDK</div>
+    <div class="arch-layer">
+      <div class="arch-layer-title">Mangopay Platform (vergunde betaalinstelling)</div>
+      <div class="arch-boxes">
+        <div class="arch-box ab-green">User wallets</div>
+        <div class="arch-box ab-green">PayIn (iDEAL/Bancontact)</div>
+        <div class="arch-box ab-green">Escrow holding</div>
+        <div class="arch-box ab-green">PayOut (SEPA)</div>
+        <div class="arch-box ab-yellow">KYC verificatie</div>
+        <div class="arch-box ab-purple">Webhooks</div>
+      </div>
+    </div>
+    <div class="arch-arrow">↕ Regulated</div>
+    <div class="arch-layer">
+      <div class="arch-layer-title">Bankensysteem</div>
+      <div class="arch-boxes">
+        <div class="arch-box ab-blue">Klant bankrekening</div>
+        <div class="arch-box ab-teal">Aannemer bankrekening</div>
+        <div class="arch-box ab-green">Buildpay commissie rekening</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW DIAGRAM -->
+  <div class="flow-wrap">
+    <div class="flow-title">Escrow flow — stap voor stap</div>
+    <div class="flow-steps" id="flow-diagram">
+      <div class="flow-step">
+        <div class="flow-node done" id="fn-1" onclick="showFlowStep(1)" title="Stap 1">👤</div>
+        <div class="flow-label">Users aanmaken</div>
+      </div>
+      <div class="flow-arrow done" id="fa-1"></div>
+      <div class="flow-step">
+        <div class="flow-node done" id="fn-2" onclick="showFlowStep(2)" title="Stap 2">👛</div>
+        <div class="flow-label">Wallets aanmaken</div>
+      </div>
+      <div class="flow-arrow done" id="fa-2"></div>
+      <div class="flow-step">
+        <div class="flow-node done" id="fn-3" onclick="showFlowStep(3)" title="Stap 3">✅</div>
+        <div class="flow-label">KYC verificatie</div>
+      </div>
+      <div class="flow-arrow done" id="fa-3"></div>
+      <div class="flow-step">
+        <div class="flow-node active" id="fn-4" onclick="showFlowStep(4)" title="Stap 4">💰</div>
+        <div class="flow-label">PayIn escrow</div>
+      </div>
+      <div class="flow-arrow" id="fa-4"></div>
+      <div class="flow-step">
+        <div class="flow-node" id="fn-5" onclick="showFlowStep(5)" title="Stap 5">🔒</div>
+        <div class="flow-label">Milestone lock</div>
+      </div>
+      <div class="flow-arrow" id="fa-5"></div>
+      <div class="flow-step">
+        <div class="flow-node" id="fn-6" onclick="showFlowStep(6)" title="Stap 6">✓✓</div>
+        <div class="flow-label">Goedkeuring</div>
+      </div>
+      <div class="flow-arrow" id="fa-6"></div>
+      <div class="flow-step">
+        <div class="flow-node" id="fn-7" onclick="showFlowStep(7)" title="Stap 7">📤</div>
+        <div class="flow-label">Transfer</div>
+      </div>
+      <div class="flow-arrow" id="fa-7"></div>
+      <div class="flow-step">
+        <div class="flow-node" id="fn-8" onclick="showFlowStep(8)">🏦</div>
+        <div class="flow-label">PayOut bank</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE DEMO -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">🎮 Interactieve escrow demo</div>
+      <span class="pill pill-blue">Sandbox mode</span>
+    </div>
+    <div class="card-body">
+      <div class="info-box blue" style="margin-bottom:1.25rem;">
+        ℹ️ Deze demo simuleert de volledige Mangopay escrow flow. In productie worden echte API calls gemaakt naar <code style="font-family:'JetBrains Mono',monospace;background:rgba(37,99,235,0.1);padding:0.1rem 0.3rem;border-radius:3px;">api.mangopay.com</code>
+      </div>
+
+      <div class="demo-wrap">
+        <!-- LEFT: CONTROLS -->
+        <div>
+          <div class="demo-panel" style="margin-bottom:1rem;">
+            <div class="demo-panel-head">
+              <div style="font-size:1rem;">👤</div>
+              <div class="demo-panel-title">Stap 1 — Users & wallets aanmaken</div>
+            </div>
+            <div class="demo-panel-body">
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Klant naam</label>
+                  <input type="text" id="client-name-mp" value="Marie Van Damme">
+                </div>
+                <div class="form-group">
+                  <label>Aannemer naam</label>
+                  <input type="text" id="contractor-name-mp" value="De Bouwers BV">
+                </div>
+              </div>
+              <button class="btn btn-navy" onclick="createUsers()" id="btn-create-users">
+                👤 Users & wallets aanmaken
+              </button>
+            </div>
+          </div>
+
+          <div class="demo-panel" style="margin-bottom:1rem;">
+            <div class="demo-panel-head">
+              <div style="font-size:1rem;">💰</div>
+              <div class="demo-panel-title">Stap 2 — Escrow storting (PayIn)</div>
+            </div>
+            <div class="demo-panel-body">
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Projectbedrag (€)</label>
+                  <input type="number" id="project-amount" value="48500">
+                </div>
+                <div class="form-group">
+                  <label>Betaalmethode</label>
+                  <select id="payment-method">
+                    <option value="IDEAL">iDEAL (NL)</option>
+                    <option value="BANCONTACT">Bancontact (BE)</option>
+                    <option value="SEPA">SEPA overschrijving</option>
+                  </select>
+                </div>
+              </div>
+              <button class="btn btn-blue" onclick="createPayIn()" id="btn-payin" disabled>
+                💰 Escrow storting initiëren
+              </button>
+            </div>
+          </div>
+
+          <div class="demo-panel" style="margin-bottom:1rem;">
+            <div class="demo-panel-head">
+              <div style="font-size:1rem;">📤</div>
+              <div class="demo-panel-title">Stap 3 — Milestone vrijgeven (Transfer + PayOut)</div>
+            </div>
+            <div class="demo-panel-body">
+              <div class="form-group">
+                <label>Milestone selecteren</label>
+                <select id="milestone-select" disabled>
+                  <option value="1">Milestone 1 — Sloopwerk (€8.500)</option>
+                  <option value="2">Milestone 2 — Ruwbouw (€18.500)</option>
+                  <option value="3">Milestone 3 — Afwerking (€21.500)</option>
+                </select>
+              </div>
+              <div style="display:flex;gap:0.5rem;">
+                <button class="btn btn-teal" onclick="releaseEscrow()" id="btn-release" disabled>
+                  ✓ Vrijgeven
+                </button>
+                <button class="btn btn-outline" onclick="refundEscrow()" id="btn-refund" disabled>
+                  ↩ Terugbetalen
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: STATUS -->
+        <div>
+          <div style="margin-bottom:1rem;">
+            <div style="font-size:0.75rem;font-weight:600;color:var(--slate);margin-bottom:0.6rem;text-transform:uppercase;letter-spacing:0.08em;">Wallet status</div>
+            <div class="wallet-card" id="client-wallet">
+              <div class="wallet-label">Klant wallet (escrow)</div>
+              <div class="wallet-amount" id="client-balance">€ 0,00</div>
+              <div class="wallet-id" id="client-wallet-id">wlt_client_— niet aangemaakt</div>
+              <div class="wallet-status"><span class="pill pill-gray" id="client-wallet-status">Inactief</span></div>
+            </div>
+            <div class="wallet-card" id="contractor-wallet">
+              <div class="wallet-label">Aannemer wallet</div>
+              <div class="wallet-amount" id="contractor-balance">€ 0,00</div>
+              <div class="wallet-id" id="contractor-wallet-id">wlt_contractor_— niet aangemaakt</div>
+              <div class="wallet-status"><span class="pill pill-gray" id="contractor-wallet-status">Inactief</span></div>
+            </div>
+          </div>
+
+          <div style="margin-bottom:1rem;">
+            <div style="font-size:0.75rem;font-weight:600;color:var(--slate);margin-bottom:0.6rem;text-transform:uppercase;letter-spacing:0.08em;">Milestones</div>
+            <div class="ms-flow" id="ms-flow">
+              <div class="ms-row" id="ms-row-1"><div class="ms-dot ms-dot-pending" id="ms-dot-1"></div><div class="ms-name">MS 1 — Sloopwerk</div><div class="ms-amount">€ 8.500</div><span class="pill pill-gray" id="ms-status-1">Wacht</span></div>
+              <div class="ms-row" id="ms-row-2"><div class="ms-dot ms-dot-pending" id="ms-dot-2"></div><div class="ms-name">MS 2 — Ruwbouw</div><div class="ms-amount">€ 18.500</div><span class="pill pill-gray" id="ms-status-2">Wacht</span></div>
+              <div class="ms-row" id="ms-row-3"><div class="ms-dot ms-dot-pending" id="ms-dot-3"></div><div class="ms-name">MS 3 — Afwerking</div><div class="ms-amount">€ 21.500</div><span class="pill pill-gray" id="ms-status-3">Wacht</span></div>
+            </div>
+          </div>
+
+          <div>
+            <div style="font-size:0.75rem;font-weight:600;color:var(--slate);margin-bottom:0.6rem;text-transform:uppercase;letter-spacing:0.08em;">API log</div>
+            <div class="tx-log" id="api-log">
+              <div class="tx-entry"><span class="ts">[00:00:00]</span> <span class="info">Buildpay sandbox klaar — wacht op actie...</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CODE EXAMPLES -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">📁 Backend code — Node.js</div>
+      <span class="pill pill-green">Productieklaar</span>
+    </div>
+    <div class="card-body" style="padding:0;">
+
+      <!-- TABS -->
+      <div style="background:var(--code-bg);border-radius:0;padding:0 1.5rem;">
+        <div style="display:flex;gap:0;border-bottom:1px solid rgba(255,255,255,0.06);">
+          <button class="code-tab active" onclick="showCodeTab('setup')" id="ct-setup">setup.js</button>
+          <button class="code-tab" onclick="showCodeTab('users')" id="ct-users">createUsers.js</button>
+          <button class="code-tab" onclick="showCodeTab('escrow')" id="ct-escrow">escrowService.js</button>
+          <button class="code-tab" onclick="showCodeTab('release')" id="ct-release">releaseEscrow.js</button>
+          <button class="code-tab" onclick="showCodeTab('webhooks')" id="ct-webhooks">webhooks.js</button>
+          <button class="code-tab" onclick="showCodeTab('kyc')" id="ct-kyc">kycService.js</button>
+        </div>
+      </div>
+
+      <!-- setup.js -->
+      <div id="code-setup" class="code-block" style="border-radius:0 0 12px 12px;">
+        <button class="code-copy" onclick="copyCode('setup')">Kopiëren</button>
+        <pre><span class="cmt">// buildpay/services/mangopay/setup.js</span>
+<span class="cmt">// Mangopay SDK initialisatie voor Buildpay</span>
+
+<span class="kw">const</span> <span class="obj">Mangopay</span> <span class="op">=</span> <span class="fn">require</span>(<span class="str">'mangopay2-nodejs-sdk'</span>);
+
+<span class="cmt">// Initialiseer Mangopay client</span>
+<span class="kw">const</span> <span class="obj">mangopay</span> <span class="op">=</span> <span class="kw">new</span> <span class="cls">Mangopay</span>({
+  clientId:  <span class="obj">process</span>.<span class="prop">env</span>.<span class="prop">MANGOPAY_CLIENT_ID</span>,   <span class="cmt">// bv. 'buildpay_prod'</span>
+  clientApiKey: <span class="obj">process</span>.<span class="prop">env</span>.<span class="prop">MANGOPAY_API_KEY</span>,  <span class="cmt">// Geheime API sleutel</span>
+  baseUrl: <span class="obj">process</span>.<span class="prop">env</span>.<span class="prop">NODE_ENV</span> <span class="op">===</span> <span class="str">'production'</span>
+    <span class="op">?</span> <span class="str">'https://api.mangopay.com'</span>
+    <span class="op">:</span> <span class="str">'https://api.sandbox.mangopay.com'</span>, <span class="cmt">// Sandbox voor development</span>
+});
+
+<span class="cmt">// Buildpay commissie wallet ID (platform earnings)</span>
+<span class="kw">const</span> <span class="obj">BUILDPAY_FEE_WALLET_ID</span> <span class="op">=</span> <span class="obj">process</span>.<span class="prop">env</span>.<span class="prop">BUILDPAY_FEE_WALLET_ID</span>;
+<span class="kw">const</span> <span class="obj">COMMISSION_RATE</span> <span class="op">=</span> <span class="num">0.015</span>; <span class="cmt">// 1.5%</span>
+<span class="kw">const</span> <span class="obj">ARCHITECT_RATE</span> <span class="op">=</span> <span class="num">0.0025</span>; <span class="cmt">// 0.25%</span>
+
+<span class="obj">module</span>.<span class="prop">exports</span> <span class="op">=</span> { mangopay, <span class="obj">BUILDPAY_FEE_WALLET_ID</span>, <span class="obj">COMMISSION_RATE</span>, <span class="obj">ARCHITECT_RATE</span> };
+</pre>
+      </div>
+
+      <!-- createUsers.js -->
+      <div id="code-users" class="code-block" style="display:none;border-radius:0 0 12px 12px;">
+        <button class="code-copy" onclick="copyCode('users')">Kopiëren</button>
+        <pre><span class="cmt">// buildpay/services/mangopay/createUsers.js</span>
+<span class="cmt">// Mangopay users en wallets aanmaken bij project start</span>
+
+<span class="kw">const</span> { mangopay } <span class="op">=</span> <span class="fn">require</span>(<span class="str">'./setup'</span>);
+
+<span class="cmt">/**
+ * Maak Mangopay Natural User aan voor particuliere klant
+ */</span>
+<span class="kw">async function</span> <span class="fn">createClientUser</span>(client) {
+  <span class="kw">const</span> user <span class="op">=</span> <span class="kw">await</span> mangopay.<span class="prop">Users</span>.<span class="fn">create</span>({
+    <span class="prop">PersonType</span>: <span class="str">'NATURAL'</span>,
+    <span class="prop">FirstName</span>:  client.<span class="prop">firstName</span>,
+    <span class="prop">LastName</span>:   client.<span class="prop">lastName</span>,
+    <span class="prop">Email</span>:      client.<span class="prop">email</span>,
+    <span class="prop">Birthday</span>:  client.<span class="prop">birthdayTimestamp</span>,
+    <span class="prop">Nationality</span>: <span class="str">'BE'</span>,
+    <span class="prop">CountryOfResidence</span>: <span class="str">'BE'</span>,
+  });
+
+  <span class="cmt">// Maak escrow wallet aan voor klant</span>
+  <span class="kw">const</span> wallet <span class="op">=</span> <span class="kw">await</span> mangopay.<span class="prop">Wallets</span>.<span class="fn">create</span>({
+    <span class="prop">Owners</span>: [user.<span class="prop">Id</span>],
+    <span class="prop">Description</span>: <span class="str">`Buildpay escrow — ${</span>client.<span class="prop">projectName</span><span class="str">}`</span>,
+    <span class="prop">Currency</span>: <span class="str">'EUR'</span>,
+  });
+
+  <span class="kw">return</span> { userId: user.<span class="prop">Id</span>, walletId: wallet.<span class="prop">Id</span> };
+}
+
+<span class="cmt">/**
+ * Maak Mangopay Legal User aan voor aannemer (bedrijf)
+ */</span>
+<span class="kw">async function</span> <span class="fn">createContractorUser</span>(contractor) {
+  <span class="kw">const</span> user <span class="op">=</span> <span class="kw">await</span> mangopay.<span class="prop">Users</span>.<span class="fn">create</span>({
+    <span class="prop">PersonType</span>: <span class="str">'LEGAL'</span>,
+    <span class="prop">Name</span>:       contractor.<span class="prop">companyName</span>,
+    <span class="prop">Email</span>:      contractor.<span class="prop">email</span>,
+    <span class="prop">LegalPersonType</span>: <span class="str">'BUSINESS'</span>,
+    <span class="prop">LegalRepresentativeFirstName</span>: contractor.<span class="prop">repFirstName</span>,
+    <span class="prop">LegalRepresentativeLastName</span>:  contractor.<span class="prop">repLastName</span>,
+    <span class="prop">LegalRepresentativeEmail</span>:     contractor.<span class="prop">email</span>,
+    <span class="prop">CompanyNumber</span>: contractor.<span class="prop">vatNumber</span>, <span class="cmt">// BTW-nummer</span>
+    <span class="prop">CountryOfResidence</span>: <span class="str">'BE'</span>,
+  });
+
+  <span class="kw">const</span> wallet <span class="op">=</span> <span class="kw">await</span> mangopay.<span class="prop">Wallets</span>.<span class="fn">create</span>({
+    <span class="prop">Owners</span>: [user.<span class="prop">Id</span>],
+    <span class="prop">Description</span>: <span class="str">`Buildpay aannemer — ${</span>contractor.<span class="prop">companyName</span><span class="str">}`</span>,
+    <span class="prop">Currency</span>: <span class="str">'EUR'</span>,
+  });
+
+  <span class="kw">return</span> { userId: user.<span class="prop">Id</span>, walletId: wallet.<span class="prop">Id</span> };
+}
+
+<span class="obj">module</span>.<span class="prop">exports</span> <span class="op">=</span> { createClientUser, createContractorUser };
+</pre>
+      </div>
+
+      <!-- escrowService.js -->
+      <div id="code-escrow" class="code-block" style="display:none;border-radius:0 0 12px 12px;">
+        <button class="code-copy" onclick="copyCode('escrow')">Kopiëren</button>
+        <pre><span class="cmt">// buildpay/services/mangopay/escrowService.js</span>
+<span class="cmt">// Escrow storting via iDEAL / Bancontact / SEPA</span>
+
+<span class="kw">const</span> { mangopay } <span class="op">=</span> <span class="fn">require</span>(<span class="str">'./setup'</span>);
+
+<span class="cmt">/**
+ * Initieer een escrow PayIn via Bancontact (BE)
+ * Klant wordt omgeleid naar bancontact betaalpagina
+ */</span>
+<span class="kw">async function</span> <span class="fn">createBancontactPayIn</span>({ projectId, clientWalletId, amount, returnUrl }) {
+  <span class="kw">const</span> payIn <span class="op">=</span> <span class="kw">await</span> mangopay.<span class="prop">PayIns</span>.<span class="fn">create</span>({
+    <span class="prop">PaymentType</span>: <span class="str">'WEB'</span>,
+    <span class="prop">ExecutionType</span>: <span class="str">'WEB'</span>,
+    <span class="prop">PaymentDetails</span>: { <span class="prop">Style</span>: <span class="str">'REDIRECT'</span> },
+    <span class="prop">CreditedWalletId</span>: clientWalletId,   <span class="cmt">// → klant escrow wallet</span>
+    <span class="prop">DebitedFunds</span>: {
+      <span class="prop">Currency</span>: <span class="str">'EUR'</span>,
+      <span class="prop">Amount</span>: amount <span class="op">*</span> <span class="num">100</span>,   <span class="cmt">// Mangopay werkt in centen</span>
+    },
+    <span class="prop">Fees</span>: { <span class="prop">Currency</span>: <span class="str">'EUR'</span>, <span class="prop">Amount</span>: <span class="num">0</span> }, <span class="cmt">// Geen fees bij storting</span>
+    <span class="prop">ReturnURL</span>: returnUrl,
+    <span class="prop">Tag</span>: <span class="str">`buildpay_project_${</span>projectId<span class="str">}`</span>,
+  });
+
+  <span class="kw">return</span> {
+    payInId:    payIn.<span class="prop">Id</span>,
+    redirectUrl: payIn.<span class="prop">RedirectURL</span>, <span class="cmt">// Stuur klant hierheen</span>
+    status:     payIn.<span class="prop">Status</span>,
+  };
+}
+
+<span class="cmt">/**
+ * iDEAL PayIn voor Nederlandse klanten
+ */</span>
+<span class="kw">async function</span> <span class="fn">createIdealPayIn</span>({ projectId, clientWalletId, amount, bank, returnUrl }) {
+  <span class="kw">const</span> payIn <span class="op">=</span> <span class="kw">await</span> mangopay.<span class="prop">PayIns</span>.<span class="fn">create</span>({
+    <span class="prop">PaymentType</span>: <span class="str">'IDEAL'</span>,
+    <span class="prop">ExecutionType</span>: <span class="str">'WEB'</span>,
+    <span class="prop">Bic</span>: bank,                 <span class="cmt">// bv. 'INGBNL2A' voor ING</span>
+    <span class="prop">CreditedWalletId</span>: clientWalletId,
+    <span class="prop">DebitedFunds</span>: {
+      <span class="prop">Currency</span>: <span class="str">'EUR'</span>,
+      <span class="prop">Amount</span>: amount <span class="op">*</span> <span class="num">100</span>,
+    },
+    <span class="prop">Fees</span>: { <span class="prop">Currency</span>: <span class="str">'EUR'</span>, <span class="prop">Amount</span>: <span class="num">0</span> },
+    <span class="prop">ReturnURL</span>: returnUrl,
+    <span class="prop">Tag</span>: <span class="str">`buildpay_project_${</span>projectId<span class="str">}`</span>,
+  });
+
+  <span class="kw">return</span> { payInId: payIn.<span class="prop">Id</span>, redirectUrl: payIn.<span class="prop">RedirectURL</span> };
+}
+
+<span class="obj">module</span>.<span class="prop">exports</span> <span class="op">=</span> { createBancontactPayIn, createIdealPayIn };
+</pre>
+      </div>
+
+      <!-- releaseEscrow.js -->
+      <div id="code-release" class="code-block" style="display:none;border-radius:0 0 12px 12px;">
+        <button class="code-copy" onclick="copyCode('release')">Kopiëren</button>
+        <pre><span class="cmt">// buildpay/services/mangopay/releaseEscrow.js</span>
+<span class="cmt">// Milestone vrijgeven: Transfer + PayOut naar bankrekening</span>
+
+<span class="kw">const</span> { mangopay, <span class="obj">BUILDPAY_FEE_WALLET_ID</span>, <span class="obj">COMMISSION_RATE</span>, <span class="obj">ARCHITECT_RATE</span> } <span class="op">=</span> <span class="fn">require</span>(<span class="str">'./setup'</span>);
+
+<span class="cmt">/**
+ * Geef milestone vrij na goedkeuring door klant én architect
+ * 
+ * Flow:
+ * 1. Transfer van klant wallet → aannemer wallet (min commissie)
+ * 2. Transfer commissie → Buildpay fee wallet
+ * 3. PayOut aannemer wallet → bankrekening (SEPA)
+ * 4. Optioneel: architect vergoeding
+ */</span>
+<span class="kw">async function</span> <span class="fn">releaseMilestone</span>({
+  milestoneId, milestoneAmount,
+  clientWalletId, contractorWalletId,
+  contractorBankAccountId,
+  architectWalletId,   <span class="cmt">// null als geen architect</span>
+  approvedByClient, approvedByArchitect
+}) {
+
+  <span class="cmt">// Validatie: beide partijen moeten goedkeuren</span>
+  <span class="kw">if</span> (<span class="op">!</span>approvedByClient) <span class="kw">throw new</span> <span class="cls">Error</span>(<span class="str">'Klant heeft nog niet goedgekeurd'</span>);
+  <span class="kw">if</span> (architectWalletId <span class="op">&&</span> <span class="op">!</span>approvedByArchitect) {
+    <span class="kw">throw new</span> <span class="cls">Error</span>(<span class="str">'Architect heeft nog niet gevalideerd'</span>);
+  }
+
+  <span class="kw">const</span> amountInCents <span class="op">=</span> milestoneAmount <span class="op">*</span> <span class="num">100</span>;
+
+  <span class="cmt">// Bereken commissies</span>
+  <span class="kw">const</span> buildpayFee <span class="op">=</span> <span class="obj">Math</span>.<span class="fn">round</span>(amountInCents <span class="op">*</span> <span class="obj">COMMISSION_RATE</span>);
+  <span class="kw">const</span> architectFee <span class="op">=</span> architectWalletId
+    <span class="op">?</span> <span class="obj">Math</span>.<span class="fn">round</span>(amountInCents <span class="op">*</span> <span class="obj">ARCHITECT_RATE</span>)
+    <span class="op">:</span> <span class="num">0</span>;
+  <span class="kw">const</span> netAmount <span class="op">=</span> amountInCents <span class="op">-</span> buildpayFee <span class="op">-</span> architectFee;
+
+  <span class="cmt">// Stap 1: Transfer klant → aannemer (netto bedrag)</span>
+  <span class="kw">const</span> transfer <span class="op">=</span> <span class="kw">await</span> mangopay.<span class="prop">Transfers</span>.<span class="fn">create</span>({
+    <span class="prop">AuthorId</span>:       clientWalletId,    <span class="cmt">// klant is eigenaar</span>
+    <span class="prop">DebitedWalletId</span>: clientWalletId,
+    <span class="prop">CreditedWalletId</span>: contractorWalletId,
+    <span class="prop">DebitedFunds</span>:  { <span class="prop">Currency</span>: <span class="str">'EUR'</span>, <span class="prop">Amount</span>: netAmount },
+    <span class="prop">Fees</span>:          { <span class="prop">Currency</span>: <span class="str">'EUR'</span>, <span class="prop">Amount</span>: buildpayFee },
+    <span class="prop">Tag</span>: <span class="str">`milestone_${</span>milestoneId<span class="str">}_release`</span>,
+  });
+
+  <span class="cmt">// Stap 2 (optioneel): Architect vergoeding</span>
+  <span class="kw">if</span> (architectWalletId <span class="op">&&</span> architectFee <span class="op">></span> <span class="num">0</span>) {
+    <span class="kw">await</span> mangopay.<span class="prop">Transfers</span>.<span class="fn">create</span>({
+      <span class="prop">AuthorId</span>:        clientWalletId,
+      <span class="prop">DebitedWalletId</span>:  clientWalletId,
+      <span class="prop">CreditedWalletId</span>: architectWalletId,
+      <span class="prop">DebitedFunds</span>: { <span class="prop">Currency</span>: <span class="str">'EUR'</span>, <span class="prop">Amount</span>: architectFee },
+      <span class="prop">Fees</span>:         { <span class="prop">Currency</span>: <span class="str">'EUR'</span>, <span class="prop">Amount</span>: <span class="num">0</span> },
+      <span class="prop">Tag</span>: <span class="str">`milestone_${</span>milestoneId<span class="str">}_architect_fee`</span>,
+    });
+  }
+
+  <span class="cmt">// Stap 3: PayOut aannemer → bankrekening (SEPA)</span>
+  <span class="kw">const</span> payout <span class="op">=</span> <span class="kw">await</span> mangopay.<span class="prop">PayOuts</span>.<span class="fn">create</span>({
+    <span class="prop">AuthorId</span>:        contractorWalletId,
+    <span class="prop">DebitedWalletId</span>:  contractorWalletId,
+    <span class="prop">DebitedFunds</span>:    { <span class="prop">Currency</span>: <span class="str">'EUR'</span>, <span class="prop">Amount</span>: netAmount },
+    <span class="prop">Fees</span>:            { <span class="prop">Currency</span>: <span class="str">'EUR'</span>, <span class="prop">Amount</span>: <span class="num">0</span> },
+    <span class="prop">BankAccountId</span>:   contractorBankAccountId,  <span class="cmt">// IBAN aannemer</span>
+    <span class="prop">BankWireRef</span>:     <span class="str">`Buildpay MS-${</span>milestoneId<span class="str">}`</span>,
+    <span class="prop">Tag</span>: <span class="str">`milestone_${</span>milestoneId<span class="str">}_payout`</span>,
+  });
+
+  <span class="kw">return</span> {
+    transferId: transfer.<span class="prop">Id</span>,
+    payoutId:   payout.<span class="prop">Id</span>,
+    netAmount:  netAmount <span class="op">/</span> <span class="num">100</span>,
+    buildpayFee: buildpayFee <span class="op">/</span> <span class="num">100</span>,
+    architectFee: architectFee <span class="op">/</span> <span class="num">100</span>,
+    estimatedArrival: <span class="str">'binnen 24 uur'</span>,
+  };
+}
+
+<span class="cmt">/**
+ * Terugbetaling bij geschil — refund naar klant
+ */</span>
+<span class="kw">async function</span> <span class="fn">refundToClient</span>({ payInId, amount, reason }) {
+  <span class="kw">const</span> refund <span class="op">=</span> <span class="kw">await</span> mangopay.<span class="prop">PayIns</span>.<span class="fn">createRefund</span>(payInId, {
+    <span class="prop">AuthorId</span>: payInId,
+    <span class="prop">DebitedFunds</span>: { <span class="prop">Currency</span>: <span class="str">'EUR'</span>, <span class="prop">Amount</span>: amount <span class="op">*</span> <span class="num">100</span> },
+    <span class="prop">Fees</span>: { <span class="prop">Currency</span>: <span class="str">'EUR'</span>, <span class="prop">Amount</span>: <span class="num">0</span> },
+    <span class="prop">Tag</span>: reason,
+  });
+  <span class="kw">return</span> { refundId: refund.<span class="prop">Id</span>, status: refund.<span class="prop">Status</span> };
+}
+
+<span class="obj">module</span>.<span class="prop">exports</span> <span class="op">=</span> { releaseMilestone, refundToClient };
+</pre>
+      </div>
+
+      <!-- webhooks.js -->
+      <div id="code-webhooks" class="code-block" style="display:none;border-radius:0 0 12px 12px;">
+        <button class="code-copy" onclick="copyCode('webhooks')">Kopiëren</button>
+        <pre><span class="cmt">// buildpay/routes/webhooks.js</span>
+<span class="cmt">// Mangopay webhook handler — verwerkt betalingsevents</span>
+
+<span class="kw">const</span> express <span class="op">=</span> <span class="fn">require</span>(<span class="str">'express'</span>);
+<span class="kw">const</span> router  <span class="op">=</span> express.<span class="fn">Router</span>();
+<span class="kw">const</span> { mangopay } <span class="op">=</span> <span class="fn">require</span>(<span class="str">'../services/mangopay/setup'</span>);
+<span class="kw">const</span> <span class="obj">ProjectService</span> <span class="op">=</span> <span class="fn">require</span>(<span class="str">'../services/projectService'</span>);
+<span class="kw">const</span> <span class="obj">NotificationService</span> <span class="op">=</span> <span class="fn">require</span>(<span class="str">'../services/notificationService'</span>);
+
+<span class="cmt">// POST /webhooks/mangopay</span>
+router.<span class="fn">post</span>(<span class="str">'/mangopay'</span>, <span class="kw">async</span> (req, res) <span class="op">=></span> {
+  <span class="kw">const</span> { <span class="prop">EventType</span>, <span class="prop">ResourceId</span>, <span class="prop">Date</span> } <span class="op">=</span> req.<span class="prop">body</span>;
+
+  <span class="fn">log</span>(<span class="str">`Webhook: ${</span><span class="prop">EventType</span><span class="str">} — ${</span><span class="prop">ResourceId</span><span class="str">}`</span>);
+
+  <span class="kw">switch</span> (<span class="prop">EventType</span>) {
+
+    <span class="kw">case</span> <span class="str">'PAYIN_NORMAL_SUCCEEDED'</span>: {
+      <span class="cmt">// Escrow storting gelukt → project kan starten</span>
+      <span class="kw">const</span> payIn <span class="op">=</span> <span class="kw">await</span> mangopay.<span class="prop">PayIns</span>.<span class="fn">get</span>(<span class="prop">ResourceId</span>);
+      <span class="kw">const</span> projectId <span class="op">=</span> payIn.<span class="prop">Tag</span>.<span class="fn">replace</span>(<span class="str">'buildpay_project_'</span>, <span class="str">''</span>);
+
+      <span class="kw">await</span> <span class="obj">ProjectService</span>.<span class="fn">markEscrowReceived</span>(projectId, {
+        amount: payIn.<span class="prop">CreditedFunds</span>.<span class="prop">Amount</span> <span class="op">/</span> <span class="num">100</span>,
+        payInId: payIn.<span class="prop">Id</span>,
+      });
+
+      <span class="kw">await</span> <span class="obj">NotificationService</span>.<span class="fn">send</span>({
+        type: <span class="str">'ESCROW_RECEIVED'</span>,
+        projectId,
+        message: <span class="str">`Escrow gestort: €${</span>payIn.<span class="prop">CreditedFunds</span>.<span class="prop">Amount</span> <span class="op">/</span> <span class="num">100</span><span class="str">}`</span>,
+      });
+      <span class="kw">break</span>;
+    }
+
+    <span class="kw">case</span> <span class="str">'PAYIN_NORMAL_FAILED'</span>: {
+      <span class="cmt">// Storting mislukt → klant notificeren</span>
+      <span class="kw">const</span> payIn <span class="op">=</span> <span class="kw">await</span> mangopay.<span class="prop">PayIns</span>.<span class="fn">get</span>(<span class="prop">ResourceId</span>);
+      <span class="kw">await</span> <span class="obj">NotificationService</span>.<span class="fn">send</span>({
+        type: <span class="str">'PAYIN_FAILED'</span>,
+        projectId: payIn.<span class="prop">Tag</span>.<span class="fn">replace</span>(<span class="str">'buildpay_project_'</span>, <span class="str">''</span>),
+        message: <span class="str">`Betaling mislukt: ${</span>payIn.<span class="prop">ResultMessage</span><span class="str">}`</span>,
+      });
+      <span class="kw">break</span>;
+    }
+
+    <span class="kw">case</span> <span class="str">'TRANSFER_NORMAL_SUCCEEDED'</span>: {
+      <span class="cmt">// Milestone transfer gelukt</span>
+      <span class="kw">const</span> transfer <span class="op">=</span> <span class="kw">await</span> mangopay.<span class="prop">Transfers</span>.<span class="fn">get</span>(<span class="prop">ResourceId</span>);
+      <span class="kw">const</span> [, milestoneId] <span class="op">=</span> transfer.<span class="prop">Tag</span>.<span class="fn">split</span>(<span class="str">'_'</span>);
+      <span class="kw">await</span> <span class="obj">ProjectService</span>.<span class="fn">markMilestoneTransferred</span>(milestoneId);
+      <span class="kw">break</span>;
+    }
+
+    <span class="kw">case</span> <span class="str">'PAYOUT_NORMAL_SUCCEEDED'</span>: {
+      <span class="cmt">// Uitbetaling naar aannemer gelukt</span>
+      <span class="kw">const</span> payout <span class="op">=</span> <span class="kw">await</span> mangopay.<span class="prop">PayOuts</span>.<span class="fn">get</span>(<span class="prop">ResourceId</span>);
+      <span class="kw">const</span> [, msId] <span class="op">=</span> payout.<span class="prop">Tag</span>.<span class="fn">split</span>(<span class="str">'_'</span>);
+      <span class="kw">await</span> <span class="obj">ProjectService</span>.<span class="fn">markMilestonePaid</span>(msId);
+      <span class="kw">await</span> <span class="obj">NotificationService</span>.<span class="fn">send</span>({
+        type: <span class="str">'MILESTONE_PAID'</span>,
+        milestoneId: msId,
+        message: <span class="str">`€${</span>payout.<span class="prop">DebitedFunds</span>.<span class="prop">Amount</span> <span class="op">/</span> <span class="num">100</span><span class="str">} uitbetaald aan aannemer`</span>,
+      });
+      <span class="kw">break</span>;
+    }
+
+    <span class="kw">case</span> <span class="str">'KYC_SUCCEEDED'</span>: {
+      <span class="cmt">// KYC verificatie geslaagd</span>
+      <span class="kw">await</span> <span class="obj">ProjectService</span>.<span class="fn">markKycVerified</span>(<span class="prop">ResourceId</span>);
+      <span class="kw">break</span>;
+    }
+  }
+
+  res.<span class="fn">status</span>(<span class="num">200</span>).<span class="fn">json</span>({ received: <span class="kw">true</span> });
+});
+
+<span class="obj">module</span>.<span class="prop">exports</span> <span class="op">=</span> router;
+</pre>
+      </div>
+
+      <!-- kycService.js -->
+      <div id="code-kyc" class="code-block" style="display:none;border-radius:0 0 12px 12px;">
+        <button class="code-copy" onclick="copyCode('kyc')">Kopiëren</button>
+        <pre><span class="cmt">// buildpay/services/mangopay/kycService.js</span>
+<span class="cmt">// KYC verificatie voor aannemers</span>
+
+<span class="kw">const</span> { mangopay } <span class="op">=</span> <span class="fn">require</span>(<span class="str">'./setup'</span>);
+<span class="kw">const</span> fs <span class="op">=</span> <span class="fn">require</span>(<span class="str">'fs'</span>);
+
+<span class="cmt">/**
+ * Upload KYC document (identiteitskaart, KBO-uittreksel, etc.)
+ * Mangopay verwerkt dit automatisch via hun verificatiesysteem
+ */</span>
+<span class="kw">async function</span> <span class="fn">uploadKycDocument</span>({ userId, documentType, filePath }) {
+  <span class="cmt">// Stap 1: Maak KYC document object aan</span>
+  <span class="kw">const</span> kycDoc <span class="op">=</span> <span class="kw">await</span> mangopay.<span class="prop">Users</span>.<span class="fn">createKycDocument</span>(userId, {
+    <span class="prop">Type</span>: documentType,
+    <span class="cmt">// IDENTITY_PROOF | REGISTRATION_PROOF | ARTICLES_OF_ASSOCIATION</span>
+  });
+
+  <span class="cmt">// Stap 2: Upload pagina's</span>
+  <span class="kw">const</span> fileContent <span class="op">=</span> fs.<span class="fn">readFileSync</span>(filePath).<span class="fn">toString</span>(<span class="str">'base64'</span>);
+  <span class="kw">await</span> mangopay.<span class="prop">Users</span>.<span class="fn">createKycPage</span>(userId, kycDoc.<span class="prop">Id</span>, {
+    <span class="prop">File</span>: fileContent,
+  });
+
+  <span class="cmt">// Stap 3: Verstuur ter verificatie</span>
+  <span class="kw">const</span> submitted <span class="op">=</span> <span class="kw">await</span> mangopay.<span class="prop">Users</span>.<span class="fn">updateKycDocument</span>(userId, {
+    <span class="prop">Id</span>: kycDoc.<span class="prop">Id</span>,
+    <span class="prop">Status</span>: <span class="str">'VALIDATION_ASKED'</span>,
+  });
+
+  <span class="kw">return</span> {
+    kycDocId: submitted.<span class="prop">Id</span>,
+    status:   submitted.<span class="prop">Status</span>, <span class="cmt">// VALIDATION_ASKED | VALIDATED | REFUSED</span>
+  };
+}
+
+<span class="cmt">/**
+ * Vereiste KYC documenten per gebruikerstype
+ */</span>
+<span class="kw">const</span> <span class="obj">KYC_REQUIREMENTS</span> <span class="op">=</span> {
+  <span class="prop">NATURAL</span>: [                       <span class="cmt">// Particuliere klant</span>
+    <span class="str">'IDENTITY_PROOF'</span>,              <span class="cmt">// Identiteitskaart</span>
+  ],
+  <span class="prop">LEGAL_BUSINESS</span>: [               <span class="cmt">// Aannemer (BV/BVBA)</span>
+    <span class="str">'REGISTRATION_PROOF'</span>,          <span class="cmt">// KBO-uittreksel</span>
+    <span class="str">'ARTICLES_OF_ASSOCIATION'</span>,     <span class="cmt">// Statuten</span>
+    <span class="str">'IDENTITY_PROOF'</span>,              <span class="cmt">// ID zaakvoerder</span>
+  ],
+};
+
+<span class="cmt">/**
+ * Controleer KYC status van een gebruiker
+ */</span>
+<span class="kw">async function</span> <span class="fn">checkKycStatus</span>(userId) {
+  <span class="kw">const</span> docs <span class="op">=</span> <span class="kw">await</span> mangopay.<span class="prop">Users</span>.<span class="fn">getKycDocuments</span>(userId);
+  <span class="kw">const</span> validated <span class="op">=</span> docs.<span class="fn">filter</span>(d <span class="op">=></span> d.<span class="prop">Status</span> <span class="op">===</span> <span class="str">'VALIDATED'</span>);
+  <span class="kw">return</span> {
+    isFullyVerified: validated.<span class="prop">length</span> <span class="op">></span> <span class="num">0</span>,
+    documents: docs.<span class="fn">map</span>(d <span class="op">=></span> ({
+      type:   d.<span class="prop">Type</span>,
+      status: d.<span class="prop">Status</span>,
+    })),
+  };
+}
+
+<span class="obj">module</span>.<span class="prop">exports</span> <span class="op">=</span> { uploadKycDocument, checkKycStatus, <span class="obj">KYC_REQUIREMENTS</span> };
+</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- COST TABLE -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">💰 Kostenoverzicht — Mangopay vs Buildpay commissie</div>
+    </div>
+    <div class="card-body" style="padding:0;">
+      <table class="cost-table">
+        <thead><tr><th>Transactie</th><th>Methode</th><th>Mangopay kost</th><th>Buildpay commissie</th><th>Netto marge</th></tr></thead>
+        <tbody>
+          <tr><td>Project € 10.000</td><td>Bancontact</td><td>1.8% + €0.18 = €180</td><td>1.5% = €150</td><td class="highlight">− €30 verlies</td></tr>
+          <tr><td>Project € 20.000</td><td>SEPA</td><td>0.5% + €0.50 = €100</td><td>1.5% = €300</td><td class="highlight">+ €200 winst</td></tr>
+          <tr><td>Project € 50.000</td><td>SEPA</td><td>0.5% + €0.50 = €250</td><td>1.5% = €750</td><td class="highlight">+ €500 winst</td></tr>
+          <tr><td>Project € 100.000</td><td>SEPA</td><td>0.5% + €0.50 = €500</td><td>1.5% = €1.500</td><td class="highlight">+ €1.000 winst</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="info-box warning">
+    ⚠️ <strong>Belangrijk:</strong> Voor kleine projecten onder ~€15.000 via Bancontact/iDEAL is de Mangopay kost hoger dan jouw commissie. Overweeg SEPA als standaard betaalmethode aan te bevelen, of een minimumcommissie van €50 in te stellen.
+  </div>
+
+  <!-- KYC SECTION -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">🪪 KYC Vereisten per rol</div>
+      <span class="pill pill-yellow">Verplicht door wet</span>
+    </div>
+    <div class="three-col" style="padding:1.5rem;gap:1rem;margin-bottom:0;">
+      <div>
+        <div style="font-size:0.78rem;font-weight:700;color:var(--blue);margin-bottom:0.75rem;">🏠 Klant</div>
+        <div class="kyc-item"><div class="kyc-icon" style="background:var(--success-light);">✅</div><div><div class="kyc-label">Naam & adres</div><div class="kyc-sub">Automatisch bij registratie</div></div></div>
+        <div class="kyc-item"><div class="kyc-icon" style="background:var(--warning-light);">📄</div><div><div class="kyc-label">Identiteitskaart</div><div class="kyc-sub">Vereist boven €2.500</div></div></div>
+      </div>
+      <div>
+        <div style="font-size:0.78rem;font-weight:700;color:var(--teal);margin-bottom:0.75rem;">🔨 Aannemer</div>
+        <div class="kyc-item"><div class="kyc-icon" style="background:var(--warning-light);">📄</div><div><div class="kyc-label">KBO-uittreksel</div><div class="kyc-sub">Bedrijfsregistratie bewijs</div></div></div>
+        <div class="kyc-item"><div class="kyc-icon" style="background:var(--warning-light);">📋</div><div><div class="kyc-label">Statuten (BVBA/BV)</div><div class="kyc-sub">Artikel of association</div></div></div>
+        <div class="kyc-item"><div class="kyc-icon" style="background:var(--warning-light);">🪪</div><div><div class="kyc-label">ID zaakvoerder</div><div class="kyc-sub">Identiteitskaart</div></div></div>
+        <div class="kyc-item"><div class="kyc-icon" style="background:var(--blue-light);">🏦</div><div><div class="kyc-label">IBAN bankrekening</div><div class="kyc-sub">Voor uitbetalingen</div></div></div>
+      </div>
+      <div>
+        <div style="font-size:0.78rem;font-weight:700;color:var(--amber, #D97706);margin-bottom:0.75rem;">📐 Architect</div>
+        <div class="kyc-item"><div class="kyc-icon" style="background:var(--warning-light);">📄</div><div><div class="kyc-label">Identiteitskaart</div><div class="kyc-sub">Voor uitbetalingen</div></div></div>
+        <div class="kyc-item"><div class="kyc-icon" style="background:var(--blue-light);">🏦</div><div><div class="kyc-label">IBAN bankrekening</div><div class="kyc-sub">Voor vergoedingen</div></div></div>
+        <div class="kyc-item"><div class="kyc-icon" style="background:var(--success-light);">✅</div><div><div class="kyc-label">Orde van Architecten nr.</div><div class="kyc-sub">Optioneel maar aanbevolen</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ENV VARS -->
+  <div class="code-block-wrap" style="margin-bottom:1.5rem;">
+    <div class="code-file-tab">
+      <div class="code-file-dot" style="background:#EF4444;"></div>
+      <div class="code-file-dot" style="background:#F59E0B;margin-left:4px;"></div>
+      <div class="code-file-dot" style="background:#10B981;margin-left:4px;"></div>
+      <span class="code-file-name" style="margin-left:0.75rem;">.env.example</span>
+    </div>
+    <div class="code-block" style="border-radius:0 0 10px 10px;">
+      <button class="code-copy" onclick="copyCode('env')">Kopiëren</button>
+      <pre id="code-env-content"><span class="cmt"># Mangopay credentials</span>
+<span class="prop">MANGOPAY_CLIENT_ID</span><span class="op">=</span><span class="str">buildpay_sandbox</span>
+<span class="prop">MANGOPAY_API_KEY</span><span class="op">=</span><span class="str">voeg_hier_je_api_key_in</span>
+
+<span class="cmt"># Buildpay platform wallet (commissies komen hier naartoe)</span>
+<span class="prop">BUILDPAY_FEE_WALLET_ID</span><span class="op">=</span><span class="str">wlt_buildpay_platform_001</span>
+
+<span class="cmt"># Database</span>
+<span class="prop">DATABASE_URL</span><span class="op">=</span><span class="str">postgresql://user:pass@localhost:5432/buildpay</span>
+
+<span class="cmt"># Webhook secret (verificatie van Mangopay calls)</span>
+<span class="prop">MANGOPAY_WEBHOOK_SECRET</span><span class="op">=</span><span class="str">geheim_webhook_token</span>
+
+<span class="cmt"># App URLs</span>
+<span class="prop">APP_URL</span><span class="op">=</span><span class="str">https://app.buildpay.nl</span>
+<span class="prop">WEBHOOK_URL</span><span class="op">=</span><span class="str">https://app.buildpay.nl/webhooks/mangopay</span>
+
+<span class="cmt"># Environment</span>
+<span class="prop">NODE_ENV</span><span class="op">=</span><span class="str">development</span>  <span class="cmt"># → sandbox | production</span></pre>
+    </div>
+  </div>
+
+  <div class="info-box teal">
+    🚀 <strong>Volgende stap:</strong> Maak een gratis sandbox account aan op <strong>mangopay.com/start</strong>. Je krijgt meteen toegang tot de volledige API documentatie en kan alle bovenstaande code testen zonder echte transacties. Goedkeuring voor productie duurt gemiddeld 1-2 weken.
+  </div>
+
+</div>
+
+<script>
+// ===== DEMO STATE =====
+let state = {
+  clientUserId: null, clientWalletId: null, clientBalance: 0,
+  contractorUserId: null, contractorWalletId: null, contractorBalance: 0,
+  escrowDeposited: false, totalAmount: 0,
+  milestones: [
+    {id:1, name:'Sloopwerk', amount:8500, status:'pending'},
+    {id:2, name:'Ruwbouw', amount:18500, status:'pending'},
+    {id:3, name:'Afwerking', amount:21500, status:'pending'},
+  ]
+};
+
+function log(msg, type='info') {
+  const logEl = document.getElementById('api-log');
+  const now = new Date().toLocaleTimeString('nl-BE');
+  const colors = {info:'info', success:'ok', warning:'warn', error:'err'};
+  const div = document.createElement('div');
+  div.className = 'tx-entry';
+  div.innerHTML = `<span class="ts">[${now}]</span> <span class="${colors[type]}">${msg}</span>`;
+  logEl.appendChild(div);
+  logEl.scrollTop = logEl.scrollHeight;
+}
+
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+function generateId(prefix){return prefix+'_'+Math.random().toString(36).substr(2,9);}
+
+async function createUsers() {
+  const btn = document.getElementById('btn-create-users');
+  btn.classList.add('btn-loading'); btn.disabled = true;
+
+  log('POST /v2/buildpay/users — Natural user aanmaken...');
+  await sleep(800);
+  state.clientUserId = generateId('usr');
+  state.clientWalletId = generateId('wlt');
+  log(`✓ Client user aangemaakt: ${state.clientUserId}`, 'success');
+  log(`✓ Client wallet aangemaakt: ${state.clientWalletId}`, 'success');
+
+  await sleep(600);
+  log('POST /v2/buildpay/users — Legal user aanmaken...');
+  await sleep(800);
+  state.contractorUserId = generateId('usr');
+  state.contractorWalletId = generateId('wlt');
+  log(`✓ Contractor user aangemaakt: ${state.contractorUserId}`, 'success');
+  log(`✓ Contractor wallet aangemaakt: ${state.contractorWalletId}`, 'success');
+
+  await sleep(400);
+  log('POST /v2/buildpay/kyc/documents — KYC documenten aangemaakt', 'success');
+  log('✓ KYC status: VALIDATED (sandbox auto-approve)', 'success');
+
+  // Update UI
+  document.getElementById('client-wallet-id').textContent = state.clientWalletId;
+  document.getElementById('contractor-wallet-id').textContent = state.contractorWalletId;
+  document.getElementById('client-wallet-status').className = 'pill pill-green';
+  document.getElementById('client-wallet-status').textContent = 'Actief';
+  document.getElementById('contractor-wallet-status').className = 'pill pill-green';
+  document.getElementById('contractor-wallet-status').textContent = 'Actief';
+
+  // Update flow
+  setFlowDone(1); setFlowDone(2); setFlowDone(3); setFlowActive(4);
+
+  btn.classList.remove('btn-loading');
+  btn.textContent = '✓ Users aangemaakt';
+  btn.style.background = 'var(--success)';
+  document.getElementById('btn-payin').disabled = false;
+}
+
+async function createPayIn() {
+  const btn = document.getElementById('btn-payin');
+  btn.classList.add('btn-loading'); btn.disabled = true;
+  state.totalAmount = parseFloat(document.getElementById('project-amount').value);
+  const method = document.getElementById('payment-method').value;
+
+  log(`POST /v2/buildpay/payins/web-pay-in — ${method} €${state.totalAmount.toLocaleString('nl-BE')}...`);
+  await sleep(600);
+  log(`→ DebitedFunds: EUR ${state.totalAmount * 100} cents`);
+  log(`→ CreditedWalletId: ${state.clientWalletId}`);
+  await sleep(1000);
+
+  const payInId = generateId('payin');
+  log(`✓ PayIn aangemaakt: ${payInId}`, 'success');
+  log(`→ RedirectURL: https://api.sandbox.mangopay.com/redirect/${payInId}`);
+  await sleep(600);
+  log('Webhook ontvangen: PAYIN_NORMAL_SUCCEEDED', 'success');
+
+  state.clientBalance = state.totalAmount;
+  state.escrowDeposited = true;
+
+  document.getElementById('client-balance').textContent = `€ ${state.totalAmount.toLocaleString('nl-BE', {minimumFractionDigits:2})}`;
+
+  setFlowDone(4); setFlowActive(5);
+
+  btn.classList.remove('btn-loading');
+  btn.textContent = '✓ Gestort in escrow';
+  btn.style.background = 'var(--success)';
+  document.getElementById('btn-release').disabled = false;
+  document.getElementById('btn-refund').disabled = false;
+  document.getElementById('milestone-select').disabled = false;
+
+  // Activate first milestone
+  setMsActive(1);
+}
+
+async function releaseEscrow() {
+  const btn = document.getElementById('btn-release');
+  const msId = parseInt(document.getElementById('milestone-select').value);
+  const ms = state.milestones.find(m=>m.id===msId);
+  if(!ms || ms.status === 'done') { log('Milestone al vrijgegeven', 'warning'); return; }
+
+  btn.classList.add('btn-loading'); btn.disabled = true;
+
+  const buildpayFee = Math.round(ms.amount * 0.015);
+  const netAmount = ms.amount - buildpayFee;
+
+  log(`Milestone ${msId} vrijgeven — € ${ms.amount.toLocaleString('nl-BE')}...`);
+  await sleep(500);
+  log(`POST /v2/buildpay/transfers`);
+  log(`→ DebitedWalletId: ${state.clientWalletId}`);
+  log(`→ CreditedWalletId: ${state.contractorWalletId}`);
+  log(`→ Amount: EUR ${netAmount * 100} cents`);
+  log(`→ Fees (1.5%): EUR ${buildpayFee * 100} cents`);
+  await sleep(900);
+
+  const transferId = generateId('transfer');
+  log(`✓ Transfer: ${transferId}`, 'success');
+  await sleep(500);
+
+  log(`POST /v2/buildpay/payouts/bank-wire`);
+  log(`→ Amount: EUR ${netAmount * 100} cents`);
+  log(`→ BankWireRef: Buildpay MS-${msId}`);
+  await sleep(800);
+  log(`✓ PayOut gestart — aankoms binnen 24u`, 'success');
+  log(`Webhook: PAYOUT_NORMAL_SUCCEEDED`, 'success');
+
+  state.clientBalance -= ms.amount;
+  state.contractorBalance += netAmount;
+  ms.status = 'done';
+
+  document.getElementById('client-balance').textContent = `€ ${state.clientBalance.toLocaleString('nl-BE', {minimumFractionDigits:2})}`;
+  document.getElementById('contractor-balance').textContent = `€ ${state.contractorBalance.toLocaleString('nl-BE', {minimumFractionDigits:2})}`;
+
+  setMsDone(msId);
+  setFlowDone(5); setFlowDone(6); setFlowDone(7); setFlowActive(8);
+
+  const nextMs = state.milestones.find(m=>m.status==='pending');
+  if(nextMs) {
+    setMsActive(nextMs.id);
+    document.getElementById('milestone-select').value = nextMs.id;
+  } else {
+    setFlowDone(8);
+    log('🎉 Alle milestones vrijgegeven — project afgerond!', 'success');
+  }
+
+  btn.classList.remove('btn-loading');
+  btn.textContent = '✓ Vrijgeven';
+  btn.disabled = false;
+}
+
+async function refundEscrow() {
+  const btn = document.getElementById('btn-refund');
+  btn.classList.add('btn-loading'); btn.disabled = true;
+
+  const remaining = state.clientBalance;
+  log(`Terugbetaling aan klant: € ${remaining.toLocaleString('nl-BE')}...`, 'warning');
+  await sleep(600);
+  log(`POST /v2/buildpay/payins/{payInId}/refunds`);
+  log(`→ Amount: EUR ${remaining * 100} cents`);
+  await sleep(900);
+  log(`✓ Refund gestart — klant ontvangt terug op bankrekening`, 'success');
+
+  state.clientBalance = 0;
+  document.getElementById('client-balance').textContent = '€ 0,00';
+
+  btn.classList.remove('btn-loading');
+  btn.textContent = '↩ Terugbetaald';
+  btn.style.color = 'var(--error)';
+  btn.disabled = true;
+}
+
+// FLOW HELPERS
+function setFlowDone(n){
+  const node=document.getElementById('fn-'+n);
+  const arrow=document.getElementById('fa-'+n);
+  if(node){node.className='flow-node done';}
+  if(arrow){arrow.className='flow-arrow done';}
+}
+function setFlowActive(n){
+  const node=document.getElementById('fn-'+n);
+  if(node) node.className='flow-node active';
+}
+
+// MILESTONE HELPERS
+function setMsActive(id){
+  const row=document.getElementById('ms-row-'+id);
+  const dot=document.getElementById('ms-dot-'+id);
+  const status=document.getElementById('ms-status-'+id);
+  if(row){row.className='ms-row active';}
+  if(dot){dot.className='ms-dot ms-dot-active';}
+  if(status){status.className='pill pill-yellow';status.textContent='Actief';}
+}
+function setMsDone(id){
+  const row=document.getElementById('ms-row-'+id);
+  const dot=document.getElementById('ms-dot-'+id);
+  const status=document.getElementById('ms-status-'+id);
+  if(row){row.className='ms-row done';}
+  if(dot){dot.className='ms-dot ms-dot-done';}
+  if(status){status.className='pill pill-green';status.textContent='Vrijgegeven';}
+}
+
+// CODE TABS
+function showCodeTab(tab) {
+  ['setup','users','escrow','release','webhooks','kyc'].forEach(t => {
+    document.getElementById('code-'+t).style.display = t===tab ? 'block' : 'none';
+    document.getElementById('ct-'+t).classList.toggle('active', t===tab);
+  });
+}
+document.getElementById('code-users').style.display='none';
+document.getElementById('code-escrow').style.display='none';
+document.getElementById('code-release').style.display='none';
+document.getElementById('code-webhooks').style.display='none';
+document.getElementById('code-kyc').style.display='none';
+
+// COPY
+function copyCode(tab) {
+  const el = document.getElementById('code-'+tab) || document.getElementById('code-'+tab+'-content');
+  if(!el) return;
+  const text = el.innerText || el.textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn = el.querySelector('.code-copy') || event.target;
+    btn.textContent = 'Gekopieerd!';
+    setTimeout(()=>btn.textContent='Kopiëren', 2000);
+  });
+}
+
+// FLOW STEP INFO
+function showFlowStep(n) {
+  const info = [
+    '',
+    'Stap 1: Mangopay Natural/Legal users aanmaken voor klant en aannemer',
+    'Stap 2: Wallets aanmaken per project — één per partij',
+    'Stap 3: KYC documenten uploaden en verificatie starten',
+    'Stap 4: Klant stort project bedrag via iDEAL/Bancontact/SEPA',
+    'Stap 5: Geld staat geblokkeerd in klant escrow wallet',
+    'Stap 6: Architect + klant keuren milestone goed',
+    'Stap 7: Transfer klant wallet → aannemer wallet (min commissie)',
+    'Stap 8: PayOut aannemer wallet → IBAN bankrekening',
+  ];
+  log(`ℹ️ ${info[n]}`, 'info');
+}
+</script>
+</body>
+</html>

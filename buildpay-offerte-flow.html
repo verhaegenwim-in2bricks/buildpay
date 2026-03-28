@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buildpay — Offerte naar Contract</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#0A1628;--blue:#1A4FAB;--blue-mid:#2563EB;--blue-light:#EFF6FF;
+    --white:#FFFFFF;--off-white:#F8FAFC;--slate:#64748B;--slate-light:#94A3B8;
+    --border:#E2E8F0;--success:#10B981;--success-light:#D1FAE5;
+    --warning:#F59E0B;--warning-light:#FEF3C7;--error:#EF4444;--error-light:#FEE2E2;
+    --ai:#7C3AED;--ai-light:#F5F3FF;--ai-border:#DDD6FE;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'DM Sans',sans-serif;background:var(--off-white);color:var(--navy);min-height:100vh;}
+
+  /* NAV */
+  .topnav{background:var(--navy);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;}
+  .topnav-logo{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--white);letter-spacing:-0.03em;text-decoration:none;}
+  .topnav-logo span{color:#60A5FA;}
+  .topnav-back{font-size:0.8rem;color:rgba(255,255,255,0.45);cursor:pointer;display:flex;align-items:center;gap:0.4rem;background:none;border:none;font-family:'DM Sans',sans-serif;}
+  .topnav-back:hover{color:var(--white);}
+
+  /* PROGRESS */
+  .progress-wrap{background:var(--white);border-bottom:1px solid var(--border);padding:1.1rem 2rem;}
+  .progress-inner{max-width:960px;margin:0 auto;display:flex;align-items:center;gap:0;}
+  .p-step{display:flex;align-items:center;flex:1;}
+  .p-circle{width:1.9rem;height:1.9rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;flex-shrink:0;transition:all 0.3s;border:2px solid var(--border);background:var(--white);color:var(--slate-light);}
+  .p-circle.done{background:var(--success);border-color:var(--success);color:var(--white);}
+  .p-circle.active{background:var(--blue-mid);border-color:var(--blue-mid);color:var(--white);box-shadow:0 0 0 3px rgba(37,99,235,0.15);}
+  .p-line{flex:1;height:2px;background:var(--border);transition:background 0.3s;}
+  .p-line.done{background:var(--success);}
+  .p-labels{max-width:960px;margin:0.5rem auto 0;display:flex;justify-content:space-between;}
+  .p-label{font-size:0.67rem;font-weight:500;color:var(--slate-light);text-align:center;flex:1;transition:color 0.3s;}
+  .p-label.active{color:var(--blue-mid);font-weight:600;}
+  .p-label.done{color:var(--success);}
+
+  /* LAYOUT */
+  .main-wrap{max-width:960px;margin:0 auto;padding:2rem;}
+  .step{display:none;}
+  .step.active{display:block;animation:fadeIn 0.25s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+  /* CARDS */
+  .card{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:1.5rem;}
+  .card-head{padding:1.25rem 1.75rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+  .card-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--navy);display:flex;align-items:center;gap:0.6rem;}
+  .card-body{padding:1.75rem;}
+
+  /* AI BADGE */
+  .ai-badge{display:inline-flex;align-items:center;gap:0.35rem;background:var(--ai-light);border:1px solid var(--ai-border);border-radius:100px;padding:0.25rem 0.7rem;font-size:0.72rem;font-weight:600;color:var(--ai);}
+  .ai-pulse{width:6px;height:6px;border-radius:50%;background:var(--ai);animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+
+  /* UPLOAD ZONE */
+  .upload-zone{border:2px dashed var(--border);border-radius:12px;padding:3rem 2rem;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--off-white);}
+  .upload-zone:hover,.upload-zone.drag{border-color:var(--blue-mid);background:var(--blue-light);}
+  .upload-zone-icon{font-size:2.5rem;margin-bottom:0.75rem;}
+  .upload-zone h3{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:0.35rem;}
+  .upload-zone p{font-size:0.82rem;color:var(--slate);}
+  .upload-zone input{display:none;}
+
+  /* SCENARIO TABS */
+  .scenario-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;margin-bottom:1.5rem;}
+  .scenario-tab{border:2px solid var(--border);border-radius:10px;padding:1.1rem;cursor:pointer;transition:all 0.2s;background:var(--white);text-align:center;}
+  .scenario-tab:hover{border-color:var(--blue-mid);}
+  .scenario-tab.active{border-color:var(--blue-mid);background:var(--blue-light);}
+  .scenario-tab-icon{font-size:1.5rem;margin-bottom:0.4rem;}
+  .scenario-tab-label{font-size:0.82rem;font-weight:600;color:var(--navy);}
+  .scenario-tab-sub{font-size:0.7rem;color:var(--slate);margin-top:0.1rem;}
+
+  /* MANUAL ENTRY */
+  .post-table{width:100%;border-collapse:collapse;}
+  .post-table th{text-align:left;padding:0.6rem 0.75rem;font-size:0.7rem;font-weight:600;color:var(--slate);text-transform:uppercase;letter-spacing:0.08em;background:var(--off-white);border-bottom:1px solid var(--border);}
+  .post-table td{padding:0.5rem 0.5rem;border-bottom:1px solid var(--border);vertical-align:middle;}
+  .post-table tr:last-child td{border-bottom:none;}
+  .post-input{width:100%;padding:0.45rem 0.65rem;border:1.5px solid var(--border);border-radius:6px;font-size:0.8rem;font-family:'DM Sans',sans-serif;color:var(--navy);outline:none;transition:border-color 0.2s;}
+  .post-input:focus{border-color:var(--blue-mid);}
+  .post-input.number{text-align:right;width:90px;}
+
+  /* POST EDITOR */
+  .post-editor-row{border:1.5px solid var(--border);border-radius:10px;padding:1rem 1.1rem;margin-bottom:0.6rem;transition:border-color 0.2s;background:var(--white);}
+  .post-editor-row:hover{border-color:var(--slate-light);}
+  .post-editor-row.ai-enhanced{border-color:var(--ai-border);background:var(--ai-light);}
+  .post-row-top{display:flex;align-items:center;gap:0.75rem;}
+  .post-drag{color:var(--slate-light);cursor:grab;font-size:1rem;flex-shrink:0;}
+  .post-desc{flex:1;font-size:0.85rem;font-weight:500;color:var(--navy);}
+  .post-amount{font-size:0.85rem;font-weight:700;color:var(--navy);white-space:nowrap;}
+  .post-actions{display:flex;gap:0.35rem;flex-shrink:0;}
+  .post-extra{margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid var(--border);display:none;}
+  .post-extra.open{display:block;}
+  .post-extra-label{font-size:0.7rem;font-weight:600;color:var(--slate);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.4rem;}
+  .post-extra textarea{width:100%;padding:0.55rem 0.75rem;border:1.5px solid var(--border);border-radius:7px;font-size:0.8rem;font-family:'DM Sans',sans-serif;color:var(--navy);resize:vertical;min-height:65px;outline:none;transition:border-color 0.2s;}
+  .post-extra textarea:focus{border-color:var(--blue-mid);}
+  .ai-explain-text{font-size:0.78rem;color:var(--ai);background:var(--ai-light);border:1px solid var(--ai-border);border-radius:6px;padding:0.5rem 0.75rem;margin-top:0.4rem;line-height:1.6;}
+
+  /* ICON BTNS */
+  .icon-btn{width:2rem;height:2rem;border-radius:6px;border:1.5px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;font-size:0.8rem;cursor:pointer;transition:all 0.15s;}
+  .icon-btn:hover{border-color:var(--blue-mid);background:var(--blue-light);}
+  .icon-btn.ai:hover{border-color:var(--ai-border);background:var(--ai-light);}
+  .icon-btn.danger:hover{border-color:var(--error);background:var(--error-light);}
+
+  /* AI LOADING */
+  .ai-loading{display:flex;align-items:center;gap:0.75rem;padding:1rem 1.25rem;background:var(--ai-light);border:1px solid var(--ai-border);border-radius:10px;margin-bottom:1rem;}
+  .ai-loading-dots{display:flex;gap:4px;}
+  .ai-loading-dots span{width:6px;height:6px;border-radius:50%;background:var(--ai);animation:dotBounce 1.2s infinite;}
+  .ai-loading-dots span:nth-child(2){animation-delay:0.2s;}
+  .ai-loading-dots span:nth-child(3){animation-delay:0.4s;}
+  @keyframes dotBounce{0%,80%,100%{transform:scale(0.8);opacity:0.5;}40%{transform:scale(1.2);opacity:1;}}
+  .ai-loading-text{font-size:0.82rem;color:var(--ai);font-weight:500;}
+
+  /* MILESTONE CARD */
+  .ms-card{border:1.5px solid var(--border);border-radius:10px;padding:1.1rem;margin-bottom:0.75rem;background:var(--white);transition:all 0.2s;}
+  .ms-card.ai-generated{border-color:var(--ai-border);background:var(--ai-light);}
+  .ms-card.approved{border-color:var(--success);background:var(--success-light);}
+  .ms-card-head{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.85rem;}
+  .ms-num{width:1.75rem;height:1.75rem;border-radius:6px;background:var(--navy);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:800;flex-shrink:0;font-family:'Syne',sans-serif;}
+  .ms-card.approved .ms-num{background:var(--success);}
+  .ms-name-input{flex:1;font-size:0.875rem;font-weight:600;}
+  .ms-card-body{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem;margin-bottom:0.75rem;}
+  .ms-posts{padding:0.6rem 0.75rem;background:rgba(255,255,255,0.7);border:1px solid var(--border);border-radius:6px;font-size:0.72rem;color:var(--slate);line-height:1.7;}
+  .ms-card-actions{display:flex;gap:0.5rem;flex-wrap:wrap;}
+  .ms-approve-btn{padding:0.4rem 0.9rem;background:var(--success);color:var(--white);border:none;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s;}
+  .ms-approve-btn:hover{background:#059669;}
+  .ms-approve-btn:disabled{background:var(--success);opacity:0.7;cursor:default;}
+  .ms-edit-btn{padding:0.4rem 0.75rem;background:none;color:var(--slate);border:1px solid var(--border);border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+  .ms-edit-btn:hover{border-color:var(--blue-mid);color:var(--blue-mid);}
+
+  /* SIGN SECTION */
+  .sign-party{border:1.5px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1rem;transition:border-color 0.3s;}
+  .sign-party.signed{border-color:var(--success);background:var(--success-light);}
+  .sign-party-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
+  .sign-party-title{font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;}
+  .sign-canvas-wrap{border:1.5px solid var(--border);border-radius:8px;background:var(--off-white);overflow:hidden;margin-bottom:0.75rem;position:relative;}
+  .sign-canvas-wrap canvas{display:block;width:100%;height:120px;cursor:crosshair;touch-action:none;}
+  .sign-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:0.82rem;color:var(--slate-light);pointer-events:none;}
+  .sign-actions{display:flex;gap:0.5rem;}
+  .sign-clear{padding:0.4rem 0.85rem;background:none;color:var(--slate);border:1px solid var(--border);border-radius:6px;font-size:0.75rem;cursor:pointer;font-family:'DM Sans',sans-serif;}
+  .sign-submit{padding:0.4rem 1rem;background:var(--blue-mid);color:var(--white);border:none;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
+  .sign-done-msg{display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;font-weight:600;color:#065F46;}
+
+  /* BUTTONS */
+  .btn-primary{background:var(--blue-mid);color:var(--white);border:none;border-radius:8px;padding:0.75rem 2rem;font-size:0.875rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+  .btn-primary:hover{background:var(--blue);transform:translateY(-1px);}
+  .btn-secondary{background:none;color:var(--slate);border:1.5px solid var(--border);border-radius:8px;padding:0.75rem 1.5rem;font-size:0.875rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+  .btn-secondary:hover{border-color:var(--slate);color:var(--navy);}
+  .btn-ai{background:var(--ai);color:var(--white);border:none;border-radius:8px;padding:0.75rem 2rem;font-size:0.875rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;display:flex;align-items:center;gap:0.5rem;}
+  .btn-ai:hover{background:#6D28D9;transform:translateY(-1px);}
+  .btn-ai:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+
+  /* NAV ROW */
+  .nav-row{display:flex;justify-content:space-between;align-items:center;padding:1.5rem 0;}
+
+  /* TOTAL */
+  .total-chip{display:flex;align-items:center;gap:0.75rem;background:var(--navy);border-radius:8px;padding:0.75rem 1.25rem;margin-bottom:1rem;}
+  .total-chip-label{font-size:0.75rem;color:rgba(255,255,255,0.5);}
+  .total-chip-value{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:800;color:var(--white);}
+
+  /* FORM */
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+  .form-group{display:flex;flex-direction:column;gap:0.35rem;}
+  .form-group.full{grid-column:1/-1;}
+  label{font-size:0.78rem;font-weight:600;color:var(--navy);}
+  input[type=text],input[type=date],input[type=number],input[type=email],select,textarea{padding:0.6rem 0.85rem;border:1.5px solid var(--border);border-radius:7px;font-size:0.85rem;font-family:'DM Sans',sans-serif;color:var(--navy);background:var(--white);outline:none;transition:border-color 0.2s;}
+  input:focus,select:focus,textarea:focus{border-color:var(--blue-mid);}
+  textarea{resize:vertical;min-height:70px;}
+
+  /* STATUS */
+  .status-pill{font-size:0.68rem;font-weight:600;padding:0.22rem 0.55rem;border-radius:100px;white-space:nowrap;}
+  .pill-done{background:var(--success-light);color:#065F46;}
+  .pill-pending{background:var(--warning-light);color:#92400E;}
+  .pill-ai{background:var(--ai-light);color:var(--ai);}
+
+  /* SUCCESS */
+  .success-screen{text-align:center;padding:3rem 2rem;}
+  .success-icon{font-size:3.5rem;margin-bottom:1rem;}
+  .success-title{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--navy);margin-bottom:0.5rem;}
+  .success-sub{font-size:0.9rem;color:var(--slate);max-width:420px;margin:0 auto 2rem;line-height:1.7;}
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar{width:4px;}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:100px;}
+
+  @media(max-width:700px){
+    .scenario-tabs{grid-template-columns:1fr;}
+    .form-grid,.ms-card-body{grid-template-columns:1fr;}
+    .main-wrap{padding:1rem;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a href="buildpay-landing.html" class="topnav-logo">Build<span>pay</span></a>
+  <button class="topnav-back" onclick="history.back()">← Dashboard</button>
+</nav>
+
+<div class="progress-wrap">
+  <div class="progress-inner" id="prog-steps">
+    <div class="p-step"><div class="p-circle active" id="pc1">1</div><div class="p-line" id="pl1"></div></div>
+    <div class="p-step"><div class="p-circle" id="pc2">2</div><div class="p-line" id="pl2"></div></div>
+    <div class="p-step"><div class="p-circle" id="pc3">3</div><div class="p-line" id="pl3"></div></div>
+    <div class="p-step"><div class="p-circle" id="pc4">4</div><div class="p-line" id="pl4"></div></div>
+    <div class="p-step"><div class="p-circle" id="pc5">5</div></div>
+  </div>
+  <div class="p-labels">
+    <span class="p-label active" id="pl-1">Offerte opladen</span>
+    <span class="p-label" id="pl-2">Posten verfijnen</span>
+    <span class="p-label" id="pl-3">AI Milestones</span>
+    <span class="p-label" id="pl-4">Contract</span>
+    <span class="p-label" id="pl-5">Ondertekening</span>
+  </div>
+</div>
+
+<div class="main-wrap">
+
+<!-- ===== STEP 1: UPLOAD ===== -->
+<div class="step active" id="step-1">
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">📂 Offerte opladen</div>
+    </div>
+    <div class="card-body">
+      <div class="scenario-tabs">
+        <div class="scenario-tab active" onclick="selectScenario(this,'pdf')">
+          <div class="scenario-tab-icon">📄</div>
+          <div class="scenario-tab-label">PDF uploaden</div>
+          <div class="scenario-tab-sub">Bestaande offerte als PDF</div>
+        </div>
+        <div class="scenario-tab" onclick="selectScenario(this,'api')">
+          <div class="scenario-tab-icon">🔗</div>
+          <div class="scenario-tab-label">API Import</div>
+          <div class="scenario-tab-sub">Bouwsoft / Vertuoza</div>
+        </div>
+        <div class="scenario-tab" onclick="selectScenario(this,'manual')">
+          <div class="scenario-tab-icon">✏️</div>
+          <div class="scenario-tab-label">Manueel invoeren</div>
+          <div class="scenario-tab-sub">Posten zelf intypen</div>
+        </div>
+      </div>
+
+      <!-- PDF -->
+      <div id="scenario-pdf">
+        <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event)">
+          <div class="upload-zone-icon">📤</div>
+          <h3>Sleep je offerte hiernaartoe</h3>
+          <p>of klik om te bladeren · PDF, max 10MB</p>
+          <input type="file" id="file-input" accept=".pdf,.jpg,.png" onchange="handleFileSelect(event)">
+        </div>
+        <div id="file-preview" style="display:none;margin-top:1rem;">
+          <div style="display:flex;align-items:center;gap:0.75rem;padding:0.85rem 1rem;background:var(--success-light);border:1px solid #BBF7D0;border-radius:8px;">
+            <span style="font-size:1.2rem;">📄</span>
+            <div style="flex:1;">
+              <div style="font-size:0.82rem;font-weight:600;color:var(--navy);" id="file-name">offerte.pdf</div>
+              <div style="font-size:0.72rem;color:var(--slate);">Klaar voor AI analyse</div>
+            </div>
+            <span style="font-size:0.75rem;font-weight:600;color:var(--success);">✓ Geladen</span>
+          </div>
+        </div>
+        <div style="margin-top:1.25rem;">
+          <div style="font-size:0.78rem;font-weight:600;color:var(--slate);margin-bottom:0.5rem;">Of gebruik een voorbeeldofferte:</div>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+            <button onclick="loadSample('keuken')" style="padding:0.35rem 0.85rem;border:1px solid var(--border);border-radius:6px;font-size:0.75rem;background:var(--white);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--blue-mid)'" onmouseout="this.style.borderColor='var(--border)'">🍳 Keuken renovatie</button>
+            <button onclick="loadSample('badkamer')" style="padding:0.35rem 0.85rem;border:1px solid var(--border);border-radius:6px;font-size:0.75rem;background:var(--white);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--blue-mid)'" onmouseout="this.style.borderColor='var(--border)'">🚿 Badkamer verbouwing</button>
+            <button onclick="loadSample('totaal')" style="padding:0.35rem 0.85rem;border:1px solid var(--border);border-radius:6px;font-size:0.75rem;background:var(--white);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--blue-mid)'" onmouseout="this.style.borderColor='var(--border)'">🏠 Totaalrenovatie</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- API -->
+      <div id="scenario-api" style="display:none;">
+        <div class="form-grid" style="margin-bottom:1rem;">
+          <div class="form-group">
+            <label>Software</label>
+            <select>
+              <option>Visma Bouwsoft</option>
+              <option>Vertuoza</option>
+              <option>Exact Online</option>
+              <option>Teamleader</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>API Key</label>
+            <input type="text" placeholder="bsk_live_xxxxxxxxxxxx">
+          </div>
+          <div class="form-group full">
+            <label>Offerte selecteren</label>
+            <select>
+              <option>OFF-2025-0124 · Keuken Van Damme · € 48.500</option>
+              <option>OFF-2025-0118 · Badkamer Janssen · € 22.000</option>
+              <option>OFF-2025-0110 · Villa Martens · € 142.000</option>
+            </select>
+          </div>
+        </div>
+        <button onclick="loadSample('keuken');document.getElementById('scenario-api').style.display='none';document.getElementById('scenario-pdf').style.display='block';" class="btn-primary">Importeer offerte</button>
+      </div>
+
+      <!-- MANUAL -->
+      <div id="scenario-manual" style="display:none;">
+        <div style="overflow-x:auto;">
+          <table class="post-table" id="manual-table">
+            <thead><tr><th>Omschrijving post</th><th style="text-align:right;">Bedrag (€)</th><th></th></tr></thead>
+            <tbody id="manual-body">
+              <tr><td><input class="post-input" type="text" placeholder="bv. Sloopwerk"></td><td><input class="post-input number" type="number" placeholder="0" oninput="updateManualTotal()"></td><td><button onclick="removeManualRow(this)" style="background:none;border:none;cursor:pointer;color:var(--slate-light);font-size:1rem;">✕</button></td></tr>
+              <tr><td><input class="post-input" type="text" placeholder="bv. Elektriciteit AREI"></td><td><input class="post-input number" type="number" placeholder="0" oninput="updateManualTotal()"></td><td><button onclick="removeManualRow(this)" style="background:none;border:none;cursor:pointer;color:var(--slate-light);font-size:1rem;">✕</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem;">
+          <button onclick="addManualRow()" style="padding:0.4rem 0.9rem;border:1.5px dashed var(--border);border-radius:7px;background:none;font-size:0.78rem;cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--slate);">+ Post toevoegen</button>
+          <div style="font-size:0.85rem;font-weight:700;color:var(--navy);">Totaal: € <span id="manual-total">0</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">👤 Projectinfo</div>
+    </div>
+    <div class="card-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Projectnaam</label>
+          <input type="text" id="proj-name" value="Keuken renovatie Van Damme">
+        </div>
+        <div class="form-group">
+          <label>Projecttype</label>
+          <select id="proj-type">
+            <option>Keuken renovatie</option>
+            <option>Badkamer verbouwing</option>
+            <option>Totaalrenovatie</option>
+            <option>Dakwerken</option>
+            <option>Technische installaties</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Naam klant</label>
+          <input type="text" id="client-name" value="Marie Van Damme">
+        </div>
+        <div class="form-group">
+          <label>E-mail klant</label>
+          <input type="email" id="client-email" value="marie@example.com">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARCHITECT KEUZE -->
+  <div class="card" id="architect-choice-card">
+    <div class="card-head">
+      <div class="card-title">📐 Begeleiding & conflictbeheer</div>
+      <span style="font-size:0.72rem;color:var(--slate-light);">Kies hoe jullie omgaan met technische validatie en conflicten</span>
+    </div>
+    <div class="card-body">
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem;">
+
+        <!-- Spoor 1 — Eigen architect -->
+        <div id="arch-own-card" onclick="selectArchSpoor('own')" style="border:2px solid var(--border);border-radius:12px;padding:1.5rem;cursor:pointer;transition:all 0.2s;background:var(--white);position:relative;">
+          <div style="font-size:1.75rem;margin-bottom:0.75rem;">📐</div>
+          <div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:0.4rem;">Eigen architect</div>
+          <div style="font-size:0.8rem;color:var(--slate);line-height:1.6;margin-bottom:1rem;">Nodig je eigen architect uit als begeleider. Hij valideert milestones technisch vóór de klant betaalt.</div>
+          <div style="display:flex;flex-direction:column;gap:0.35rem;">
+            <div style="font-size:0.75rem;color:var(--slate);display:flex;gap:0.4rem;align-items:flex-start;"><span style="color:var(--success);flex-shrink:0;">✓</span><span>Architect keurt milestones goed voor klant</span></div>
+            <div style="font-size:0.75rem;color:var(--slate);display:flex;gap:0.4rem;align-items:flex-start;"><span style="color:var(--success);flex-shrink:0;">✓</span><span>Eerste bemiddelaar bij conflict</span></div>
+            <div style="font-size:0.75rem;color:var(--slate);display:flex;gap:0.4rem;align-items:flex-start;"><span style="color:var(--success);flex-shrink:0;">✓</span><span>Architect krijgt verwijzingsvergoeding</span></div>
+          </div>
+          <div style="margin-top:1rem;padding:0.5rem 0.75rem;background:var(--success-light);border-radius:6px;font-size:0.72rem;font-weight:600;color:#065F46;">💰 Gratis voor jou · Architect verdient 0.25%</div>
+          <div id="arch-own-check" style="display:none;position:absolute;top:0.75rem;right:0.75rem;width:1.5rem;height:1.5rem;border-radius:50%;background:var(--blue-mid);color:var(--white);display:none;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;">✓</div>
+        </div>
+
+        <!-- Spoor 2 — Buildpay expert -->
+        <div id="arch-bp-card" onclick="selectArchSpoor('buildpay')" style="border:2px solid var(--border);border-radius:12px;padding:1.5rem;cursor:pointer;transition:all 0.2s;background:var(--white);position:relative;">
+          <div style="font-size:1.75rem;margin-bottom:0.75rem;">🛡️</div>
+          <div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:0.4rem;">Buildpay expert bij geschil</div>
+          <div style="font-size:0.8rem;color:var(--slate);line-height:1.6;margin-bottom:1rem;">Geen eigen architect? Bij een conflict sturen wij een onafhankelijke gecertificeerde bouwexpert voor een bindend advies.</div>
+          <div style="display:flex;flex-direction:column;gap:0.35rem;">
+            <div style="font-size:0.75rem;color:var(--slate);display:flex;gap:0.4rem;align-items:flex-start;"><span style="color:var(--success);flex-shrink:0;">✓</span><span>Gecertificeerde bouwexpert op afroep</span></div>
+            <div style="font-size:0.75rem;color:var(--slate);display:flex;gap:0.4rem;align-items:flex-start;"><span style="color:var(--success);flex-shrink:0;">✓</span><span>Werfbezoek + bindend technisch advies</span></div>
+            <div style="font-size:0.75rem;color:var(--slate);display:flex;gap:0.4rem;align-items:flex-start;"><span style="color:var(--success);flex-shrink:0;">✓</span><span>Kosten bij verliezende partij</span></div>
+          </div>
+          <div style="margin-top:1rem;padding:0.5rem 0.75rem;background:var(--warning-light);border-radius:6px;font-size:0.72rem;font-weight:600;color:#92400E;">💰 € 299 enkel bij activatie van geschil</div>
+          <div id="arch-bp-check" style="display:none;position:absolute;top:0.75rem;right:0.75rem;width:1.5rem;height:1.5rem;border-radius:50%;background:var(--blue-mid);color:var(--white);align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;">✓</div>
+        </div>
+      </div>
+
+      <!-- Spoor 1 detail — architect uitnodigen -->
+      <div id="arch-own-detail" style="display:none;border:1.5px solid var(--border);border-radius:10px;padding:1.25rem;background:var(--off-white);animation:fadeIn 0.2s ease;">
+        <div style="font-size:0.78rem;font-weight:600;color:var(--navy);margin-bottom:0.85rem;">📐 Architect uitnodigen</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.85rem;margin-bottom:0.85rem;">
+          <div style="display:flex;flex-direction:column;gap:0.35rem;">
+            <label style="font-size:0.75rem;font-weight:600;color:var(--navy);">Naam architect / bureau</label>
+            <input type="text" id="arch-name" placeholder="bv. Sophie Vermeersch Architecten" style="padding:0.55rem 0.8rem;border:1.5px solid var(--border);border-radius:7px;font-size:0.82rem;font-family:'DM Sans',sans-serif;color:var(--navy);outline:none;" onfocus="this.style.borderColor='var(--blue-mid)'" onblur="this.style.borderColor='var(--border)'">
+          </div>
+          <div style="display:flex;flex-direction:column;gap:0.35rem;">
+            <label style="font-size:0.75rem;font-weight:600;color:var(--navy);">E-mail architect</label>
+            <input type="email" id="arch-email" placeholder="architect@bureau.be" style="padding:0.55rem 0.8rem;border:1.5px solid var(--border);border-radius:7px;font-size:0.82rem;font-family:'DM Sans',sans-serif;color:var(--navy);outline:none;" onfocus="this.style.borderColor='var(--blue-mid)'" onblur="this.style.borderColor='var(--border)'">
+          </div>
+        </div>
+        <div style="background:var(--blue-light);border:1px solid #BFDBFE;border-radius:8px;padding:0.75rem 1rem;font-size:0.75rem;color:var(--blue-mid);">
+          📧 De architect ontvangt een uitnodiging per e-mail. Na acceptatie krijgt hij toegang tot het project dashboard en ontvangt hij <strong>0.25% van elk vrijgegeven bedrag</strong> als platformvergoeding.
+        </div>
+      </div>
+
+      <!-- Spoor 2 detail — Buildpay expert info -->
+      <div id="arch-bp-detail" style="display:none;border:1.5px solid var(--border);border-radius:10px;padding:1.25rem;background:var(--off-white);animation:fadeIn 0.2s ease;">
+        <div style="font-size:0.78rem;font-weight:600;color:var(--navy);margin-bottom:0.85rem;">🛡️ Hoe werkt de Buildpay expert?</div>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:0.85rem;">
+          <div style="display:flex;gap:0.75rem;align-items:flex-start;">
+            <div style="width:1.5rem;height:1.5rem;border-radius:5px;background:var(--navy);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:800;flex-shrink:0;">1</div>
+            <div style="font-size:0.78rem;color:var(--slate);line-height:1.5;"><strong style="color:var(--navy);">Conflict gemeld</strong> — Klant of aannemer opent een geschil via Buildpay na mislukte onderhandeling.</div>
+          </div>
+          <div style="display:flex;gap:0.75rem;align-items:flex-start;">
+            <div style="width:1.5rem;height:1.5rem;border-radius:5px;background:var(--navy);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:800;flex-shrink:0;">2</div>
+            <div style="font-size:0.78rem;color:var(--slate);line-height:1.5;"><strong style="color:var(--navy);">Expert aangesteld</strong> — Buildpay stuurt een gecertificeerde bouwexpert uit jouw regio.</div>
+          </div>
+          <div style="display:flex;gap:0.75rem;align-items:flex-start;">
+            <div style="width:1.5rem;height:1.5rem;border-radius:5px;background:var(--navy);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:800;flex-shrink:0;">3</div>
+            <div style="font-size:0.78rem;color:var(--slate);line-height:1.5;"><strong style="color:var(--navy);">Werfbezoek</strong> — Expert bezoekt de werf, beoordeelt het werk t.o.v. het contract en de offerte.</div>
+          </div>
+          <div style="display:flex;gap:0.75rem;align-items:flex-start;">
+            <div style="width:1.5rem;height:1.5rem;border-radius:5px;background:var(--navy);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:800;flex-shrink:0;">4</div>
+            <div style="font-size:0.78rem;color:var(--slate);line-height:1.5;"><strong style="color:var(--navy);">Bindend advies</strong> — Expert schrijft rapport. Buildpay admin volgt dit advies op voor escrow vrijgave. <strong>€ 299 kosten bij verliezende partij.</strong></div>
+          </div>
+        </div>
+        <div style="background:var(--warning-light);border:1px solid #FDE68A;border-radius:8px;padding:0.75rem 1rem;font-size:0.75rem;color:#92400E;">
+          ⚡ <strong>Beide partijen gaan akkoord</strong> bij ondertekening van het contract dat de expert-procedure bindend is en de kosten (€ 299) gedragen worden door de in het ongelijk gestelde partij.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <div></div>
+    <button class="btn-primary" id="step1-next" onclick="goToStep2()" disabled>Posten verfijnen →</button>
+  </div>
+</div>
+
+<!-- ===== STEP 2: REFINE POSTS ===== -->
+<div class="step" id="step-2">
+  <div id="ai-loading-posts" class="ai-loading" style="display:none;">
+    <div class="ai-loading-dots"><span></span><span></span><span></span></div>
+    <div class="ai-loading-text" id="ai-loading-text">AI analyseert je offerte...</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">✏️ Posten verfijnen</div>
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <div class="ai-badge"><div class="ai-pulse"></div>AI beschikbaar</div>
+        <button class="btn-ai" style="padding:0.4rem 0.9rem;font-size:0.78rem;" onclick="enhanceAllPosts()">✨ Alles verduidelijken</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div style="background:var(--blue-light);border:1px solid #BFDBFE;border-radius:8px;padding:0.75rem 1rem;margin-bottom:1.25rem;font-size:0.78rem;color:var(--blue-mid);">
+        💡 Klik op <strong>✨</strong> naast een post om AI de omschrijving te laten verduidelijken voor de klant. Klik op <strong>+</strong> om extra uitleg toe te voegen.
+      </div>
+      <div id="posts-list"></div>
+      <button onclick="addEmptyPost()" style="display:flex;align-items:center;gap:0.5rem;padding:0.65rem 1rem;border:1.5px dashed var(--border);border-radius:9px;background:none;cursor:pointer;font-size:0.78rem;font-weight:500;color:var(--slate);font-family:'DM Sans',sans-serif;width:100%;margin-top:0.5rem;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--blue-mid)';this.style.color='var(--blue-mid)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--slate)'">
+        + Post toevoegen
+      </button>
+    </div>
+  </div>
+
+  <div id="posts-total-bar" class="total-chip">
+    <div><div class="total-chip-label">Totaal offerte</div><div class="total-chip-value" id="posts-total">€ 0</div></div>
+    <div style="margin-left:auto;text-align:right;"><div class="total-chip-label">Buildpay commissie (1.5%)</div><div style="font-size:0.9rem;font-weight:700;color:#93C5FD;" id="commission-total">€ 0</div></div>
+  </div>
+
+  <div class="nav-row">
+    <button class="btn-secondary" onclick="goToStep(1)">← Terug</button>
+    <button class="btn-ai" onclick="goToStep3()">🤖 AI genereert milestones →</button>
+  </div>
+</div>
+
+<!-- ===== STEP 3: AI MILESTONES ===== -->
+<div class="step" id="step-3">
+  <div id="ai-loading-ms" class="ai-loading" style="display:none;">
+    <div class="ai-loading-dots"><span></span><span></span><span></span></div>
+    <div class="ai-loading-text" id="ai-ms-text">AI analyseert je projectposten...</div>
+  </div>
+
+  <div class="card" id="ms-card-wrap">
+    <div class="card-head">
+      <div class="card-title">🤖 AI Milestones</div>
+      <div style="display:flex;gap:0.5rem;">
+        <div class="ai-badge"><div class="ai-pulse"></div>Gegenereerd door AI</div>
+        <button class="btn-ai" style="padding:0.4rem 0.9rem;font-size:0.78rem;" onclick="regenerateMilestones()">↻ Hergeneren</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div style="background:var(--ai-light);border:1px solid var(--ai-border);border-radius:8px;padding:0.75rem 1rem;margin-bottom:1.25rem;font-size:0.78rem;color:var(--ai);">
+        🤖 AI heeft onderstaande milestones gegenereerd op basis van je projectposten. Keur goed, pas aan of voeg toe naar eigen inzicht.
+      </div>
+      <div id="milestones-list"></div>
+      <button onclick="addEmptyMilestone()" style="display:flex;align-items:center;gap:0.5rem;padding:0.65rem 1rem;border:1.5px dashed var(--border);border-radius:9px;background:none;cursor:pointer;font-size:0.78rem;font-weight:500;color:var(--slate);font-family:'DM Sans',sans-serif;width:100%;margin-top:0.5rem;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--blue-mid)';this.style.color='var(--blue-mid)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--slate)'">
+        + Milestone toevoegen
+      </button>
+    </div>
+  </div>
+
+  <div class="total-chip">
+    <div><div class="total-chip-label">Totaal milestones</div><div class="total-chip-value" id="ms-total-display">€ 0</div></div>
+    <div style="margin-left:auto;"><div class="total-chip-label" id="ms-approved-count">0 van 0 goedgekeurd</div></div>
+  </div>
+
+  <div class="nav-row">
+    <button class="btn-secondary" onclick="goToStep(2)">← Terug</button>
+    <button class="btn-primary" onclick="goToStep4()" id="step3-next">Contract genereren →</button>
+  </div>
+</div>
+
+<!-- ===== STEP 4: CONTRACT ===== -->
+<div class="step" id="step-4">
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">📋 Aannemingscontract</div>
+      <div class="ai-badge"><div class="ai-pulse"></div>Auto-ingevuld</div>
+    </div>
+    <div class="card-body">
+      <div class="form-grid" style="margin-bottom:1.25rem;">
+        <div class="form-group">
+          <label>Startdatum werken</label>
+          <input type="date" id="start-date" value="2025-04-01">
+        </div>
+        <div class="form-group">
+          <label>Uiterste einddatum</label>
+          <input type="date" id="end-date" value="2025-06-15">
+        </div>
+        <div class="form-group">
+          <label>Vertragingstolerantie</label>
+          <select>
+            <option>5 werkdagen</option>
+            <option>10 werkdagen</option>
+            <option>Geen</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Meerwerken procedure</label>
+          <select>
+            <option>Schriftelijk via Buildpay verplicht</option>
+            <option>Mondeling tot € 500</option>
+            <option>Geen meerwerken</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>Bijzondere bepalingen</label>
+          <textarea placeholder="Eventuele aanvullende afspraken..."></textarea>
+        </div>
+      </div>
+
+      <!-- Contract preview -->
+      <div style="background:var(--off-white);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin-top:0.5rem;">
+        <div style="text-align:center;padding-bottom:1.25rem;border-bottom:2px solid var(--navy);margin-bottom:1.25rem;">
+          <div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--navy);">Build<span style="color:var(--blue-mid);">pay</span></div>
+          <div style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--navy);margin-top:0.4rem;" id="contract-title">Aannemingsovereenkomst</div>
+          <div style="font-size:0.72rem;color:var(--slate-light);margin-top:0.2rem;" id="contract-ref">Contract #BPC-2025-1042 · 24 maart 2025</div>
+        </div>
+        <div id="contract-preview-body" style="font-size:0.78rem;color:var(--navy);line-height:1.8;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="btn-secondary" onclick="goToStep(3)">← Terug</button>
+    <button class="btn-primary" onclick="goToStep5()">Naar ondertekening →</button>
+  </div>
+</div>
+
+<!-- ===== STEP 5: SIGNING ===== -->
+<div class="step" id="step-5">
+  <div id="signing-done" style="display:none;">
+    <div class="success-screen">
+      <div class="success-icon">🎉</div>
+      <div class="success-title">Contract ondertekend!</div>
+      <div class="success-sub">Beide partijen hebben ondertekend. De klant ontvangt nu een betalingsverzoek voor de escrow storting van <strong id="final-amount">€ 48.500</strong>. Zodra gestort, start het project.</div>
+      <div style="background:var(--success-light);border:1px solid #BBF7D0;border-radius:10px;padding:1.25rem;max-width:380px;margin:0 auto 2rem;text-align:left;">
+        <div style="font-size:0.72rem;font-weight:600;color:#065F46;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.75rem;">Dossier volledig</div>
+        <div style="display:flex;flex-direction:column;gap:0.5rem;">
+          <div style="font-size:0.78rem;color:#065F46;display:flex;gap:0.4rem;">✓ <span>Offerte opgeladen en verfijnd</span></div>
+          <div style="font-size:0.78rem;color:#065F46;display:flex;gap:0.4rem;">✓ <span>Milestones door AI gegenereerd en goedgekeurd</span></div>
+          <div style="font-size:0.78rem;color:#065F46;display:flex;gap:0.4rem;">✓ <span>Aannemingscontract gegenereerd</span></div>
+          <div style="font-size:0.78rem;color:#065F46;display:flex;gap:0.4rem;">✓ <span>Digitaal ondertekend door beide partijen</span></div>
+          <div style="font-size:0.78rem;color:#065F46;display:flex;gap:0.4rem;">✓ <span>Escrow betalingsverzoek verstuurd</span></div>
+          <div id="success-arch-line" style="font-size:0.78rem;color:#065F46;display:flex;gap:0.4rem;">✓ <span id="success-arch-text">Buildpay expert geactiveerd bij eventueel geschil</span></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <button class="btn-primary" onclick="window.location='buildpay-dashboard-contractor.html'">Naar dashboard →</button>
+        <button class="btn-secondary">📄 PDF downloaden</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="signing-form">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">✍️ Digitale ondertekening</div>
+        <div style="font-size:0.78rem;color:var(--slate);">Beide partijen ondertekenen het contract en de offerte</div>
+      </div>
+      <div class="card-body">
+
+        <!-- Contractor sign -->
+        <div class="sign-party" id="sign-contractor">
+          <div class="sign-party-head">
+            <div>
+              <div style="font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;">🔨 Aannemer</div>
+              <div style="font-size:0.78rem;color:var(--slate);margin-top:0.1rem;">Vandebroeck BV</div>
+            </div>
+            <span class="status-pill pill-pending" id="contractor-sign-status">Wacht op handtekening</span>
+          </div>
+          <div class="sign-canvas-wrap" id="contractor-canvas-wrap">
+            <canvas id="canvas-contractor" width="800" height="120"></canvas>
+            <div class="sign-placeholder" id="placeholder-contractor">Teken hier je handtekening...</div>
+          </div>
+          <div class="sign-actions">
+            <button class="sign-clear" onclick="clearCanvas('contractor')">Wissen</button>
+            <button class="sign-submit" onclick="submitSign('contractor')">Handtekening bevestigen</button>
+          </div>
+        </div>
+
+        <!-- Client sign -->
+        <div class="sign-party" id="sign-client" style="opacity:0.5;">
+          <div class="sign-party-head">
+            <div>
+              <div style="font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;">🏠 Klant</div>
+              <div style="font-size:0.78rem;color:var(--slate);margin-top:0.1rem;" id="client-name-sign">Marie Van Damme</div>
+            </div>
+            <span class="status-pill pill-pending" id="client-sign-status">Wacht op aannemer</span>
+          </div>
+          <div class="sign-canvas-wrap" id="client-canvas-wrap" style="pointer-events:none;">
+            <canvas id="canvas-client" width="800" height="120"></canvas>
+            <div class="sign-placeholder" id="placeholder-client">Wacht op aannemer om eerst te ondertekenen...</div>
+          </div>
+          <div class="sign-actions" id="client-sign-actions" style="display:none;">
+            <button class="sign-clear" onclick="clearCanvas('client')">Wissen</button>
+            <button class="sign-submit" onclick="submitSign('client')">Handtekening bevestigen</button>
+          </div>
+        </div>
+
+        <div style="background:var(--blue-light);border:1px solid #BFDBFE;border-radius:8px;padding:0.75rem 1rem;margin-top:1rem;font-size:0.75rem;color:var(--blue-mid);">
+          🔒 Beide handtekeningen worden cryptografisch beveiligd en opgeslagen met tijdstempel. Juridisch geldig conform eIDAS-regelgeving.
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn-secondary" onclick="goToStep(4)">← Terug</button>
+      <div style="font-size:0.8rem;color:var(--slate);" id="sign-progress-text">Stap 1/2: Aannemer ondertekent eerst</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end main-wrap -->
+
+<script>
+// =====================
+// STATE
+// =====================
+let currentStep = 1;
+let posts = [];
+let milestones = [];
+let contractorSigned = false;
+let clientSigned = false;
+let sampleLoaded = false;
+
+const SAMPLES = {
+  keuken: {
+    name: 'Keuken renovatie Van Damme',
+    type: 'Keuken renovatie',
+    client: 'Marie Van Damme',
+    email: 'marie@example.com',
+    posts: [
+      { desc: 'Afbraak & sloopwerken bestaande keuken', amount: 3200 },
+      { desc: 'Afvoer puin en materialen', amount: 800 },
+      { desc: 'EP keukeninstallatie - elektriciteit AREI + keuring', amount: 6500 },
+      { desc: 'Sanitaire aansluitingen - aan/afvoer', amount: 4200 },
+      { desc: 'Vloertegels 60x60 - levering en plaatsing', amount: 5800 },
+      { desc: 'Wandtegels spatrand - levering en plaatsing', amount: 3400 },
+      { desc: 'Keukenmeubelen plaatsing (klant levert)', amount: 4500 },
+      { desc: 'Werkblad graniet - levering en plaatsing', amount: 7200 },
+      { desc: 'Verluchting en dampkap aansluiting', amount: 1800 },
+      { desc: 'Schilderwerk wanden en plafond', amount: 2800 },
+      { desc: 'Afwerking en reiniging', amount: 1200 },
+      { desc: 'Werfcoördinatie en algemene kosten', amount: 7100 },
+    ]
+  },
+  badkamer: {
+    name: 'Badkamer verbouwing Janssen',
+    type: 'Badkamer verbouwing',
+    client: 'Tom Janssen',
+    email: 'tom@example.com',
+    posts: [
+      { desc: 'Sloopwerken bestaande badkamer', amount: 2400 },
+      { desc: 'Loodgieterij - aan en afvoerleidingen', amount: 5800 },
+      { desc: 'Elektriciteit badkamer AREI conform', amount: 3200 },
+      { desc: 'Vloer- en wandtegels - levering en plaatsing', amount: 6400 },
+      { desc: 'Sanitair - douche, bad, lavabo, toilet', amount: 8500 },
+      { desc: 'Radiator badkamer - levering en plaatsing', amount: 1200 },
+      { desc: 'Afwerking schilderwerk en reiniging', amount: 1800 },
+    ]
+  },
+  totaal: {
+    name: 'Totaalrenovatie Villa Martens',
+    type: 'Totaalrenovatie',
+    client: 'Luc Martens',
+    email: 'luc@example.com',
+    posts: [
+      { desc: 'Volledige sloopwerken en asbestverwijdering', amount: 18000 },
+      { desc: 'Ruwbouw - wanden, vloerplaten, dakstructuur', amount: 45000 },
+      { desc: 'Dakwerken - isolatie en dakbedekking', amount: 22000 },
+      { desc: 'Schrijnwerk - ramen, deuren, trappenhal', amount: 28000 },
+      { desc: 'Elektriciteit volledig - AREI keuring', amount: 18000 },
+      { desc: 'Sanitair en HVAC installatie', amount: 24000 },
+      { desc: 'Pleisterwerken en afwerking', amount: 15000 },
+      { desc: 'Vloeren - tegels en parket', amount: 22000 },
+      { desc: 'Schilderwerk volledig', amount: 12000 },
+      { desc: 'Buitenaanleg en terras', amount: 8000 },
+      { desc: 'Projectbeheer en werfleiding', amount: 14000 },
+    ]
+  }
+};
+
+// =====================
+// STEP NAVIGATION
+// =====================
+function goToStep(n) {
+  document.getElementById('step-' + currentStep).classList.remove('active');
+  currentStep = n;
+  document.getElementById('step-' + n).classList.add('active');
+  updateProgress(n);
+  window.scrollTo(0,0);
+}
+
+function updateProgress(n) {
+  for (let i=1;i<=5;i++) {
+    const c = document.getElementById('pc'+i);
+    const l = document.getElementById('pl-'+i);
+    const line = document.getElementById('pl'+i);
+    if(i<n){c.className='p-circle done';c.textContent='✓';l.className='p-label done';if(line)line.className='p-line done';}
+    else if(i===n){c.className='p-circle active';c.textContent=i;l.className='p-label active';if(line)line.className='p-line';}
+    else{c.className='p-circle';c.textContent=i;l.className='p-label';if(line)line.className='p-line';}
+  }
+}
+
+// =====================
+// STEP 1
+// =====================
+function selectScenario(el, type) {
+  document.querySelectorAll('.scenario-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  ['pdf','api','manual'].forEach(s => {
+    document.getElementById('scenario-'+s).style.display = s===type ? 'block' : 'none';
+  });
+}
+
+function loadSample(type) {
+  const s = SAMPLES[type];
+  posts = s.posts.map((p,i) => ({id:i, desc:p.desc, amount:p.amount, extra:'', aiExplain:'', enhanced:false}));
+  document.getElementById('proj-name').value = s.name;
+  document.getElementById('proj-type').value = s.type;
+  document.getElementById('client-name').value = s.client;
+  document.getElementById('client-email').value = s.email;
+  document.getElementById('file-name').textContent = type+'-offerte-demo.pdf';
+  document.getElementById('file-preview').style.display = 'block';
+  document.getElementById('step1-next').disabled = false;
+  sampleLoaded = true;
+}
+
+function handleFileSelect(e) {
+  if(e.target.files[0]) {
+    document.getElementById('file-name').textContent = e.target.files[0].name;
+    document.getElementById('file-preview').style.display = 'block';
+    document.getElementById('step1-next').disabled = false;
+    if(!sampleLoaded) loadSample('keuken');
+  }
+}
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('upload-zone').classList.remove('drag');
+  if(e.dataTransfer.files[0]) {
+    document.getElementById('file-name').textContent = e.dataTransfer.files[0].name;
+    document.getElementById('file-preview').style.display = 'block';
+    document.getElementById('step1-next').disabled = false;
+    if(!sampleLoaded) loadSample('keuken');
+  }
+}
+
+async function goToStep2() {
+  if(!posts.length) loadSample('keuken');
+  goToStep(2);
+  const loading = document.getElementById('ai-loading-posts');
+  loading.style.display = 'flex';
+  const msgs = ['AI leest je offerte...','Posten worden geïdentificeerd...','Bedragen worden geverifieerd...','Klaar!'];
+  for(let i=0;i<msgs.length;i++){
+    document.getElementById('ai-loading-text').textContent = msgs[i];
+    await sleep(600);
+  }
+  loading.style.display = 'none';
+  renderPosts();
+}
+
+// =====================
+// STEP 2 — POSTS
+// =====================
+function renderPosts() {
+  const list = document.getElementById('posts-list');
+  list.innerHTML = '';
+  posts.forEach((post,i) => {
+    const div = document.createElement('div');
+    div.className = 'post-editor-row' + (post.enhanced ? ' ai-enhanced' : '');
+    div.id = 'post-row-'+i;
+    div.innerHTML = `
+      <div class="post-row-top">
+        <span class="post-drag">⠿</span>
+        <input class="post-input" style="flex:1;font-size:0.85rem;" type="text" value="${post.desc}" onchange="posts[${i}].desc=this.value">
+        <input class="post-input number" type="number" value="${post.amount}" onchange="posts[${i}].amount=parseFloat(this.value)||0;updatePostsTotal()">
+        <div class="post-actions">
+          <button class="icon-btn ai" title="AI verduidelijken" onclick="aiEnhancePost(${i})">✨</button>
+          <button class="icon-btn" title="Uitleg toevoegen" onclick="togglePostExtra(${i})">+</button>
+          <button class="icon-btn danger" title="Verwijderen" onclick="deletePost(${i})">✕</button>
+        </div>
+      </div>
+      <div class="post-extra" id="post-extra-${i}" ${post.extra||post.aiExplain?'style="display:block;"':''}>
+        <div class="post-extra-label">Extra uitleg voor klant</div>
+        <textarea placeholder="Beschrijf wat deze post inhoudt voor de klant..." onchange="posts[${i}].extra=this.value">${post.extra||''}</textarea>
+        ${post.aiExplain ? `<div class="ai-explain-text">🤖 AI suggestie: ${post.aiExplain}</div>` : ''}
+      </div>`;
+    list.appendChild(div);
+  });
+  updatePostsTotal();
+}
+
+function togglePostExtra(i) {
+  const el = document.getElementById('post-extra-'+i);
+  el.style.display = el.style.display === 'block' ? 'none' : 'block';
+}
+
+function deletePost(i) {
+  posts.splice(i,1);
+  renderPosts();
+}
+
+function addEmptyPost() {
+  posts.push({id:posts.length, desc:'', amount:0, extra:'', aiExplain:'', enhanced:false});
+  renderPosts();
+  setTimeout(()=>{
+    const inputs = document.querySelectorAll('#posts-list .post-input:not(.number)');
+    if(inputs[inputs.length-1]) inputs[inputs.length-1].focus();
+  },50);
+}
+
+function updatePostsTotal() {
+  const total = posts.reduce((s,p)=>s+(parseFloat(p.amount)||0),0);
+  document.getElementById('posts-total').textContent = '€ '+total.toLocaleString('nl-BE');
+  document.getElementById('commission-total').textContent = '€ '+(total*0.015).toLocaleString('nl-BE',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+async function aiEnhancePost(i) {
+  const post = posts[i];
+  const row = document.getElementById('post-row-'+i);
+  const aiBtn = row.querySelector('.icon-btn.ai');
+  aiBtn.textContent = '⏳';
+  aiBtn.disabled = true;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:`Je bent een assistent voor het bouwplatform Buildpay. Je taak is om technische offerteposten te herschrijven in begrijpelijke taal voor particuliere klanten, en een korte uitleg te geven over wat de post inhoudt. Antwoord ALLEEN in JSON formaat: {"improved_desc": "...", "client_explanation": "..."}. Geen markdown, geen preamble.`,
+        messages:[{role:'user', content:`Herschrijf deze offertepost voor een particuliere klant:\nPost: "${post.desc}"\nBedrag: €${post.amount}\n\nGeef een verbeterde, begrijpelijke beschrijving en een korte uitleg (max 2 zinnen) wat dit inhoudt voor de klant.`}]
+      })
+    });
+    const data = await resp.json();
+    const text = data.content.map(c=>c.text||'').join('');
+    const clean = text.replace(/```json|```/g,'').trim();
+    const parsed = JSON.parse(clean);
+    posts[i].desc = parsed.improved_desc || post.desc;
+    posts[i].aiExplain = parsed.client_explanation || '';
+    posts[i].enhanced = true;
+  } catch(e) {
+    posts[i].aiExplain = 'AI tijdelijk niet beschikbaar. Voeg zelf een uitleg toe.';
+  }
+
+  aiBtn.textContent = '✨';
+  aiBtn.disabled = false;
+  renderPosts();
+  document.getElementById('post-extra-'+i).style.display = 'block';
+}
+
+async function enhanceAllPosts() {
+  for(let i=0;i<posts.length;i++) {
+    await aiEnhancePost(i);
+    await sleep(200);
+  }
+}
+
+// =====================
+// STEP 3 — AI MILESTONES
+// =====================
+async function goToStep3() {
+  goToStep(3);
+  await generateMilestones();
+}
+
+async function generateMilestones() {
+  const loading = document.getElementById('ai-loading-ms');
+  loading.style.display = 'flex';
+  document.getElementById('milestones-list').innerHTML = '';
+  milestones = [];
+
+  const msgs = ['AI analyseert je projectposten...','Logische bouwfases worden bepaald...','Betalingsplan wordt berekend...','Milestones worden gegenereerd...'];
+  let mi = 0;
+  const interval = setInterval(()=>{
+    if(mi<msgs.length) document.getElementById('ai-ms-text').textContent = msgs[mi++];
+  },800);
+
+  const postsText = posts.map(p=>`- ${p.desc}: €${p.amount}`).join('\n');
+  const total = posts.reduce((s,p)=>s+(parseFloat(p.amount)||0),0);
+  const projType = document.getElementById('proj-type').value;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:`Je bent een expert bouwprojectmanager voor het platform Buildpay. Je genereert logische betalingsmilestones op basis van offerteposten. Antwoord ALLEEN in JSON formaat als array. Geen markdown, geen uitleg, alleen pure JSON array: [{"name":"...","amount":0,"posts":["..."],"rationale":"...","deadline_weeks":0}]`,
+        messages:[{role:'user', content:`Genereer 3 tot 5 logische betalingsmilestones voor dit bouwproject:\n\nType: ${projType}\nTotaal: €${total}\n\nPosten:\n${postsText}\n\nRegels:\n- Verdeel de posten logisch per bouwfase\n- Eerste milestone max 30% van totaal (sloopwerk/voorbereiding)\n- Laatste milestone min 20% (eindoplevering, retentie)\n- Geef voor elke milestone aan welke posten erbij horen\n- deadline_weeks = aantal weken na start\n- rationale = korte uitleg waarom deze groepering logisch is (1 zin)`}]
+      })
+    });
+    const data = await resp.json();
+    const text = data.content.map(c=>c.text||'').join('');
+    const clean = text.replace(/```json|```/g,'').trim();
+    milestones = JSON.parse(clean).map((m,i)=>({...m, id:i, approved:false}));
+  } catch(e) {
+    // Fallback milestones
+    milestones = [
+      {id:0, name:'Sloopwerk & voorbereiding', amount:Math.round(total*0.20), posts:['Sloopwerken','Afvoer materialen'], rationale:'Eerste betaling voor aanvang werken en sloopfase.', deadline_weeks:2, approved:false},
+      {id:1, name:'Ruwbouw & installaties', amount:Math.round(total*0.40), posts:['Elektriciteit','Sanitair','Ruwbouw'], rationale:'Hoofdfase van technische installaties.', deadline_weeks:6, approved:false},
+      {id:2, name:'Afwerking', amount:Math.round(total*0.25), posts:['Tegelwerk','Schilderwerk','Vloeren'], rationale:'Afwerkingsfase wanneer installaties klaar zijn.', deadline_weeks:10, approved:false},
+      {id:3, name:'Eindoplevering', amount:total-Math.round(total*0.85), posts:['Reiniging','Oplevering','Garantiedocumenten'], rationale:'Retentiebetaling bij definitieve oplevering.', deadline_weeks:12, approved:false},
+    ];
+  }
+
+  clearInterval(interval);
+  loading.style.display = 'none';
+  renderMilestones();
+}
+
+async function regenerateMilestones() {
+  milestones = [];
+  await generateMilestones();
+}
+
+function renderMilestones() {
+  const list = document.getElementById('milestones-list');
+  list.innerHTML = '';
+  milestones.forEach((ms,i) => {
+    const div = document.createElement('div');
+    div.className = 'ms-card' + (ms.approved ? ' approved' : ' ai-generated');
+    div.id = 'ms-'+i;
+    const total = milestones.reduce((s,m)=>s+(parseFloat(m.amount)||0),0);
+    const pct = total>0 ? Math.round((ms.amount/total)*100) : 0;
+    div.innerHTML = `
+      <div class="ms-card-head">
+        <div class="ms-num">${i+1}</div>
+        <input class="post-input" style="flex:1;font-size:0.875rem;font-weight:600;" type="text" value="${ms.name}" onchange="milestones[${i}].name=this.value">
+        ${ms.approved ? '<span style="font-size:0.75rem;font-weight:600;color:var(--success);">✓ Goedgekeurd</span>' : '<div class="ai-badge"><div class="ai-pulse"></div>AI voorstel</div>'}
+      </div>
+      <div class="ms-card-body">
+        <div class="form-group"><label>Bedrag (€)</label><input class="post-input" type="number" value="${ms.amount}" onchange="milestones[${i}].amount=parseFloat(this.value)||0;updateMsTotal()"></div>
+        <div class="form-group"><label>% van totaal</label><input class="post-input" readonly style="background:var(--off-white);color:var(--slate);" value="${pct}%"></div>
+        <div class="form-group"><label>Deadline (weken na start)</label><input class="post-input" type="number" value="${ms.deadline_weeks}" onchange="milestones[${i}].deadline_weeks=parseInt(this.value)||0"></div>
+      </div>
+      <div class="ms-posts">
+        <strong>Inbegrepen posten:</strong> ${ms.posts.join(' · ')}<br>
+        <em style="color:var(--slate-light);">🤖 ${ms.rationale}</em>
+      </div>
+      <div class="ms-card-actions" style="margin-top:0.75rem;">
+        ${!ms.approved ? `<button class="ms-approve-btn" onclick="approveMilestone(${i})">✓ Goedkeuren</button>` : `<button class="ms-approve-btn" disabled>✓ Goedgekeurd</button>`}
+        <button class="ms-edit-btn" onclick="deleteMilestone(${i})">✕ Verwijderen</button>
+      </div>`;
+    list.appendChild(div);
+  });
+  updateMsTotal();
+}
+
+function approveMilestone(i) {
+  milestones[i].approved = true;
+  renderMilestones();
+}
+
+function deleteMilestone(i) {
+  milestones.splice(i,1);
+  milestones.forEach((m,j)=>m.id=j);
+  renderMilestones();
+}
+
+function addEmptyMilestone() {
+  milestones.push({id:milestones.length, name:'Nieuwe milestone', amount:0, posts:[], rationale:'', deadline_weeks:0, approved:false});
+  renderMilestones();
+}
+
+function updateMsTotal() {
+  const total = milestones.reduce((s,m)=>s+(parseFloat(m.amount)||0),0);
+  const approved = milestones.filter(m=>m.approved).length;
+  document.getElementById('ms-total-display').textContent = '€ '+total.toLocaleString('nl-BE');
+  document.getElementById('ms-approved-count').textContent = `${approved} van ${milestones.length} goedgekeurd`;
+}
+
+function goToStep4() {
+  goToStep(4);
+  buildContractPreview();
+}
+
+// =====================
+// STEP 4 — CONTRACT
+// =====================
+function buildContractPreview() {
+  const name = document.getElementById('proj-name').value;
+  const client = document.getElementById('client-name').value;
+  const total = milestones.reduce((s,m)=>s+(parseFloat(m.amount)||0),0);
+  document.getElementById('contract-title').textContent = 'Aannemingsovereenkomst — '+name;
+
+  const body = document.getElementById('contract-preview-body');
+  const msRows = milestones.map((m,i)=>`
+    <div style="display:flex;align-items:center;gap:0.75rem;padding:0.5rem 0.75rem;background:rgba(255,255,255,0.7);border-radius:6px;margin-bottom:0.3rem;">
+      <div style="width:1.3rem;height:1.3rem;border-radius:4px;background:var(--navy);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:800;flex-shrink:0;">${i+1}</div>
+      <span style="flex:1;font-weight:600;">${m.name}</span>
+      <span style="color:var(--slate-light);font-size:0.7rem;">Week ${m.deadline_weeks}</span>
+      <span style="font-weight:700;">€ ${(m.amount||0).toLocaleString('nl-BE')}</span>
+    </div>`).join('');
+
+  body.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+      <div><div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--slate-light);margin-bottom:0.2rem;">Aannemer</div><div style="font-weight:600;">Vandebroeck BV</div></div>
+      <div><div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--slate-light);margin-bottom:0.2rem;">Opdrachtgever</div><div style="font-weight:600;">${client}</div></div>
+    </div>
+    <div style="margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border);">
+      <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--slate-light);margin-bottom:0.5rem;">Betalingsmilestones & Escrow</div>
+      ${msRows}
+      <div style="display:flex;justify-content:flex-end;margin-top:0.5rem;"><strong>Totaal: € ${total.toLocaleString('nl-BE')}</strong></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;font-size:0.75rem;margin-bottom:1rem;">
+      <div><span style="color:var(--slate-light);">Startdatum: </span>1 april 2025</div>
+      <div><span style="color:var(--slate-light);">Einddatum: </span>15 juni 2025</div>
+      <div><span style="color:var(--slate-light);">Meerwerken: </span>Schriftelijk via Buildpay</div>
+      <div><span style="color:var(--slate-light);">Garantie: </span>1 jaar + wettelijk</div>
+    </div>
+    <div style="font-size:0.72rem;color:var(--slate);line-height:1.7;padding:0.75rem;background:rgba(255,255,255,0.5);border-radius:6px;">
+      Bij betwisting doorlopen partijen de Buildpay geschillenprocedure. De beslissing van de Buildpay admin is bindend. Beide partijen aanvaarden dit door ondertekening. Contract gegenereerd via Buildpay Contract Wizard op ${new Date().toLocaleDateString('nl-BE')}.
+    </div>`;
+}
+
+// =====================
+// STEP 5 — SIGNING
+// =====================
+const canvasState = { contractor: false, client: false };
+
+function initCanvas(id) {
+  const canvas = document.getElementById('canvas-'+id);
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth * window.devicePixelRatio || 800;
+  canvas.height = 120 * (window.devicePixelRatio||1);
+  ctx.scale(window.devicePixelRatio||1, window.devicePixelRatio||1);
+  ctx.strokeStyle = '#0A1628';
+  ctx.lineWidth = 2.5;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  let drawing = false;
+  let lastX = 0, lastY = 0;
+
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const source = e.touches ? e.touches[0] : e;
+    return { x: (source.clientX - rect.left), y: (source.clientY - rect.top) };
+  }
+
+  function start(e) {
+    drawing = true;
+    const pos = getPos(e);
+    lastX = pos.x; lastY = pos.y;
+    document.getElementById('placeholder-'+id).style.opacity = '0';
+    canvasState[id] = true;
+    e.preventDefault();
+  }
+  function move(e) {
+    if(!drawing) return;
+    const pos = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+    lastX = pos.x; lastY = pos.y;
+    e.preventDefault();
+  }
+  function end() { drawing = false; }
+
+  canvas.addEventListener('mousedown', start);
+  canvas.addEventListener('mousemove', move);
+  canvas.addEventListener('mouseup', end);
+  canvas.addEventListener('touchstart', start, {passive:false});
+  canvas.addEventListener('touchmove', move, {passive:false});
+  canvas.addEventListener('touchend', end);
+}
+
+function goToStep5() {
+  goToStep(5);
+  document.getElementById('client-name-sign').textContent = document.getElementById('client-name').value;
+  document.getElementById('final-amount').textContent = '€ ' + milestones.reduce((s,m)=>s+(parseFloat(m.amount)||0),0).toLocaleString('nl-BE');
+  setTimeout(()=>initCanvas('contractor'), 100);
+}
+
+function clearCanvas(id) {
+  const canvas = document.getElementById('canvas-'+id);
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  canvasState[id] = false;
+  document.getElementById('placeholder-'+id).style.opacity = '1';
+}
+
+async function submitSign(id) {
+  if(!canvasState[id]) {
+    alert('Teken eerst je handtekening.');
+    return;
+  }
+
+  const party = document.getElementById('sign-'+id);
+  party.classList.add('signed');
+
+  if(id === 'contractor') {
+    contractorSigned = true;
+    document.getElementById('contractor-sign-status').className = 'status-pill pill-done';
+    document.getElementById('contractor-sign-status').textContent = '✓ Ondertekend';
+    // Unlock client
+    const clientParty = document.getElementById('sign-client');
+    clientParty.style.opacity = '1';
+    document.getElementById('client-canvas-wrap').style.pointerEvents = 'auto';
+    document.getElementById('client-sign-actions').style.display = 'flex';
+    document.getElementById('client-sign-status').textContent = 'Klaar om te ondertekenen';
+    document.getElementById('sign-progress-text').textContent = 'Stap 2/2: Klant ondertekent';
+    document.getElementById('placeholder-client').textContent = 'Teken hier je handtekening...';
+    setTimeout(()=>initCanvas('client'), 100);
+  } else {
+    clientSigned = true;
+    document.getElementById('client-sign-status').className = 'status-pill pill-done';
+    document.getElementById('client-sign-status').textContent = '✓ Ondertekend';
+    await sleep(800);
+    // Update arch success text before showing
+    const archText = document.getElementById('success-arch-text');
+    if (archText) {
+      if (archSpoor === 'own') {
+        const name = document.getElementById('arch-name')?.value;
+        archText.textContent = name ? `Architect uitgenodigd: ${name}` : 'Architect uitgenodigd en genotificeerd';
+      } else {
+        archText.textContent = 'Buildpay expert beschikbaar bij eventueel geschil (€ 299 bij verliezende partij)';
+      }
+    }
+    document.getElementById('signing-form').style.display = 'none';
+    document.getElementById('signing-done').style.display = 'block';
+    // Mark all steps done
+    for(let i=1;i<=5;i++){
+      const c=document.getElementById('pc'+i);
+      if(c){c.className='p-circle done';c.textContent='✓';}
+      const l=document.getElementById('pl-'+i);
+      if(l)l.className='p-label done';
+      const li=document.getElementById('pl'+i);
+      if(li)li.className='p-line done';
+    }
+  }
+}
+
+// =====================
+// MANUAL ENTRY
+// =====================
+function addManualRow() {
+  const tbody = document.getElementById('manual-body');
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td><input class="post-input" type="text" placeholder="Omschrijving"></td><td><input class="post-input number" type="number" placeholder="0" oninput="updateManualTotal()"></td><td><button onclick="removeManualRow(this)" style="background:none;border:none;cursor:pointer;color:var(--slate-light);font-size:1rem;">✕</button></td>`;
+  tbody.appendChild(tr);
+}
+function removeManualRow(btn) {
+  btn.closest('tr').remove();
+  updateManualTotal();
+}
+function updateManualTotal() {
+  let t = 0;
+  document.querySelectorAll('#manual-body input[type=number]').forEach(i=>t+=(parseFloat(i.value)||0));
+  document.getElementById('manual-total').textContent = t.toLocaleString('nl-BE');
+  if(t>0) {
+    posts = [];
+    document.querySelectorAll('#manual-body tr').forEach(tr=>{
+      const inputs = tr.querySelectorAll('input');
+      if(inputs[0]&&inputs[1]&&inputs[0].value) posts.push({id:posts.length,desc:inputs[0].value,amount:parseFloat(inputs[1].value)||0,extra:'',aiExplain:'',enhanced:false});
+    });
+    document.getElementById('step1-next').disabled = false;
+  }
+}
+
+// =====================
+// UTILS
+// =====================
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+// =====================
+// ARCHITECT SPOOR
+// =====================
+let archSpoor = null;
+
+function selectArchSpoor(spoor) {
+  archSpoor = spoor;
+
+  // Reset both cards
+  const ownCard = document.getElementById('arch-own-card');
+  const bpCard = document.getElementById('arch-bp-card');
+  const ownCheck = document.getElementById('arch-own-check');
+  const bpCheck = document.getElementById('arch-bp-check');
+  const ownDetail = document.getElementById('arch-own-detail');
+  const bpDetail = document.getElementById('arch-bp-detail');
+
+  ownCard.style.border = '2px solid var(--border)';
+  ownCard.style.background = 'var(--white)';
+  bpCard.style.border = '2px solid var(--border)';
+  bpCard.style.background = 'var(--white)';
+  ownCheck.style.display = 'none';
+  bpCheck.style.display = 'none';
+  ownDetail.style.display = 'none';
+  bpDetail.style.display = 'none';
+
+  if (spoor === 'own') {
+    ownCard.style.border = '2px solid var(--blue-mid)';
+    ownCard.style.background = 'var(--blue-light)';
+    ownCheck.style.display = 'flex';
+    ownDetail.style.display = 'block';
+  } else {
+    bpCard.style.border = '2px solid var(--blue-mid)';
+    bpCard.style.background = 'var(--blue-light)';
+    bpCheck.style.display = 'flex';
+    bpDetail.style.display = 'block';
+  }
+
+  // Update success checklist
+  updateSuccessChecklist();
+}
+
+function updateSuccessChecklist() {
+  const archItem = document.getElementById('success-arch-item');
+  if (!archItem) return;
+  if (archSpoor === 'own') {
+    const name = document.getElementById('arch-name')?.value || 'Architect';
+    archItem.textContent = `✓ Architect uitgenodigd: ${name}`;
+    archItem.style.display = 'flex';
+  } else if (archSpoor === 'buildpay') {
+    archItem.textContent = '✓ Buildpay expert geactiveerd bij geschil (€ 299)';
+    archItem.style.display = 'flex';
+  }
+}
+
+// Update success screen to include architect info
+const origGenerateContract = window.generateContract;
+
+// Patch success screen with arch info
+function patchSuccessScreen() {
+  const checklist = document.querySelector('#signing-done .success-screen > div');
+  if (!checklist) return;
+  // Already patched
+  if (document.getElementById('success-arch-item')) return;
+  const div = document.createElement('div');
+  div.id = 'success-arch-item';
+  div.style.cssText = 'font-size:0.78rem;color:#065F46;display:none;gap:0.4rem;';
+  const container = document.querySelector('#signing-done .success-screen > div > div:last-child') ||
+    document.querySelector('#signing-done .success-screen div[style*="flex-direction: column"]');
+  if (container) container.appendChild(div);
+}
+
+// Init
+loadSample('keuken');
+document.getElementById('step1-next').disabled = false;
+// Select buildpay by default
+selectArchSpoor('buildpay');
+</script>
+</body>
+</html>

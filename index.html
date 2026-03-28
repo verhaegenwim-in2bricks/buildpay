@@ -662,7 +662,7 @@ body.lang-nl [data-en]{display:none;}
         <a href="#" data-nl>Over Buildpay</a><a href="#" data-en>About Buildpay</a>
         <a href="#" data-nl>Contact</a><a href="#" data-en>Contact</a>
         <a href="#" data-nl>Partners</a><a href="#" data-en>Partners</a>
-        <a href="#">info@buildpay.nl</a>
+        <a href="#"><span class="__cf_email__" data-cfemail="20494e464f604255494c445041590e4e4c">[email&#160;protected]</span></a>
       </div>
     </div>
   </div>
@@ -676,7 +676,7 @@ body.lang-nl [data-en]{display:none;}
   </div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 function setLang(l){
   document.body.className='lang-'+l;
   document.getElementById('btn-nl').classList.toggle('active',l==='nl');
@@ -708,11 +708,4 @@ function setHow(h){
 
 // Scroll fade
 const obs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');});
-},{threshold:0.1});
-document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
-
-setLang('nl');
-</script>
-</body>
-</html>
+  entrie

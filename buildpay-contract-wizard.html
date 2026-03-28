@@ -192,7 +192,7 @@
 <body>
 
 <nav class="topnav">
-  <a href="buildpay-landing.html" class="topnav-logo">Build<span>pay</span></a>
+  <a href="index.html" class="topnav-logo">Build<span>pay</span></a>
   <button class="topnav-back" onclick="window.location='buildpay-dashboard-contractor.html'">← <span>Terug naar dashboard</span></button>
 </nav>
 
@@ -726,7 +726,7 @@
       <div class="preview-section">
         <div class="preview-section-title">Partijen</div>
         <div class="preview-row"><span class="preview-key">Aannemer</span><span class="preview-val">Vandebroeck BV · BTW BE0456.789.012</span></div>
-        <div class="preview-row"><span class="preview-key">Opdrachtgever</span><span class="preview-val">Marie Van Damme · marie@example.com</span></div>
+        <div class="preview-row"><span class="preview-key">Opdrachtgever</span><span class="preview-val">Marie Van Damme · <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="711c10031814311409101c011d145f121e1c">[email&#160;protected]</a></span></div>
         <div class="preview-row"><span class="preview-key">Adres werken</span><span class="preview-val">Bosstraat 24, 9000 Gent</span></div>
       </div>
 
@@ -832,7 +832,7 @@
 
 </div><!-- end wizard-layout -->
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   let currentStep = 1;
   const totalSteps = 7;
 
@@ -953,13 +953,4 @@
     for (let i = 1; i <= 7; i++) {
       const c = document.getElementById('sc-' + i);
       if (c) { c.className = 'step-circle done'; c.textContent = '✓'; }
-      const l = document.getElementById('sl-label-' + i);
-      if (l) l.className = 'step-label done';
-      const li = document.getElementById('sl-' + i);
-      if (li) li.className = 'step-line done';
-    }
-    window.scrollTo(0, 0);
-  }
-</script>
-</body>
-</html>
+      const l = document.getElementById

@@ -1,262 +1,223 @@
 <!DOCTYPE html>
-<!-- saved from url=(0040)file:///Users/wim/Downloads/index_2.html -->
+<!-- saved from url=(0040)file:///Users/wim/Downloads/index_3.html -->
 <html lang="nl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Buildpay — Your money, held until it's earned</title>
-<link href="./index_files/css2" rel="stylesheet">
 <style>
-:root{
-  --navy:#0A1628;--navy-deep:#060E1A;
-  --blue:#1A4FAB;--blue-mid:#2563EB;--blue-light:#EFF6FF;
-  --teal:#0D9488;--teal-light:#F0FDFA;
-  --amber:#D97706;--amber-light:#FFFBEB;
-  --white:#FFFFFF;--off-white:#F8FAFC;
-  --slate:#64748B;--slate-light:#94A3B8;--border:#E2E8F0;
-  --success:#10B981;--success-light:#D1FAE5;
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--navy);overflow-x:hidden;}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: Arial, Helvetica, sans-serif; background: #ffffff; color: #0A1628; }
 
 /* TOPBAR */
-.topbar{background:var(--navy) !important;padding:0.5rem 5vw;display:flex;justify-content:space-between;align-items:center;}
-.topbar-msg{font-size:0.72rem;color:rgba(255,255,255,0.4);letter-spacing:0.02em;}
-.lang-wrap{display:flex;align-items:center;gap:0.5rem;}
-.lang-btn{font-size:0.72rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;padding:0.1rem 0.35rem;}
-.lang-btn.active{color:var(--white);}
-.lang-sep{color:rgba(255,255,255,0.15);font-size:0.7rem;}
+.topbar { background: #0A1628; padding: 0.5rem 5%; display: flex; justify-content: space-between; align-items: center; }
+.topbar-msg { font-size: 0.75rem; color: rgba(255,255,255,0.5); }
+.lang-wrap { display: flex; gap: 0.5rem; }
+.lang-btn { font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.4); background: none; border: none; cursor: pointer; padding: 0.2rem 0.4rem; }
+.lang-btn.active { color: #ffffff; }
 
 /* NAV */
-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 5vw;height:68px;display:flex;align-items:center;justify-content:space-between;}
-.nav-logo{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:900;color:var(--navy) !important;letter-spacing:-0.03em;text-decoration:none;}
-.nav-logo span{color:var(--blue-mid);}
-.nav-links{display:flex;gap:2rem;list-style:none;font-size:0.85rem;font-weight:500;}
-.nav-links a{text-decoration:none;color:var(--slate);transition:color 0.15s;}
-.nav-links a:hover{color:var(--navy);}
-.nav-cta{display:flex;gap:0.75rem;align-items:center;}
-.btn-ghost-nav{font-size:0.85rem;font-weight:500;color:var(--navy);text-decoration:none;}
-.btn-cta{background:var(--navy);color:var(--white);padding:0.6rem 1.4rem;border-radius:6px;font-size:0.85rem;font-weight:600;text-decoration:none;transition:all 0.2s;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;}
-.btn-cta:hover{background:var(--blue-mid);}
+nav { background: #ffffff; border-bottom: 1px solid #E2E8F0; padding: 0 5%; height: 65px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+.nav-logo { font-size: 1.5rem; font-weight: 900; color: #0A1628; text-decoration: none; letter-spacing: -0.03em; }
+.nav-logo span { color: #2563EB; }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a { text-decoration: none; color: #64748B; font-size: 0.9rem; font-weight: 500; }
+.nav-links a:hover { color: #0A1628; }
+.nav-right { display: flex; gap: 0.75rem; align-items: center; }
+.btn-login { font-size: 0.85rem; color: #0A1628; text-decoration: none; font-weight: 500; }
+.btn-start { background: #0A1628; color: #ffffff; padding: 0.6rem 1.25rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; text-decoration: none; }
+.btn-start:hover { background: #2563EB; }
 
 /* HERO */
-.hero{background:var(--navy);min-height:90vh;display:flex;flex-direction:column;justify-content:center;padding:6rem 5vw 4rem;position:relative;overflow:hidden;}
-.hero::before{content:'';position:absolute;top:-200px;right:-150px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,0.15),transparent);pointer-events:none;}
-.hero::after{content:'';position:absolute;bottom:-100px;left:-100px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(13,148,136,0.12),transparent);pointer-events:none;}
-
-.hero-eyebrow{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:100px;padding:0.35rem 1rem;font-size:0.72rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-bottom:1.75rem;}
-.eyebrow-dot{width:5px;height:5px;border-radius:50%;background:var(--success);animation:blink 2s infinite;}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.hero { background: #0A1628; padding: 5rem 5%; min-height: 85vh; display: flex; flex-direction: column; justify-content: center; }
+.hero-eyebrow { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 100px; padding: 0.35rem 1rem; font-size: 0.75rem; font-weight: 600; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.5rem; width: fit-content; }
+.eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: #10B981; display: inline-block; }
 
 /* AUDIENCE TABS */
-.aud-tabs{display:inline-flex;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:100px;padding:0.3rem;gap:0.2rem;margin-bottom:2.5rem;}
-.aud-tab{padding:0.5rem 1.4rem;border-radius:100px;font-size:0.82rem;font-weight:600;cursor:pointer;border:none;background:none;color:rgba(255,255,255,0.45);font-family:'DM Sans',sans-serif;transition:all 0.25s;}
-.aud-tab:hover{color:var(--white);}
-.aud-tab.sel-client{background:var(--blue-mid);color:var(--white);}
-.aud-tab.sel-contractor{background:var(--teal);color:var(--white);}
-.aud-tab.sel-architect{background:var(--amber);color:var(--white);}
+.aud-tabs { display: flex; gap: 0.25rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 100px; padding: 0.3rem; margin-bottom: 2rem; width: fit-content; }
+.aud-tab { padding: 0.5rem 1.25rem; border-radius: 100px; font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; background: none; color: rgba(255,255,255,0.5); transition: all 0.2s; }
+.aud-tab:hover { color: #ffffff; }
+.aud-tab.active-client { background: #2563EB; color: #ffffff; }
+.aud-tab.active-contractor { background: #0D9488; color: #ffffff; }
+.aud-tab.active-architect { background: #D97706; color: #ffffff; }
 
 /* HERO CONTENT */
-.hero-content{display:none;visibility:hidden;opacity:0;}
-.hero-content.active{display:block;visibility:visible;opacity:1;}
-h1{font-family:'Syne',sans-serif;font-size:clamp(3rem,6vw,5.25rem);font-weight:900;line-height:1.05;letter-spacing:-0.03em;color:var(--white);max-width:780px;margin-bottom:1.5rem;}
-.hl-b{color:#60A5FA;}.hl-t{color:#2DD4BF;}.hl-a{color:#FCD34D;}
-.hero-sub{font-size:clamp(1rem,1.5vw,1.15rem);font-weight:300;color:rgba(255,255,255,0.55);max-width:560px;line-height:1.75;margin-bottom:2.75rem;}
-.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;}
-.btn-hprimary{padding:0.9rem 2rem;border-radius:8px;font-size:0.95rem;font-weight:700;text-decoration:none;transition:all 0.2s;font-family:'DM Sans',sans-serif;border:none;cursor:pointer;}
-.btn-hprimary.blue{background:var(--blue-mid);color:var(--white);}
-.btn-hprimary.blue:hover{background:var(--blue);transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,99,235,0.4);}
-.btn-hprimary.teal{background:var(--teal);color:var(--white);}
-.btn-hprimary.teal:hover{background:#0F766E;transform:translateY(-2px);box-shadow:0 8px 24px rgba(13,148,136,0.4);}
-.btn-hprimary.amber{background:var(--amber);color:var(--white);}
-.btn-hprimary.amber:hover{background:#B45309;transform:translateY(-2px);box-shadow:0 8px 24px rgba(217,119,6,0.4);}
-.btn-hghost{padding:0.9rem 1.75rem;border-radius:8px;font-size:0.95rem;font-weight:600;text-decoration:none;background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.65);border:1px solid rgba(255,255,255,0.15);transition:all 0.2s;font-family:'DM Sans',sans-serif;}
-.btn-hghost:hover{background:rgba(255,255,255,0.13);color:var(--white);}
+.hero-content { display: none; }
+.hero-content.active { display: block; }
+h1 { font-size: 3.5rem; font-weight: 900; line-height: 1.1; color: #ffffff; max-width: 750px; margin-bottom: 1.25rem; letter-spacing: -0.02em; }
+h1 .hl-blue { color: #60A5FA; }
+h1 .hl-teal { color: #2DD4BF; }
+h1 .hl-amber { color: #FCD34D; }
+.hero-sub { font-size: 1.1rem; color: rgba(255,255,255,0.6); max-width: 550px; line-height: 1.75; margin-bottom: 2.5rem; }
+.hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+.btn-hero { padding: 0.9rem 1.75rem; border-radius: 8px; font-size: 0.95rem; font-weight: 700; text-decoration: none; border: none; cursor: pointer; font-family: Arial, sans-serif; }
+.btn-blue { background: #2563EB; color: #ffffff; }
+.btn-blue:hover { background: #1D4ED8; }
+.btn-teal { background: #0D9488; color: #ffffff; }
+.btn-teal:hover { background: #0F766E; }
+.btn-amber { background: #D97706; color: #ffffff; }
+.btn-amber:hover { background: #B45309; }
+.btn-ghost { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.75); border: 1px solid rgba(255,255,255,0.2); }
+.btn-ghost:hover { background: rgba(255,255,255,0.18); color: #ffffff; }
 
-.hero-trust{display:flex;gap:2rem;flex-wrap:wrap;margin-top:2.75rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.07);}
-.trust-i{display:flex;align-items:center;gap:0.4rem;font-size:0.75rem;color:rgba(255,255,255,0.35);}
-
-@keyframes fadeUp{from{opacity:1;transform:translateY(0);}to{opacity:1;transform:translateY(0);}}
+.hero-trust { display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); }
+.trust-item { font-size: 0.78rem; color: rgba(255,255,255,0.4); display: flex; align-items: center; gap: 0.4rem; }
 
 /* STATS */
-.stats{background:var(--off-white);border-bottom:1px solid var(--border);padding:2.5rem 5vw;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;}
-.stat{text-align:center;}
-.stat-n{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:900;color:var(--navy);letter-spacing:-0.03em;}
-.stat-l{font-size:0.78rem;color:var(--slate);margin-top:0.2rem;font-weight:500;}
+.stats { background: #F8FAFC; border-bottom: 1px solid #E2E8F0; padding: 2.5rem 5%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+.stat { text-align: center; }
+.stat-n { font-size: 2.25rem; font-weight: 900; color: #0A1628; letter-spacing: -0.02em; }
+.stat-l { font-size: 0.8rem; color: #64748B; margin-top: 0.25rem; }
 
-/* FOR WHO — dark section */
-.for-who{background:var(--navy);padding:7rem 5vw;}
-.fw-inner{max-width:1280px;margin:0 auto;}
-.fw-header{text-align:center;margin-bottom:3.5rem;}
-.fw-header h2{font-family:'Syne',sans-serif;font-size:clamp(2rem,3.5vw,3rem);font-weight:800;letter-spacing:-0.02em;color:var(--white);margin-top:0.75rem;}
-.tag{font-size:0.7rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;}
-.tag-blue{color:#60A5FA;}.tag-teal{color:#2DD4BF;}.tag-amber{color:#FCD34D;}
-.fw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
-.fw-card{border-radius:16px;padding:2.5rem;position:relative;overflow:hidden;transition:transform 0.2s;}
-.fw-card:hover{transform:translateY(-4px);}
-.fw-card.c1{background:linear-gradient(145deg,#0F2952,#0A1628);}
-.fw-card.c2{background:linear-gradient(145deg,#042F2E,#0A1628);}
-.fw-card.c3{background:linear-gradient(145deg,#451A03,#0A1628);}
-.fw-card::before{content:'';position:absolute;top:-80px;right:-80px;width:200px;height:200px;border-radius:50%;opacity:0.2;}
-.fw-card.c1::before{background:radial-gradient(circle,var(--blue-mid),transparent);}
-.fw-card.c2::before{background:radial-gradient(circle,var(--teal),transparent);}
-.fw-card.c3::before{background:radial-gradient(circle,var(--amber),transparent);}
-.fw-role{font-size:0.68rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;opacity:0.45;color:var(--white);margin-bottom:1rem;}
-.fw-icon{font-size:2rem;margin-bottom:0.75rem;}
-.fw-card h3{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--white);line-height:1.2;margin-bottom:0.85rem;}
-.fw-card p{font-size:0.875rem;color:rgba(255,255,255,0.55);line-height:1.7;margin-bottom:1.5rem;}
-.fw-list{list-style:none;display:flex;flex-direction:column;gap:0.5rem;margin-bottom:1.75rem;}
-.fw-list li{font-size:0.82rem;color:rgba(255,255,255,0.7);display:flex;align-items:flex-start;gap:0.5rem;line-height:1.5;}
-.fw-list li span.ck{font-weight:700;flex-shrink:0;}
-.fw-card.c1 .ck{color:#60A5FA;}
-.fw-card.c2 .ck{color:#2DD4BF;}
-.fw-card.c3 .ck{color:#FCD34D;}
-.fw-cta{display:inline-flex;align-items:center;gap:0.5rem;font-size:0.82rem;font-weight:700;padding:0.65rem 1.25rem;border-radius:7px;text-decoration:none;transition:all 0.2s;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;}
-.fw-cta.cb{background:rgba(37,99,235,0.2);color:#93C5FD;}
-.fw-cta.cb:hover{background:var(--blue-mid);color:var(--white);}
-.fw-cta.ct{background:rgba(13,148,136,0.2);color:#5EEAD4;}
-.fw-cta.ct:hover{background:var(--teal);color:var(--white);}
-.fw-cta.ca{background:rgba(217,119,6,0.2);color:#FCD34D;}
-.fw-cta.ca:hover{background:var(--amber);color:var(--white);}
+/* FOR WHO */
+.for-who { background: #0A1628; padding: 6rem 5%; }
+.section-header { text-align: center; margin-bottom: 3rem; }
+.section-tag { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.75rem; display: block; }
+.tag-blue { color: #60A5FA; }
+.section-header h2 { font-size: 2.5rem; font-weight: 800; color: #ffffff; letter-spacing: -0.02em; }
+.fw-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 1200px; margin: 0 auto; }
+.fw-card { border-radius: 16px; padding: 2.25rem; position: relative; overflow: hidden; }
+.fw-card-1 { background: linear-gradient(145deg, #0F2952, #0A1628); }
+.fw-card-2 { background: linear-gradient(145deg, #042F2E, #0A1628); }
+.fw-card-3 { background: linear-gradient(145deg, #451A03, #0A1628); }
+.fw-role { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 0.75rem; }
+.fw-icon { font-size: 2rem; margin-bottom: 0.75rem; display: block; }
+.fw-card h3 { font-size: 1.25rem; font-weight: 800; color: #ffffff; margin-bottom: 0.75rem; }
+.fw-card p { font-size: 0.875rem; color: rgba(255,255,255,0.55); line-height: 1.7; margin-bottom: 1.25rem; }
+.fw-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.75rem; }
+.fw-list li { font-size: 0.82rem; color: rgba(255,255,255,0.7); display: flex; gap: 0.5rem; }
+.ck-blue { color: #60A5FA; font-weight: 700; }
+.ck-teal { color: #2DD4BF; font-weight: 700; }
+.ck-amber { color: #FCD34D; font-weight: 700; }
+.fw-btn { display: inline-block; padding: 0.65rem 1.25rem; border-radius: 7px; font-size: 0.82rem; font-weight: 700; text-decoration: none; border: none; cursor: pointer; font-family: Arial, sans-serif; }
+.fw-btn-blue { background: rgba(37,99,235,0.25); color: #93C5FD; }
+.fw-btn-blue:hover { background: #2563EB; color: #ffffff; }
+.fw-btn-teal { background: rgba(13,148,136,0.25); color: #5EEAD4; }
+.fw-btn-teal:hover { background: #0D9488; color: #ffffff; }
+.fw-btn-amber { background: rgba(217,119,6,0.25); color: #FCD34D; }
+.fw-btn-amber:hover { background: #D97706; color: #ffffff; }
 
 /* HOW IT WORKS */
-.hiw{padding:7rem 5vw;background:var(--white);}
-.hiw-inner{max-width:1280px;margin:0 auto;}
-.hiw-header{margin-bottom:2.5rem;}
-.hiw-header h2{font-family:'Syne',sans-serif;font-size:clamp(2rem,3vw,2.75rem);font-weight:800;letter-spacing:-0.02em;color:var(--navy);margin-top:0.5rem;margin-bottom:1.5rem;}
-.hiw-tabs{display:inline-flex;border:1.5px solid var(--border);border-radius:9px;overflow:hidden;}
-.hiw-tab{padding:0.6rem 1.4rem;font-size:0.82rem;font-weight:600;cursor:pointer;border:none;background:none;color:var(--slate);font-family:'DM Sans',sans-serif;transition:all 0.2s;}
-.hiw-tab+.hiw-tab{border-left:1px solid var(--border);}
-.hiw-tab.sb{background:var(--navy);color:var(--white);}
-.hiw-tab.st{background:var(--teal);color:var(--white);}
-.hiw-tab.sa{background:var(--amber);color:var(--white);}
-.hiw-steps{display:none;}
-.hiw-steps.active{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;position:relative;}
-.hiw-steps.active::before{content:'';position:absolute;top:1.9rem;left:8%;right:8%;height:1px;background:var(--border);}
-.hiw-step{text-align:center;padding:1.5rem 1rem;position:relative;z-index:1;}
-.hiw-num{width:2.75rem;height:2.75rem;border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--white);margin:0 auto 1.25rem;background:var(--off-white);border:2px solid var(--border);}
-.nb{background:var(--navy);border-color:var(--navy);}
-.nt{background:var(--teal);border-color:var(--teal);}
-.na{background:var(--amber);border-color:var(--amber);}
-.hiw-step h3{font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;color:var(--navy);margin-bottom:0.5rem;}
-.hiw-step p{font-size:0.82rem;color:var(--slate);line-height:1.65;}
-
-/* FEATURES */
-.features-section{background:var(--off-white);padding:7rem 5vw;}
-.features-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;}
-.features-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;}
-.feat-card{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:1.75rem;transition:all 0.2s;}
-.feat-card:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,0,0,0.07);}
-.feat-icon{width:2.5rem;height:2.5rem;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;margin-bottom:1rem;}
-.fi-b{background:var(--blue-light);}
-.fi-t{background:var(--teal-light);}
-.fi-a{background:var(--amber-light);}
-.feat-card h3{font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;color:var(--navy);margin-bottom:0.4rem;}
-.feat-card p{font-size:0.82rem;color:var(--slate);line-height:1.65;}
+.hiw { padding: 6rem 5%; background: #ffffff; }
+.hiw-inner { max-width: 1200px; margin: 0 auto; }
+.hiw h2 { font-size: 2.25rem; font-weight: 800; color: #0A1628; letter-spacing: -0.02em; margin-bottom: 1.5rem; }
+.hiw-tabs { display: flex; border: 1.5px solid #E2E8F0; border-radius: 8px; overflow: hidden; width: fit-content; margin-bottom: 2.5rem; }
+.hiw-tab { padding: 0.6rem 1.25rem; font-size: 0.82rem; font-weight: 600; cursor: pointer; border: none; background: none; color: #64748B; font-family: Arial, sans-serif; border-right: 1px solid #E2E8F0; }
+.hiw-tab:last-child { border-right: none; }
+.hiw-tab.active { background: #0A1628; color: #ffffff; }
+.hiw-steps { display: none; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+.hiw-steps.active { display: grid; }
+.hiw-step { text-align: center; padding: 1.5rem 1rem; }
+.hiw-num { width: 2.75rem; height: 2.75rem; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 800; color: #ffffff; margin: 0 auto 1rem; }
+.nb { background: #0A1628; }
+.nt { background: #0D9488; }
+.na { background: #D97706; }
+.hiw-step h3 { font-size: 0.95rem; font-weight: 700; color: #0A1628; margin-bottom: 0.5rem; }
+.hiw-step p { font-size: 0.82rem; color: #64748B; line-height: 1.65; }
 
 /* TESTIMONIALS */
-.testimonials-section{padding:7rem 5vw;}
-.testimonials-inner{max-width:1280px;margin:0 auto;}
-.t-header{text-align:center;margin-bottom:3rem;}
-.t-header h2{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,3vw,2.75rem);font-weight:800;letter-spacing:-0.02em;color:var(--navy);margin-top:0.5rem;}
-.t-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
-.t-card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:2rem;}
-.t-quote{font-size:0.92rem;color:var(--navy);line-height:1.7;margin-bottom:1.25rem;font-style:italic;}
-.t-author{display:flex;align-items:center;gap:0.75rem;}
-.t-av{width:2.25rem;height:2.25rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:var(--white);}
-.av-b{background:linear-gradient(135deg,#2563EB,#1D4ED8);}
-.av-t{background:linear-gradient(135deg,#0D9488,#0F766E);}
-.av-a{background:linear-gradient(135deg,#D97706,#B45309);}
-.t-name{font-size:0.82rem;font-weight:700;color:var(--navy);}
-.t-role{font-size:0.72rem;color:var(--slate);}
-.t-badge{display:inline-flex;align-items:center;gap:0.25rem;font-size:0.65rem;font-weight:600;padding:0.18rem 0.45rem;border-radius:4px;margin-top:0.2rem;}
-.tb-b{background:var(--blue-light);color:var(--blue-mid);}
-.tb-t{background:var(--teal-light);color:var(--teal);}
-.tb-a{background:var(--amber-light);color:var(--amber);}
+.testimonials { padding: 6rem 5%; background: #F8FAFC; }
+.testimonials-inner { max-width: 1200px; margin: 0 auto; }
+.t-header { text-align: center; margin-bottom: 3rem; }
+.t-header h2 { font-size: 2.25rem; font-weight: 800; color: #0A1628; letter-spacing: -0.02em; }
+.t-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.t-card { background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 2rem; }
+.t-quote { font-size: 0.92rem; color: #0A1628; line-height: 1.7; margin-bottom: 1.25rem; font-style: italic; }
+.t-author { display: flex; align-items: center; gap: 0.75rem; }
+.t-av { width: 2.25rem; height: 2.25rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: #ffffff; flex-shrink: 0; }
+.av-b { background: #2563EB; }
+.av-t { background: #0D9488; }
+.av-a { background: #D97706; }
+.t-name { font-size: 0.82rem; font-weight: 700; color: #0A1628; }
+.t-role { font-size: 0.72rem; color: #64748B; }
+.t-badge { display: inline-block; font-size: 0.65rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 4px; margin-top: 0.25rem; }
+.tb-b { background: #EFF6FF; color: #2563EB; }
+.tb-t { background: #F0FDFA; color: #0D9488; }
+.tb-a { background: #FFFBEB; color: #D97706; }
 
 /* PRICING */
-.pricing-section{background:var(--off-white);padding:7rem 5vw;}
-.pricing-inner{max-width:1280px;margin:0 auto;}
-.p-header{text-align:center;margin-bottom:3rem;}
-.p-header h2{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,3vw,2.75rem);font-weight:800;letter-spacing:-0.02em;color:var(--navy);margin-top:0.5rem;}
-.p-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
-.p-card{border:1.5px solid var(--border);border-radius:16px;padding:2.5rem;background:var(--white);transition:all 0.2s;position:relative;}
-.p-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.08);}
-.p-card.featured{border-color:var(--navy);background:var(--navy);}
-.p-badge{position:absolute;top:-0.7rem;left:50%;transform:translateX(-50%);background:var(--blue-mid);color:var(--white);font-size:0.7rem;font-weight:700;padding:0.25rem 0.85rem;border-radius:100px;white-space:nowrap;}
-.p-role{font-size:0.7rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.75rem;}
-.pr-b{color:var(--blue-mid);}.pr-t{color:var(--teal);}.pr-a{color:var(--amber);}
-.p-card.featured .pr-t{color:#2DD4BF;}
-.p-amount{font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:900;letter-spacing:-0.03em;margin-bottom:0.25rem;color:var(--navy);}
-.p-card.featured .p-amount{color:var(--white);}
-.p-period{font-size:0.82rem;color:var(--slate);margin-bottom:1.5rem;}
-.p-card.featured .p-period{color:rgba(255,255,255,0.45);}
-.p-list{list-style:none;display:flex;flex-direction:column;gap:0.6rem;margin-bottom:2rem;}
-.p-list li{font-size:0.82rem;display:flex;align-items:flex-start;gap:0.5rem;line-height:1.5;color:var(--slate);}
-.p-card.featured .p-list li{color:rgba(255,255,255,0.7);}
-.p-list li::before{content:'✓';font-weight:700;flex-shrink:0;color:var(--success);}
-.p-card.featured .p-list li::before{color:#2DD4BF;}
-.p-btn{width:100%;padding:0.75rem;border-radius:8px;font-size:0.875rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;border:none;}
-.p-btn.navy{background:var(--navy);color:var(--white);}
-.p-btn.navy:hover{background:var(--blue-mid);}
-.p-btn.feat{background:var(--blue-mid);color:var(--white);}
-.p-btn.feat:hover{background:var(--blue);}
-.p-btn.amberb{background:var(--amber);color:var(--white);}
-.p-btn.amberb:hover{background:#B45309;}
+.pricing { padding: 6rem 5%; background: #ffffff; }
+.pricing-inner { max-width: 1200px; margin: 0 auto; }
+.p-header { text-align: center; margin-bottom: 3rem; }
+.p-header h2 { font-size: 2.25rem; font-weight: 800; color: #0A1628; letter-spacing: -0.02em; }
+.p-header p { font-size: 0.9rem; color: #64748B; margin-top: 0.75rem; }
+.p-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.p-card { border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 2.5rem; background: #ffffff; position: relative; }
+.p-card.featured { border-color: #0A1628; background: #0A1628; }
+.p-badge { position: absolute; top: -0.75rem; left: 50%; transform: translateX(-50%); background: #2563EB; color: #ffffff; font-size: 0.7rem; font-weight: 700; padding: 0.25rem 0.85rem; border-radius: 100px; white-space: nowrap; }
+.p-role { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem; }
+.pr-b { color: #2563EB; }
+.pr-t { color: #0D9488; }
+.pr-a { color: #D97706; }
+.p-card.featured .pr-t { color: #2DD4BF; }
+.p-amount { font-size: 2.5rem; font-weight: 900; color: #0A1628; letter-spacing: -0.02em; margin-bottom: 0.25rem; }
+.p-card.featured .p-amount { color: #ffffff; }
+.p-period { font-size: 0.82rem; color: #64748B; margin-bottom: 1.5rem; }
+.p-card.featured .p-period { color: rgba(255,255,255,0.5); }
+.p-list { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 2rem; }
+.p-list li { font-size: 0.82rem; color: #64748B; display: flex; gap: 0.5rem; line-height: 1.5; }
+.p-list li::before { content: '✓'; font-weight: 700; color: #10B981; flex-shrink: 0; }
+.p-card.featured .p-list li { color: rgba(255,255,255,0.7); }
+.p-card.featured .p-list li::before { color: #2DD4BF; }
+.p-btn { width: 100%; padding: 0.75rem; border-radius: 8px; font-size: 0.875rem; font-weight: 700; cursor: pointer; font-family: Arial, sans-serif; border: none; text-align: center; text-decoration: none; display: block; }
+.p-btn-navy { background: #0A1628; color: #ffffff; }
+.p-btn-navy:hover { background: #2563EB; }
+.p-btn-feat { background: #2563EB; color: #ffffff; }
+.p-btn-feat:hover { background: #1D4ED8; }
+.p-btn-amber { background: #D97706; color: #ffffff; }
+.p-btn-amber:hover { background: #B45309; }
 
-/* CTA SECTION */
-.cta-section{background:var(--navy);padding:8rem 5vw;text-align:center;position:relative;overflow:hidden;}
-.cta-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:350px;background:radial-gradient(ellipse,rgba(37,99,235,0.18),transparent);pointer-events:none;}
-.cta-section h2{font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3.5rem);font-weight:900;color:var(--white);letter-spacing:-0.02em;margin-bottom:1rem;position:relative;}
-.cta-section p{font-size:1rem;color:rgba(255,255,255,0.45);max-width:460px;margin:0 auto 2.5rem;line-height:1.7;position:relative;}
-.cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;position:relative;}
-.cta-btn{padding:0.85rem 1.75rem;border-radius:8px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;border:2px solid transparent;}
-.cta-btn.cb{background:var(--blue-mid);color:var(--white);}
-.cta-btn.cb:hover{background:var(--blue);}
-.cta-btn.ct{background:var(--teal);color:var(--white);}
-.cta-btn.ct:hover{background:#0F766E;}
-.cta-btn.ca{background:transparent;color:rgba(255,255,255,0.65);border-color:rgba(255,255,255,0.2);}
-.cta-btn.ca:hover{background:var(--amber);border-color:var(--amber);color:var(--white);}
+/* CTA */
+.cta-section { background: #0A1628; padding: 6rem 5%; text-align: center; }
+.cta-section h2 { font-size: 3rem; font-weight: 900; color: #ffffff; letter-spacing: -0.02em; margin-bottom: 1rem; }
+.cta-section p { font-size: 1rem; color: rgba(255,255,255,0.5); max-width: 460px; margin: 0 auto 2.5rem; line-height: 1.7; }
+.cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+.cta-btn { padding: 0.85rem 1.75rem; border-radius: 8px; font-size: 0.9rem; font-weight: 700; text-decoration: none; display: inline-block; }
+.cb { background: #2563EB; color: #ffffff; }
+.cb:hover { background: #1D4ED8; }
+.ct { background: #0D9488; color: #ffffff; }
+.ct:hover { background: #0F766E; }
+.ca { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.75); border: 2px solid rgba(255,255,255,0.2); }
+.ca:hover { background: #D97706; border-color: #D97706; color: #ffffff; }
 
 /* FOOTER */
-footer{background:var(--navy-deep);border-top:1px solid rgba(255,255,255,0.05);padding:4rem 5vw 2rem;}
-.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem;}
-.footer-logo-f{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:900;color:var(--white);letter-spacing:-0.03em;margin-bottom:0.75rem;}
-.footer-logo-f span{color:#60A5FA;}
-.footer-tagline{font-size:0.8rem;color:rgba(255,255,255,0.3);line-height:1.7;max-width:240px;}
-.f-col-title{font-size:0.7rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:1rem;}
-.f-links{display:flex;flex-direction:column;gap:0.6rem;}
-.f-links a{font-size:0.8rem;color:rgba(255,255,255,0.4);text-decoration:none;transition:color 0.15s;}
-.f-links a:hover{color:var(--white);}
-.footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.05);}
-.f-copy{font-size:0.72rem;color:rgba(255,255,255,0.18);}
-.f-legal{display:flex;gap:1.5rem;}
-.f-legal a{font-size:0.72rem;color:rgba(255,255,255,0.18);text-decoration:none;transition:color 0.15s;}
-.f-legal a:hover{color:rgba(255,255,255,0.5);}
-
-/* FADE */
-.fade-up{opacity:1;transform:translateY(0);transition:none;}
-.fade-up.vis{opacity:1;transform:translateY(0);}
+footer { background: #060E1A; padding: 4rem 5% 2rem; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+.footer-logo { font-size: 1.4rem; font-weight: 900; color: #ffffff; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
+.footer-logo span { color: #60A5FA; }
+.footer-tagline { font-size: 0.8rem; color: rgba(255,255,255,0.3); line-height: 1.7; max-width: 240px; }
+.f-col-title { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 1rem; }
+.f-links { display: flex; flex-direction: column; gap: 0.6rem; }
+.f-links a { font-size: 0.8rem; color: rgba(255,255,255,0.4); text-decoration: none; }
+.f-links a:hover { color: #ffffff; }
+.footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.06); }
+.f-copy { font-size: 0.72rem; color: rgba(255,255,255,0.2); }
+.f-legal { display: flex; gap: 1.5rem; }
+.f-legal a { font-size: 0.72rem; color: rgba(255,255,255,0.2); text-decoration: none; }
+.f-legal a:hover { color: rgba(255,255,255,0.5); }
 
 /* LANG */
-body.lang-en [data-nl]{display:none;}
-body.lang-nl [data-en]{display:none;}
+.nl { display: block; }
+.fr { display: none; }
+.en-text { display: none; }
+body.lang-fr .nl { display: none; }
+body.lang-fr .fr { display: block; }
+body.lang-en .nl { display: none; }
+body.lang-en .en-text { display: block; }
 
 /* RESPONSIVE */
-@media(max-width:960px){
-  nav .nav-links{display:none;}
-  .stats,.fw-grid,.t-grid,.p-grid{grid-template-columns:1fr;}
-  .features-inner{grid-template-columns:1fr;}
-  .features-grid{grid-template-columns:1fr 1fr;}
-  .hiw-steps.active{grid-template-columns:1fr 1fr;}
-  .hiw-steps.active::before{display:none;}
-  .footer-grid{grid-template-columns:1fr 1fr;}
+@media (max-width: 900px) {
+  nav .nav-links { display: none; }
+  .stats, .fw-grid, .t-grid, .p-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .hiw-steps.active { grid-template-columns: 1fr 1fr; }
+  h1 { font-size: 2.25rem; }
 }
-@media(max-width:600px){
-  h1{font-size:2.4rem;}
-  .features-grid,.hiw-steps.active{grid-template-columns:1fr;}
-  .aud-tabs{flex-wrap:wrap;border-radius:12px;}
-  .cta-btns,.hero-btns{flex-direction:column;align-items:flex-start;}
+@media (max-width: 600px) {
+  h1 { font-size: 1.9rem; }
+  .hiw-steps.active { grid-template-columns: 1fr; }
+  .hero-btns, .cta-btns { flex-direction: column; align-items: flex-start; }
+  .aud-tabs { flex-wrap: wrap; border-radius: 12px; }
 }
 </style>
 </head>
@@ -264,172 +225,181 @@ body.lang-nl [data-en]{display:none;}
 
 <!-- TOPBAR -->
 <div class="topbar">
-  <span class="topbar-msg" data-nl="">🔒 Veilig escrow via erkende betaalinstelling</span>
-  <span class="topbar-msg" data-en="">🔒 Secure escrow via licensed payment institution</span>
+  <span class="topbar-msg nl">🔒 Veilig escrow via erkende betaalinstelling</span>
+  <span class="topbar-msg fr" style="display: none;">🔒 Paiement sécurisé via établissement agréé</span>
+  <span class="topbar-msg en-text" style="display: none;">🔒 Secure escrow via licensed payment institution</span>
   <div class="lang-wrap">
-    <button class="lang-btn active" onclick="setLang(&#39;nl&#39;)" id="btn-nl">NL</button>
-    <span class="lang-sep">|</span>
-    <button class="lang-btn" onclick="setLang(&#39;en&#39;)" id="btn-en">EN</button>
+    <button class="lang-btn active" id="btn-nl" onclick="setLang(&#39;nl&#39;)">NL</button>
+    <button class="lang-btn" id="btn-fr" onclick="setLang(&#39;fr&#39;)">FR</button>
+    <button class="lang-btn" id="btn-en" onclick="setLang(&#39;en&#39;)">EN</button>
   </div>
 </div>
 
 <!-- NAV -->
 <nav>
-  <a href="file:///Users/wim/Downloads/index_2.html#" class="nav-logo">Build<span>pay</span></a>
+  <a href="file:///Users/wim/Downloads/index.html" class="nav-logo">Build<span>pay</span></a>
   <ul class="nav-links">
-    <li><a href="file:///Users/wim/Downloads/index_2.html#voor-wie" data-nl="">Voor wie</a><a href="file:///Users/wim/Downloads/index_2.html#voor-wie" data-en="">For who</a></li>
-    <li><a href="file:///Users/wim/Downloads/index_2.html#hoe-het-werkt" data-nl="">Hoe het werkt</a><a href="file:///Users/wim/Downloads/index_2.html#hoe-het-werkt" data-en="">How it works</a></li>
-    <li><a href="file:///Users/wim/Downloads/index_2.html#prijzen" data-nl="">Prijzen</a><a href="file:///Users/wim/Downloads/index_2.html#prijzen" data-en="">Pricing</a></li>
+    <li><a href="file:///Users/wim/Downloads/index_3.html#voor-wie" class="nl">Voor wie</a><a href="file:///Users/wim/Downloads/index_3.html#voor-wie" class="fr" style="display: none;">Pour qui</a><a href="file:///Users/wim/Downloads/index_3.html#voor-wie" class="en-text" style="display: none;">For who</a></li>
+    <li><a href="file:///Users/wim/Downloads/index_3.html#hoe-het-werkt" class="nl">Hoe het werkt</a><a href="file:///Users/wim/Downloads/index_3.html#hoe-het-werkt" class="fr" style="display: none;">Comment ça marche</a><a href="file:///Users/wim/Downloads/index_3.html#hoe-het-werkt" class="en-text" style="display: none;">How it works</a></li>
+    <li><a href="file:///Users/wim/Downloads/index_3.html#prijzen" class="nl">Prijzen</a><a href="file:///Users/wim/Downloads/index_3.html#prijzen" class="fr" style="display: none;">Tarifs</a><a href="file:///Users/wim/Downloads/index_3.html#prijzen" class="en-text" style="display: none;">Pricing</a></li>
   </ul>
-  <div class="nav-cta">
-    <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-ghost-nav" data-nl="">Inloggen</a>
-    <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-ghost-nav" data-en="">Log in</a>
-    <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-cta" data-nl="">Gratis starten</a>
-    <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-cta" data-en="">Get started free</a>
+  <div class="nav-right">
+    <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-login nl">Inloggen</a>
+    <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-login fr" style="display: none;">Se connecter</a>
+    <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-login en-text" style="display: none;">Log in</a>
+    <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-start nl">Gratis starten</a>
+    <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-start fr" style="display: none;">Commencer</a>
+    <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-start en-text" style="display: none;">Get started</a>
   </div>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-  <!-- AUDIENCE TABS -->
   <div class="hero-eyebrow">
-    <div class="eyebrow-dot"></div>
-    <span data-nl="">Escrow platform voor de bouwsector</span>
-    <span data-en="">Escrow platform for the construction sector</span>
+    <span class="eyebrow-dot"></span>
+    <span class="nl">Escrow platform voor de bouwsector</span>
+    <span class="fr" style="display: none;">Plateforme escrow pour la construction</span>
+    <span class="en-text" style="display: none;">Escrow platform for construction</span>
   </div>
 
+  <!-- TABS -->
   <div class="aud-tabs">
-    <button class="aud-tab sel-client" onclick="setAud(&#39;client&#39;)" id="at-c">🏠 <span data-nl="">Klant</span><span data-en="">Client</span></button>
-    <button class="aud-tab" onclick="setAud(&#39;contractor&#39;)" id="at-k">🔨 <span data-nl="">Aannemer</span><span data-en="">Contractor</span></button>
-    <button class="aud-tab" onclick="setAud(&#39;architect&#39;)" id="at-a">📐 <span data-nl="">Architect</span><span data-en="">Architect</span></button>
+    <button class="aud-tab active-client" id="at-client" onclick="setAud(&#39;client&#39;)">🏠 <span class="nl">Klant</span><span class="fr" style="display: none;">Client</span><span class="en-text" style="display: none;">Client</span></button>
+    <button class="aud-tab" id="at-contractor" onclick="setAud(&#39;contractor&#39;)">🔨 <span class="nl">Aannemer</span><span class="fr" style="display: none;">Entrepreneur</span><span class="en-text" style="display: none;">Contractor</span></button>
+    <button class="aud-tab" id="at-architect" onclick="setAud(&#39;architect&#39;)">📐 <span class="nl">Architect</span><span class="fr" style="display: none;">Architecte</span><span class="en-text" style="display: none;">Architect</span></button>
   </div>
 
   <!-- CLIENT -->
   <div class="hero-content active" id="hc-client">
-    <h1 data-nl="">Verbouw zonder<br>financieel <span class="hl-b">risico</span></h1>
-    <h1 data-en="">Renovate without<br>financial <span class="hl-b">risk</span></h1>
-    <p class="hero-sub" data-nl="">Jouw geld staat veilig in escrow. De aannemer krijgt pas betaald wanneer jij het werk goedkeurt — milestone per milestone. Nooit meer verdwenen voorschotten.</p>
-    <p class="hero-sub" data-en="">Your money sits safely in escrow. The contractor only gets paid when you approve the work — milestone by milestone. No more disappearing deposits.</p>
+    <h1 class="nl">Verbouw zonder<br>financieel <span class="hl-blue">risico</span></h1>
+    <h1 class="fr" style="display: none;">Rénover sans<br><span class="hl-blue">risque financier</span></h1>
+    <h1 class="en-text" style="display: none;">Renovate without<br>financial <span class="hl-blue">risk</span></h1>
+    <p class="hero-sub nl">Jouw geld staat veilig in escrow. De aannemer krijgt pas betaald wanneer jij het werk goedkeurt — milestone per milestone. Nooit meer verdwenen voorschotten.</p>
+    <p class="hero-sub fr" style="display: none;">Votre argent est sécurisé en escrow. L'entrepreneur n'est payé que lorsque vous approuvez le travail — jalon par jalon.</p>
+    <p class="hero-sub en-text" style="display: none;">Your money sits safely in escrow. The contractor only gets paid when you approve the work — milestone by milestone.</p>
     <div class="hero-btns">
-      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-hprimary blue" data-nl="">Bescherm mijn verbouwing →</a>
-      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-hprimary blue" data-en="">Protect my renovation →</a>
-      <a href="file:///Users/wim/Downloads/index_2.html#hoe-het-werkt" class="btn-hghost" data-nl="">Hoe werkt het?</a>
-      <a href="file:///Users/wim/Downloads/index_2.html#hoe-het-werkt" class="btn-hghost" data-en="">How does it work?</a>
+      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-hero btn-blue nl">Bescherm mijn verbouwing →</a>
+      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-hero btn-blue fr" style="display: none;">Protéger mes travaux →</a>
+      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-hero btn-blue en-text" style="display: none;">Protect my renovation →</a>
+      <a href="file:///Users/wim/Downloads/index_3.html#hoe-het-werkt" class="btn-hero btn-ghost nl">Hoe werkt het?</a>
+      <a href="file:///Users/wim/Downloads/index_3.html#hoe-het-werkt" class="btn-hero btn-ghost fr" style="display: none;">Comment ça marche?</a>
+      <a href="file:///Users/wim/Downloads/index_3.html#hoe-het-werkt" class="btn-hero btn-ghost en-text" style="display: none;">How does it work?</a>
     </div>
   </div>
 
   <!-- CONTRACTOR -->
   <div class="hero-content" id="hc-contractor">
-    <h1 data-nl="">Gegarandeerde betaling<br>voor <span class="hl-t">goed werk</span></h1>
-    <h1 data-en="">Guaranteed payment<br>for <span class="hl-t">good work</span></h1>
-    <p class="hero-sub" data-nl="">Het geld staat klaar in escrow nog vóór je begint. Lever goed werk, dien je milestone in en ontvang je betaling binnen 24 uur. Nooit meer achterstallige facturen.</p>
-    <p class="hero-sub" data-en="">The money is ready in escrow before you even start. Deliver good work, submit your milestone and receive payment within 24 hours. No more overdue invoices.</p>
+    <h1 class="nl">Gegarandeerde betaling<br>voor <span class="hl-teal">goed werk</span></h1>
+    <h1 class="fr" style="display: none;">Paiement garanti<br>pour <span class="hl-teal">bon travail</span></h1>
+    <h1 class="en-text" style="display: none;">Guaranteed payment<br>for <span class="hl-teal">good work</span></h1>
+    <p class="hero-sub nl">Het geld staat klaar in escrow nog vóór je begint. Lever goed werk, dien je milestone in en ontvang betaling binnen 24 uur.</p>
+    <p class="hero-sub fr" style="display: none;">L'argent est prêt en escrow avant que vous commenciez. Faites du bon travail et recevez le paiement en 24h.</p>
+    <p class="hero-sub en-text" style="display: none;">The money is ready in escrow before you start. Deliver good work and receive payment within 24 hours.</p>
     <div class="hero-btns">
-      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-hprimary teal" data-nl="">Garandeer mijn betaling →</a>
-      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-hprimary teal" data-en="">Guarantee my payment →</a>
-      <a href="file:///Users/wim/Downloads/buildpay-offerte-flow.html" class="btn-hghost" data-nl="">Offerte importeren</a>
-      <a href="file:///Users/wim/Downloads/buildpay-offerte-flow.html" class="btn-hghost" data-en="">Import quote</a>
+      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-hero btn-teal nl">Garandeer mijn betaling →</a>
+      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-hero btn-teal fr" style="display: none;">Garantir mon paiement →</a>
+      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-hero btn-teal en-text" style="display: none;">Guarantee my payment →</a>
+      <a href="file:///Users/wim/Downloads/buildpay-offerte-flow.html" class="btn-hero btn-ghost nl">Offerte importeren</a>
+      <a href="file:///Users/wim/Downloads/buildpay-offerte-flow.html" class="btn-hero btn-ghost fr" style="display: none;">Importer un devis</a>
+      <a href="file:///Users/wim/Downloads/buildpay-offerte-flow.html" class="btn-hero btn-ghost en-text" style="display: none;">Import quote</a>
     </div>
   </div>
 
   <!-- ARCHITECT -->
   <div class="hero-content" id="hc-architect">
-    <h1 data-nl="">Begeleid projecten<br>als <span class="hl-a">neutrale expert</span></h1>
-    <h1 data-en="">Guide projects<br>as <span class="hl-a">neutral expert</span></h1>
-    <p class="hero-sub" data-nl="">Valideer milestones technisch, bewaar de vrede tussen klant en aannemer, en verdien een vergoeding voor elk project dat je begeleidt. Jouw expertise beloond.</p>
-    <p class="hero-sub" data-en="">Technically validate milestones, keep the peace between client and contractor, and earn a fee for every project you guide. Your expertise rewarded.</p>
+    <h1 class="nl">Begeleid projecten<br>als <span class="hl-amber">neutrale expert</span></h1>
+    <h1 class="fr" style="display: none;">Guidez les projets<br>en tant qu'<span class="hl-amber">expert neutre</span></h1>
+    <h1 class="en-text" style="display: none;">Guide projects<br>as <span class="hl-amber">neutral expert</span></h1>
+    <p class="hero-sub nl">Valideer milestones technisch, bewaar de vrede tussen klant en aannemer, en verdien een vergoeding voor elk project.</p>
+    <p class="hero-sub fr" style="display: none;">Validez les jalons techniquement, maintenez la paix et gagnez une commission pour chaque projet.</p>
+    <p class="hero-sub en-text" style="display: none;">Technically validate milestones, keep the peace between client and contractor, and earn a fee for every project.</p>
     <div class="hero-btns">
-      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-hprimary amber" data-nl="">Start als architect →</a>
-      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-hprimary amber" data-en="">Start as architect →</a>
-      <a href="file:///Users/wim/Downloads/buildpay-dashboard-architect.html" class="btn-hghost" data-nl="">Dashboard bekijken</a>
-      <a href="file:///Users/wim/Downloads/buildpay-dashboard-architect.html" class="btn-hghost" data-en="">View dashboard</a>
+      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-hero btn-amber nl">Start als architect →</a>
+      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-hero btn-amber fr" style="display: none;">Commencer comme architecte →</a>
+      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-hero btn-amber en-text" style="display: none;">Start as architect →</a>
+      <a href="file:///Users/wim/Downloads/buildpay-dashboard-architect.html" class="btn-hero btn-ghost nl">Dashboard bekijken</a>
+      <a href="file:///Users/wim/Downloads/buildpay-dashboard-architect.html" class="btn-hero btn-ghost fr" style="display: none;">Voir le dashboard</a>
+      <a href="file:///Users/wim/Downloads/buildpay-dashboard-architect.html" class="btn-hero btn-ghost en-text" style="display: none;">View dashboard</a>
     </div>
   </div>
 
   <div class="hero-trust">
-    <div class="trust-i">🔒 <span data-nl="">Erkende betaalinstelling</span><span data-en="">Licensed payment institution</span></div>
-    <div class="trust-i">⚡ <span data-nl="">Uitbetaling binnen 24u</span><span data-en="">Payout within 24h</span></div>
-    <div class="trust-i">📐 <span data-nl="">Architect validatie</span><span data-en="">Architect validation</span></div>
-    <div class="trust-i">✅ <span data-nl="">Geen maandkosten</span><span data-en="">No monthly fees</span></div>
+    <span class="trust-item">🔒 <span class="nl">Erkende betaalinstelling</span><span class="fr" style="display: none;">Établissement agréé</span><span class="en-text" style="display: none;">Licensed institution</span></span>
+    <span class="trust-item">⚡ <span class="nl">Uitbetaling binnen 24u</span><span class="fr" style="display: none;">Paiement en 24h</span><span class="en-text" style="display: none;">Payout within 24h</span></span>
+    <span class="trust-item">📐 <span class="nl">Architect validatie</span><span class="fr" style="display: none;">Validation architecte</span><span class="en-text" style="display: none;">Architect validation</span></span>
+    <span class="trust-item">✅ <span class="nl">Geen maandkosten</span><span class="fr" style="display: none;">Sans abonnement</span><span class="en-text" style="display: none;">No monthly fees</span></span>
   </div>
 </section>
 
 <!-- STATS -->
-<div class="stats fade-up">
-  <div class="stat"><div class="stat-n">€ 2.4M</div><div class="stat-l" data-nl="">Veilig beheerd</div><div class="stat-l" data-en="">Securely managed</div></div>
-  <div class="stat"><div class="stat-n">340+</div><div class="stat-l" data-nl="">Projecten afgerond</div><div class="stat-l" data-en="">Projects completed</div></div>
-  <div class="stat"><div class="stat-n">100%</div><div class="stat-l" data-nl="">Conflicten opgelost</div><div class="stat-l" data-en="">Disputes resolved</div></div>
-  <div class="stat"><div class="stat-n">4.9 ★</div><div class="stat-l" data-nl="">Gemiddelde score</div><div class="stat-l" data-en="">Average rating</div></div>
+<div class="stats">
+  <div class="stat"><div class="stat-n">€ 2.4M</div><div class="stat-l nl">Veilig beheerd</div><div class="stat-l fr" style="display: none;">Géré en sécurité</div><div class="stat-l en-text" style="display: none;">Securely managed</div></div>
+  <div class="stat"><div class="stat-n">340+</div><div class="stat-l nl">Projecten afgerond</div><div class="stat-l fr" style="display: none;">Projets terminés</div><div class="stat-l en-text" style="display: none;">Projects completed</div></div>
+  <div class="stat"><div class="stat-n">100%</div><div class="stat-l nl">Conflicten opgelost</div><div class="stat-l fr" style="display: none;">Litiges résolus</div><div class="stat-l en-text" style="display: none;">Disputes resolved</div></div>
+  <div class="stat"><div class="stat-n">4.9 ★</div><div class="stat-l nl">Gemiddelde score</div><div class="stat-l fr" style="display: none;">Note moyenne</div><div class="stat-l en-text" style="display: none;">Average rating</div></div>
 </div>
 
 <!-- FOR WHO -->
 <section class="for-who" id="voor-wie">
-  <div class="fw-inner">
-    <div class="fw-header fade-up">
-      <div class="tag tag-blue" data-nl="">Voor iedereen in het bouwproces</div>
-      <div class="tag tag-blue" data-en="">For everyone in the construction process</div>
-      <h2 data-nl="">Eén platform. Drie rollen.<br>Samen sterker.</h2>
-      <h2 data-en="">One platform. Three roles.<br>Stronger together.</h2>
+  <div class="section-header">
+    <span class="section-tag tag-blue nl">Voor iedereen in het bouwproces</span>
+    <span class="section-tag tag-blue fr" style="display: none;">Pour tous dans la construction</span>
+    <span class="section-tag tag-blue en-text" style="display: none;">For everyone in construction</span>
+    <h2 class="nl">Één platform. Drie rollen.<br>Samen sterker.</h2>
+    <h2 class="fr" style="display: none;">Une plateforme. Trois rôles.<br>Plus forts ensemble.</h2>
+    <h2 class="en-text" style="display: none;">One platform. Three roles.<br>Stronger together.</h2>
+  </div>
+  <div class="fw-grid">
+    <div class="fw-card fw-card-1">
+      <div class="fw-role nl">Voor de klant</div><div class="fw-role fr" style="display: none;">Pour le client</div><div class="fw-role en-text" style="display: none;">For the client</div>
+      <span class="fw-icon">🏠</span>
+      <h3 class="nl">Verbouw met zekerheid</h3><h3 class="fr" style="display: none;">Rénover avec certitude</h3><h3 class="en-text" style="display: none;">Renovate with certainty</h3>
+      <p class="nl">Jij bepaalt wanneer de aannemer betaald wordt. Jouw geld blijft van jou totdat het werk klopt.</p>
+      <p class="fr" style="display: none;">Vous décidez quand l'entrepreneur est payé. Votre argent reste le vôtre jusqu'à ce que le travail soit correct.</p>
+      <p class="en-text" style="display: none;">You decide when the contractor gets paid. Your money stays yours until the work is right.</p>
+      <ul class="fw-list">
+        <li><span class="ck-blue">✓</span> <span class="nl">Geld veilig in escrow</span><span class="fr" style="display: none;">Argent sécurisé en escrow</span><span class="en-text" style="display: none;">Money safe in escrow</span></li>
+        <li><span class="ck-blue">✓</span> <span class="nl">Milestone per milestone vrijgeven</span><span class="fr" style="display: none;">Libérer jalon par jalon</span><span class="en-text" style="display: none;">Release milestone by milestone</span></li>
+        <li><span class="ck-blue">✓</span> <span class="nl">Expert bij conflict (€299)</span><span class="fr" style="display: none;">Expert en cas de litige (€299)</span><span class="en-text" style="display: none;">Expert in dispute (€299)</span></li>
+        <li><span class="ck-blue">✓</span> <span class="nl">Volledig gratis</span><span class="fr" style="display: none;">Entièrement gratuit</span><span class="en-text" style="display: none;">Completely free</span></li>
+      </ul>
+      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="fw-btn fw-btn-blue nl">Start als klant →</a>
+      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="fw-btn fw-btn-blue fr" style="display: none;">Commencer →</a>
+      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="fw-btn fw-btn-blue en-text" style="display: none;">Start as client →</a>
     </div>
-    <div class="fw-grid fade-up">
-
-      <!-- CLIENT CARD -->
-      <div class="fw-card c1">
-        <div class="fw-role" data-nl="">Voor de klant</div>
-        <div class="fw-role" data-en="">For the client</div>
-        <div class="fw-icon">🏠</div>
-        <h3 data-nl="">Verbouw met volledige zekerheid</h3>
-        <h3 data-en="">Renovate with complete certainty</h3>
-        <p data-nl="">Jij bepaalt wanneer de aannemer betaald wordt. Niet andersom. Jouw geld blijft van jou totdat het werk klopt.</p>
-        <p data-en="">You decide when the contractor gets paid. Not the other way around. Your money stays yours until the work is right.</p>
-        <ul class="fw-list">
-          <li><span class="ck">✓</span><span data-nl="">Geld veilig in escrow — nooit rechtstreeks</span><span data-en="">Money safe in escrow — never directly</span></li>
-          <li><span class="ck">✓</span><span data-nl="">Milestone per milestone goedkeuren</span><span data-en="">Approve milestone by milestone</span></li>
-          <li><span class="ck">✓</span><span data-nl="">Onafhankelijke expert bij conflict (€299)</span><span data-en="">Independent expert in dispute (€299)</span></li>
-          <li><span class="ck">✓</span><span data-nl="">Volledig gratis platform gebruik</span><span data-en="">Completely free platform use</span></li>
-        </ul>
-        <a href="file:///Users/wim/Downloads/buildpay-login.html" class="fw-cta cb" data-nl="">Start als klant →</a>
-        <a href="file:///Users/wim/Downloads/buildpay-login.html" class="fw-cta cb" data-en="">Start as client →</a>
-      </div>
-
-      <!-- CONTRACTOR CARD -->
-      <div class="fw-card c2">
-        <div class="fw-role" data-nl="">Voor de aannemer</div>
-        <div class="fw-role" data-en="">For the contractor</div>
-        <div class="fw-icon">🔨</div>
-        <h3 data-nl="">Werk gerust, word zeker betaald</h3>
-        <h3 data-en="">Work assured, get paid guaranteed</h3>
-        <p data-nl="">Het budget staat klaar vóór je begint. Lever goed werk, dien in en ontvang je betaling binnen 24 uur.</p>
-        <p data-en="">Budget is ready before you start. Deliver good work, submit and receive payment within 24 hours.</p>
-        <ul class="fw-list">
-          <li><span class="ck">✓</span><span data-nl="">Budget gegarandeerd in escrow</span><span data-en="">Budget guaranteed in escrow</span></li>
-          <li><span class="ck">✓</span><span data-nl="">AI contract vanuit jouw offerte</span><span data-en="">AI contract from your quote</span></li>
-          <li><span class="ck">✓</span><span data-nl="">Uitbetaling binnen 24u na goedkeuring</span><span data-en="">Payout within 24h after approval</span></li>
-          <li><span class="ck">✓</span><span data-nl="">Bouwsoft &amp; Vertuoza integratie</span><span data-en="">Bouwsoft &amp; Vertuoza integration</span></li>
-        </ul>
-        <a href="file:///Users/wim/Downloads/buildpay-login.html" class="fw-cta ct" data-nl="">Start als aannemer →</a>
-        <a href="file:///Users/wim/Downloads/buildpay-login.html" class="fw-cta ct" data-en="">Start as contractor →</a>
-      </div>
-
-      <!-- ARCHITECT CARD -->
-      <div class="fw-card c3">
-        <div class="fw-role" data-nl="">Voor de architect</div>
-        <div class="fw-role" data-en="">For the architect</div>
-        <div class="fw-icon">📐</div>
-        <h3 data-nl="">Begeleid. Valideer. Verdien.</h3>
-        <h3 data-en="">Guide. Validate. Earn.</h3>
-        <p data-nl="">Jij bent de neutrale expert die beide partijen vertrouwen. Buildpay geeft jou de tools en beloont je expertise.</p>
-        <p data-en="">You are the neutral expert both parties trust. Buildpay gives you the tools and rewards your expertise.</p>
-        <ul class="fw-list">
-          <li><span class="ck">✓</span><span data-nl="">Alle projecten in één dashboard</span><span data-en="">All projects in one dashboard</span></li>
-          <li><span class="ck">✓</span><span data-nl="">Technische milestone validatie</span><span data-en="">Technical milestone validation</span></li>
-          <li><span class="ck">✓</span><span data-nl="">0.25% vergoeding per vrijgegeven bedrag</span><span data-en="">0.25% fee per released amount</span></li>
-          <li><span class="ck">✓</span><span data-nl="">Conflictbeheer &amp; escalatie tools</span><span data-en="">Conflict management &amp; escalation tools</span></li>
-        </ul>
-        <a href="file:///Users/wim/Downloads/buildpay-login.html" class="fw-cta ca" data-nl="">Start als architect →</a>
-        <a href="file:///Users/wim/Downloads/buildpay-login.html" class="fw-cta ca" data-en="">Start as architect →</a>
-      </div>
-
+    <div class="fw-card fw-card-2">
+      <div class="fw-role nl">Voor de aannemer</div><div class="fw-role fr" style="display: none;">Pour l'entrepreneur</div><div class="fw-role en-text" style="display: none;">For the contractor</div>
+      <span class="fw-icon">🔨</span>
+      <h3 class="nl">Werk gerust, word betaald</h3><h3 class="fr" style="display: none;">Travaillez serein, soyez payé</h3><h3 class="en-text" style="display: none;">Work assured, get paid</h3>
+      <p class="nl">Het budget staat klaar vóór je begint. Lever goed werk en ontvang betaling binnen 24 uur.</p>
+      <p class="fr" style="display: none;">Le budget est prêt avant que vous commenciez. Faites du bon travail et recevez le paiement en 24h.</p>
+      <p class="en-text" style="display: none;">Budget is ready before you start. Deliver good work and receive payment within 24 hours.</p>
+      <ul class="fw-list">
+        <li><span class="ck-teal">✓</span> <span class="nl">Budget gegarandeerd in escrow</span><span class="fr" style="display: none;">Budget garanti en escrow</span><span class="en-text" style="display: none;">Budget guaranteed in escrow</span></li>
+        <li><span class="ck-teal">✓</span> <span class="nl">AI contract vanuit offerte</span><span class="fr" style="display: none;">Contrat IA depuis devis</span><span class="en-text" style="display: none;">AI contract from quote</span></li>
+        <li><span class="ck-teal">✓</span> <span class="nl">Uitbetaling binnen 24u</span><span class="fr" style="display: none;">Paiement en 24h</span><span class="en-text" style="display: none;">Payout within 24h</span></li>
+        <li><span class="ck-teal">✓</span> <span class="nl">Bouwsoft &amp; Vertuoza integratie</span><span class="fr" style="display: none;">Intégration Bouwsoft &amp; Vertuoza</span><span class="en-text" style="display: none;">Bouwsoft &amp; Vertuoza integration</span></li>
+      </ul>
+      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="fw-btn fw-btn-teal nl">Start als aannemer →</a>
+      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="fw-btn fw-btn-teal fr" style="display: none;">Commencer →</a>
+      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="fw-btn fw-btn-teal en-text" style="display: none;">Start as contractor →</a>
+    </div>
+    <div class="fw-card fw-card-3">
+      <div class="fw-role nl">Voor de architect</div><div class="fw-role fr" style="display: none;">Pour l'architecte</div><div class="fw-role en-text" style="display: none;">For the architect</div>
+      <span class="fw-icon">📐</span>
+      <h3 class="nl">Begeleid. Valideer. Verdien.</h3><h3 class="fr" style="display: none;">Guidez. Validez. Gagnez.</h3><h3 class="en-text" style="display: none;">Guide. Validate. Earn.</h3>
+      <p class="nl">Jij bent de neutrale expert die beide partijen vertrouwen. Buildpay geeft jou de tools en beloont je expertise.</p>
+      <p class="fr" style="display: none;">Vous êtes l'expert neutre en qui les deux parties ont confiance. Buildpay vous donne les outils et récompense votre expertise.</p>
+      <p class="en-text" style="display: none;">You are the neutral expert both parties trust. Buildpay gives you the tools and rewards your expertise.</p>
+      <ul class="fw-list">
+        <li><span class="ck-amber">✓</span> <span class="nl">Alle projecten in één dashboard</span><span class="fr" style="display: none;">Tous les projets en un dashboard</span><span class="en-text" style="display: none;">All projects in one dashboard</span></li>
+        <li><span class="ck-amber">✓</span> <span class="nl">Technische milestone validatie</span><span class="fr" style="display: none;">Validation technique des jalons</span><span class="en-text" style="display: none;">Technical milestone validation</span></li>
+        <li><span class="ck-amber">✓</span> <span class="nl">0.25% vergoeding per vrijgave</span><span class="fr" style="display: none;">0,25% commission par libération</span><span class="en-text" style="display: none;">0.25% fee per release</span></li>
+        <li><span class="ck-amber">✓</span> <span class="nl">Conflictbeheer tools</span><span class="fr" style="display: none;">Outils de gestion des litiges</span><span class="en-text" style="display: none;">Conflict management tools</span></li>
+      </ul>
+      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="fw-btn fw-btn-amber nl">Start als architect →</a>
+      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="fw-btn fw-btn-amber fr" style="display: none;">Commencer →</a>
+      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="fw-btn fw-btn-amber en-text" style="display: none;">Start as architect →</a>
     </div>
   </div>
 </section>
@@ -437,193 +407,150 @@ body.lang-nl [data-en]{display:none;}
 <!-- HOW IT WORKS -->
 <section class="hiw" id="hoe-het-werkt">
   <div class="hiw-inner">
-    <div class="hiw-header fade-up">
-      <div class="tag tag-blue" data-nl="">Hoe het werkt</div>
-      <div class="tag tag-blue" data-en="">How it works</div>
-      <h2 data-nl="">Van offerte tot oplevering — voor iedereen duidelijk</h2>
-      <h2 data-en="">From quote to completion — clear for everyone</h2>
-      <div class="hiw-tabs">
-        <button class="hiw-tab sb" onclick="setHow(&#39;client&#39;)" id="ht-c" data-nl="">🏠 Klant</button>
-        <button class="hiw-tab sb" onclick="setHow(&#39;client&#39;)" id="ht-c-en" data-en="">🏠 Client</button>
-        <button class="hiw-tab" onclick="setHow(&#39;contractor&#39;)" id="ht-k" data-nl="">🔨 Aannemer</button>
-        <button class="hiw-tab" onclick="setHow(&#39;contractor&#39;)" id="ht-k-en" data-en="">🔨 Contractor</button>
-        <button class="hiw-tab" onclick="setHow(&#39;architect&#39;)" id="ht-a" data-nl="">📐 Architect</button>
-        <button class="hiw-tab" onclick="setHow(&#39;architect&#39;)" id="ht-a-en" data-en="">📐 Architect</button>
-      </div>
+    <span class="section-tag tag-blue nl" style="margin-bottom: 0.5rem;">Hoe het werkt</span>
+    <span class="section-tag tag-blue fr" style="display: none; margin-bottom: 0.5rem;">Comment ça marche</span>
+    <span class="section-tag tag-blue en-text" style="display: none; margin-bottom: 0.5rem;">How it works</span>
+    <h2 class="nl">Van offerte tot oplevering</h2>
+    <h2 class="fr" style="display: none;">Du devis à la livraison</h2>
+    <h2 class="en-text" style="display: none;">From quote to completion</h2>
+    <div class="hiw-tabs">
+      <button class="hiw-tab active" onclick="setHow(&#39;client&#39;)" id="ht-client">🏠 <span class="nl">Klant</span><span class="fr" style="display: none;">Client</span><span class="en-text" style="display: none;">Client</span></button>
+      <button class="hiw-tab" onclick="setHow(&#39;contractor&#39;)" id="ht-contractor">🔨 <span class="nl">Aannemer</span><span class="fr" style="display: none;">Entrepreneur</span><span class="en-text" style="display: none;">Contractor</span></button>
+      <button class="hiw-tab" onclick="setHow(&#39;architect&#39;)" id="ht-architect">📐 <span class="nl">Architect</span><span class="fr" style="display: none;">Architecte</span><span class="en-text" style="display: none;">Architect</span></button>
     </div>
-
     <div class="hiw-steps active" id="hs-client">
-      <div class="hiw-step"><div class="hiw-num nb">1</div><h3 data-nl="">Project aanmaken</h3><h3 data-en="">Create project</h3><p data-nl="">Maak een project aan en nodig je aannemer en eventueel architect uit via e-mail.</p><p data-en="">Create a project and invite your contractor and optional architect by email.</p></div>
-      <div class="hiw-step"><div class="hiw-num nb">2</div><h3 data-nl="">Escrow storten</h3><h3 data-en="">Deposit escrow</h3><p data-nl="">Je stort het volledige bedrag veilig in escrow. Het blijft jouw geld totdat jij goedkeurt.</p><p data-en="">You deposit the full amount safely in escrow. It remains your money until you approve.</p></div>
-      <div class="hiw-step"><div class="hiw-num nb">3</div><h3 data-nl="">Werk opvolgen</h3><h3 data-en="">Follow the work</h3><p data-nl="">Volg voortgang per milestone. Aannemer uploadt bewijs. Architect valideert technisch.</p><p data-en="">Track progress per milestone. Contractor uploads proof. Architect validates technically.</p></div>
-      <div class="hiw-step"><div class="hiw-num nb">4</div><h3 data-nl="">Goedkeuren &amp; betalen</h3><h3 data-en="">Approve &amp; pay</h3><p data-nl="">Keur jij goed? Geld wordt automatisch vrijgegeven binnen 24 uur.</p><p data-en="">Do you approve? Money is automatically released within 24 hours.</p></div>
+      <div class="hiw-step"><div class="hiw-num nb">1</div><h3 class="nl">Project aanmaken</h3><h3 class="fr" style="display: none;">Créer le projet</h3><h3 class="en-text" style="display: none;">Create project</h3><p class="nl">Maak een project aan en nodig je aannemer en architect uit.</p><p class="fr" style="display: none;">Créez un projet et invitez votre entrepreneur et architecte.</p><p class="en-text" style="display: none;">Create a project and invite your contractor and architect.</p></div>
+      <div class="hiw-step"><div class="hiw-num nb">2</div><h3 class="nl">Escrow storten</h3><h3 class="fr" style="display: none;">Déposer en escrow</h3><h3 class="en-text" style="display: none;">Deposit escrow</h3><p class="nl">Stort het volledige bedrag veilig in escrow. Het blijft jouw geld.</p><p class="fr" style="display: none;">Déposez le montant total en escrow. C'est toujours votre argent.</p><p class="en-text" style="display: none;">Deposit the full amount safely in escrow. It stays your money.</p></div>
+      <div class="hiw-step"><div class="hiw-num nb">3</div><h3 class="nl">Werk opvolgen</h3><h3 class="fr" style="display: none;">Suivre les travaux</h3><h3 class="en-text" style="display: none;">Follow the work</h3><p class="nl">Volg voortgang per milestone. Architect valideert technisch.</p><p class="fr" style="display: none;">Suivez l'avancement par jalon. L'architecte valide techniquement.</p><p class="en-text" style="display: none;">Track progress per milestone. Architect validates technically.</p></div>
+      <div class="hiw-step"><div class="hiw-num nb">4</div><h3 class="nl">Goedkeuren &amp; betalen</h3><h3 class="fr" style="display: none;">Approuver &amp; payer</h3><h3 class="en-text" style="display: none;">Approve &amp; pay</h3><p class="nl">Keur je goed? Geld vrijgegeven binnen 24 uur.</p><p class="fr" style="display: none;">Vous approuvez? Argent libéré en 24 heures.</p><p class="en-text" style="display: none;">You approve? Money released within 24 hours.</p></div>
     </div>
-
     <div class="hiw-steps" id="hs-contractor">
-      <div class="hiw-step"><div class="hiw-num nt">1</div><h3 data-nl="">Offerte importeren</h3><h3 data-en="">Import quote</h3><p data-nl="">Upload via PDF, Bouwsoft of Vertuoza API. AI extraheert alle posten automatisch.</p><p data-en="">Upload via PDF, Bouwsoft or Vertuoza API. AI extracts all line items automatically.</p></div>
-      <div class="hiw-step"><div class="hiw-num nt">2</div><h3 data-nl="">AI contract</h3><h3 data-en="">AI contract</h3><p data-nl="">AI stelt milestones voor op basis van je offerte. Pas aan, keur goed, stuur ter ondertekening.</p><p data-en="">AI proposes milestones based on your quote. Adjust, approve, send for signing.</p></div>
-      <div class="hiw-step"><div class="hiw-num nt">3</div><h3 data-nl="">Werk uitvoeren</h3><h3 data-en="">Execute work</h3><p data-nl="">Budget staat klaar in escrow. Upload bewijs per milestone via het platform.</p><p data-en="">Budget is ready in escrow. Upload proof per milestone via the platform.</p></div>
-      <div class="hiw-step"><div class="hiw-num nt">4</div><h3 data-nl="">Indienen &amp; ontvangen</h3><h3 data-en="">Submit &amp; receive</h3><p data-nl="">Na goedkeuring door architect en klant staat het geld binnen 24u op je rekening.</p><p data-en="">After approval by architect and client, money is in your account within 24h.</p></div>
+      <div class="hiw-step"><div class="hiw-num nt">1</div><h3 class="nl">Offerte importeren</h3><h3 class="fr" style="display: none;">Importer le devis</h3><h3 class="en-text" style="display: none;">Import quote</h3><p class="nl">Upload via PDF, Bouwsoft of Vertuoza. AI extraheert alles automatisch.</p><p class="fr" style="display: none;">Importez via PDF, Bouwsoft ou Vertuoza. L'IA extrait tout automatiquement.</p><p class="en-text" style="display: none;">Upload via PDF, Bouwsoft or Vertuoza. AI extracts everything automatically.</p></div>
+      <div class="hiw-step"><div class="hiw-num nt">2</div><h3 class="nl">AI contract</h3><h3 class="fr" style="display: none;">Contrat IA</h3><h3 class="en-text" style="display: none;">AI contract</h3><p class="nl">AI stelt milestones voor. Pas aan en stuur ter ondertekening.</p><p class="fr" style="display: none;">L'IA propose des jalons. Ajustez et envoyez pour signature.</p><p class="en-text" style="display: none;">AI proposes milestones. Adjust and send for signing.</p></div>
+      <div class="hiw-step"><div class="hiw-num nt">3</div><h3 class="nl">Werk uitvoeren</h3><h3 class="fr" style="display: none;">Exécuter les travaux</h3><h3 class="en-text" style="display: none;">Execute work</h3><p class="nl">Budget staat klaar in escrow. Upload bewijs per milestone.</p><p class="fr" style="display: none;">Budget prêt en escrow. Téléchargez les preuves par jalon.</p><p class="en-text" style="display: none;">Budget ready in escrow. Upload proof per milestone.</p></div>
+      <div class="hiw-step"><div class="hiw-num nt">4</div><h3 class="nl">Betaling ontvangen</h3><h3 class="fr" style="display: none;">Recevoir le paiement</h3><h3 class="en-text" style="display: none;">Receive payment</h3><p class="nl">Na goedkeuring staat het geld binnen 24u op je rekening.</p><p class="fr" style="display: none;">Après approbation, l'argent est sur votre compte en 24h.</p><p class="en-text" style="display: none;">After approval, money is in your account within 24h.</p></div>
     </div>
-
     <div class="hiw-steps" id="hs-architect">
-      <div class="hiw-step"><div class="hiw-num na">1</div><h3 data-nl="">Uitgenodigd worden</h3><h3 data-en="">Get invited</h3><p data-nl="">Klant of aannemer nodigt jou uit als begeleider, of je start zelf een dossier.</p><p data-en="">Client or contractor invites you as supervisor, or you start a file yourself.</p></div>
-      <div class="hiw-step"><div class="hiw-num na">2</div><h3 data-nl="">Plannen uploaden</h3><h3 data-en="">Upload plans</h3><p data-nl="">Upload technische plannen, bestekken en referentiedocumenten voor alle partijen.</p><p data-en="">Upload technical plans, specifications and reference documents for all parties.</p></div>
-      <div class="hiw-step"><div class="hiw-num na">3</div><h3 data-nl="">Milestones valideren</h3><h3 data-en="">Validate milestones</h3><p data-nl="">Beoordeel ingediend bewijs technisch t.o.v. je plannen. Keur goed of blokkeer.</p><p data-en="">Technically assess submitted proof against your plans. Approve or block.</p></div>
-      <div class="hiw-step"><div class="hiw-num na">4</div><h3 data-nl="">Vergoeding ontvangen</h3><h3 data-en="">Receive compensation</h3><p data-nl="">0.25% per goedgekeurd milestone bedrag. Automatisch uitbetaald op je rekening.</p><p data-en="">0.25% per approved milestone amount. Automatically paid to your account.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- FEATURES -->
-<section class="features-section">
-  <div class="features-inner fade-up">
-    <div>
-      <div class="tag tag-blue" data-nl="">Platform functies</div>
-      <div class="tag tag-blue" data-en="">Platform features</div>
-      <h2 style="font-family:&#39;Syne&#39;,sans-serif;font-size:clamp(1.8rem,3vw,2.75rem);font-weight:800;letter-spacing:-0.02em;color:var(--navy);margin:0.75rem 0 1rem;" data-nl="">Alles wat je nodig hebt, voor iedereen</h2>
-      <h2 style="font-family:&#39;Syne&#39;,sans-serif;font-size:clamp(1.8rem,3vw,2.75rem);font-weight:800;letter-spacing:-0.02em;color:var(--navy);margin:0.75rem 0 1rem;" data-en="">Everything you need, for everyone</h2>
-      <p style="font-size:0.95rem;color:var(--slate);line-height:1.75;max-width:400px;" data-nl="">Buildpay bundelt escrow, AI contracten, milestone beheer, architect validatie en documenten in één platform.</p>
-      <p style="font-size:0.95rem;color:var(--slate);line-height:1.75;max-width:400px;" data-en="">Buildpay bundles escrow, AI contracts, milestone management, architect validation and documents in one platform.</p>
-    </div>
-    <div class="features-grid">
-      <div class="feat-card"><div class="feat-icon fi-b">🔒</div><h3 data-nl="">Escrow betalingen</h3><h3 data-en="">Escrow payments</h3><p data-nl="">Geld geblokkeerd bij erkende instelling. Vrijgave enkel bij wederzijdse goedkeuring.</p><p data-en="">Money held at licensed institution. Release only upon mutual approval.</p></div>
-      <div class="feat-card"><div class="feat-icon fi-t">🤖</div><h3 data-nl="">AI Contract Wizard</h3><h3 data-en="">AI Contract Wizard</h3><p data-nl="">Importeer offerte via PDF of API. AI genereert milestones en contract in minuten.</p><p data-en="">Import quote via PDF or API. AI generates milestones and contract in minutes.</p></div>
-      <div class="feat-card"><div class="feat-icon fi-t">📋</div><h3 data-nl="">Milestone beheer</h3><h3 data-en="">Milestone management</h3><p data-nl="">Duidelijke stappen met bewijs, validatie en automatische vrijgave bij akkoord.</p><p data-en="">Clear steps with proof, validation and automatic release upon agreement.</p></div>
-      <div class="feat-card"><div class="feat-icon fi-a">📐</div><h3 data-nl="">Architect validatie</h3><h3 data-en="">Architect validation</h3><p data-nl="">Technische goedkeuringslaag door architect vóór de klant betaalt.</p><p data-en="">Technical approval layer by architect before the client pays.</p></div>
-      <div class="feat-card"><div class="feat-icon fi-b">💬</div><h3 data-nl="">Gescheiden chats</h3><h3 data-en="">Separate chats</h3><p data-nl="">Architect communiceert apart met klant en aannemer. Neutraal en traceerbaar.</p><p data-en="">Architect communicates separately with client and contractor. Neutral and traceable.</p></div>
-      <div class="feat-card"><div class="feat-icon fi-b">📁</div><h3 data-nl="">Digitaal dossier</h3><h3 data-en="">Digital file</h3><p data-nl="">Alle documenten, plannen en attesten op één plek. Volledig traceerbaar bij geschil.</p><p data-en="">All documents, plans and certificates in one place. Fully traceable in dispute.</p></div>
+      <div class="hiw-step"><div class="hiw-num na">1</div><h3 class="nl">Uitgenodigd worden</h3><h3 class="fr" style="display: none;">Être invité</h3><h3 class="en-text" style="display: none;">Get invited</h3><p class="nl">Klant of aannemer nodigt jou uit als begeleider.</p><p class="fr" style="display: none;">Le client ou l'entrepreneur vous invite comme superviseur.</p><p class="en-text" style="display: none;">Client or contractor invites you as supervisor.</p></div>
+      <div class="hiw-step"><div class="hiw-num na">2</div><h3 class="nl">Plannen uploaden</h3><h3 class="fr" style="display: none;">Télécharger les plans</h3><h3 class="en-text" style="display: none;">Upload plans</h3><p class="nl">Upload technische plannen en bestekken voor alle partijen.</p><p class="fr" style="display: none;">Téléchargez les plans techniques pour toutes les parties.</p><p class="en-text" style="display: none;">Upload technical plans for all parties.</p></div>
+      <div class="hiw-step"><div class="hiw-num na">3</div><h3 class="nl">Milestones valideren</h3><h3 class="fr" style="display: none;">Valider les jalons</h3><h3 class="en-text" style="display: none;">Validate milestones</h3><p class="nl">Beoordeel bewijs technisch. Keur goed of blokkeer.</p><p class="fr" style="display: none;">Évaluez les preuves techniquement. Approuvez ou bloquez.</p><p class="en-text" style="display: none;">Technically assess proof. Approve or block.</p></div>
+      <div class="hiw-step"><div class="hiw-num na">4</div><h3 class="nl">Vergoeding ontvangen</h3><h3 class="fr" style="display: none;">Recevoir la commission</h3><h3 class="en-text" style="display: none;">Receive fee</h3><p class="nl">0.25% per goedgekeurd bedrag. Automatisch uitbetaald.</p><p class="fr" style="display: none;">0,25% par montant approuvé. Versé automatiquement.</p><p class="en-text" style="display: none;">0.25% per approved amount. Automatically paid.</p></div>
     </div>
   </div>
 </section>
 
 <!-- TESTIMONIALS -->
-<section class="testimonials-section">
+<section class="testimonials">
   <div class="testimonials-inner">
-    <div class="t-header fade-up">
-      <div class="tag tag-blue" data-nl="">Ervaringen</div>
-      <div class="tag tag-blue" data-en="">Testimonials</div>
-      <h2 data-nl="">Wat zij zeggen over Buildpay</h2>
-      <h2 data-en="">What they say about Buildpay</h2>
+    <div class="t-header">
+      <span class="section-tag tag-blue nl" style="margin-bottom: 0.5rem;">Ervaringen</span>
+      <span class="section-tag tag-blue fr" style="display: none; margin-bottom: 0.5rem;">Témoignages</span>
+      <span class="section-tag tag-blue en-text" style="display: none; margin-bottom: 0.5rem;">Testimonials</span>
+      <h2 class="nl">Wat zij zeggen over Buildpay</h2>
+      <h2 class="fr" style="display: none;">Ce qu'ils disent de Buildpay</h2>
+      <h2 class="en-text" style="display: none;">What they say about Buildpay</h2>
     </div>
-    <div class="t-grid fade-up">
+    <div class="t-grid">
       <div class="t-card">
-        <p class="t-quote" data-nl="">Eindelijk geen stress meer over mijn voorschot. Ik heb altijd controle over mijn eigen geld. De aannemer werkt ook veel professioneler omdat alles vastgelegd is.</p>
-        <p class="t-quote" data-en="">Finally no more stress about my deposit. I always have control over my own money. The contractor also works much more professionally because everything is documented.</p>
-        <div class="t-author">
-          <div class="t-av av-b">MV</div>
-          <div>
-            <div class="t-name">Marie Van Damme</div>
-            <div class="t-role" data-nl="">Keuken renovatie · Gent</div>
-            <div class="t-role" data-en="">Kitchen renovation · Ghent</div>
-            <span class="t-badge tb-b">🏠 <span data-nl="">Klant</span><span data-en="">Client</span></span>
-          </div>
-        </div>
+        <p class="t-quote nl">Eindelijk geen stress meer over mijn voorschot. Ik heb altijd controle over mijn eigen geld. De aannemer werkt ook veel professioneler.</p>
+        <p class="t-quote fr" style="display: none;">Enfin plus de stress concernant mon acompte. J'ai toujours le contrôle sur mon argent.</p>
+        <p class="t-quote en-text" style="display: none;">Finally no more stress about my deposit. I always have control over my own money.</p>
+        <div class="t-author"><div class="t-av av-b">MV</div><div><div class="t-name">Marie Van Damme</div><div class="t-role nl">Keuken renovatie · Gent</div><div class="t-role fr" style="display: none;">Rénovation cuisine · Gand</div><div class="t-role en-text" style="display: none;">Kitchen renovation · Ghent</div><span class="t-badge tb-b">🏠 <span class="nl">Klant</span><span class="fr" style="display: none;">Client</span><span class="en-text" style="display: none;">Client</span></span></div></div>
       </div>
       <div class="t-card">
-        <p class="t-quote" data-nl="">Mijn klanten vertrouwen me meer depuis ik met Buildpay werk. Het geld staat klaar voor ik begin — ik verlies geen tijd meer met achtervolgen van facturen.</p>
-        <p class="t-quote" data-en="">My clients trust me more since I started using Buildpay. The money is ready before I start — I no longer waste time chasing invoices.</p>
-        <div class="t-author">
-          <div class="t-av av-t">PV</div>
-          <div>
-            <div class="t-name">Pieter Vandebroeck</div>
-            <div class="t-role" data-nl="">Aannemer · Antwerpen</div>
-            <div class="t-role" data-en="">Contractor · Antwerp</div>
-            <span class="t-badge tb-t">🔨 <span data-nl="">Aannemer</span><span data-en="">Contractor</span></span>
-          </div>
-        </div>
+        <p class="t-quote nl">Mijn klanten vertrouwen me meer. Het geld staat klaar voor ik begin — ik verlies geen tijd meer met achtervolgen van facturen.</p>
+        <p class="t-quote fr" style="display: none;">Mes clients me font plus confiance. L'argent est prêt avant que je commence.</p>
+        <p class="t-quote en-text" style="display: none;">My clients trust me more. The money is ready before I start — no more chasing invoices.</p>
+        <div class="t-author"><div class="t-av av-t">PV</div><div><div class="t-name">Pieter Vandebroeck</div><div class="t-role nl">Aannemer · Antwerpen</div><div class="t-role fr" style="display: none;">Entrepreneur · Anvers</div><div class="t-role en-text" style="display: none;">Contractor · Antwerp</div><span class="t-badge tb-t">🔨 <span class="nl">Aannemer</span><span class="fr" style="display: none;">Entrepreneur</span><span class="en-text" style="display: none;">Contractor</span></span></div></div>
       </div>
       <div class="t-card">
-        <p class="t-quote" data-nl="">Als architect is dit mijn nieuwe standaard voor elk project. Geen conflicten meer over betalingen — en de vergoeding is mooi meegenomen.</p>
-        <p class="t-quote" data-en="">As an architect this is my new standard for every project. No more payment disputes — and the fee is a nice bonus.</p>
-        <div class="t-author">
-          <div class="t-av av-a">SV</div>
-          <div>
-            <div class="t-name">Sophie Vermeersch</div>
-            <div class="t-role" data-nl="">Architect · Brussel</div>
-            <div class="t-role" data-en="">Architect · Brussels</div>
-            <span class="t-badge tb-a">📐 <span data-nl="">Architect</span><span data-en="">Architect</span></span>
-          </div>
-        </div>
+        <p class="t-quote nl">Als architect is dit mijn nieuwe standaard. Geen conflicten meer over betalingen — en de vergoeding is mooi meegenomen.</p>
+        <p class="t-quote fr" style="display: none;">En tant qu'architecte, c'est ma nouvelle norme. Plus de conflits sur les paiements.</p>
+        <p class="t-quote en-text" style="display: none;">As an architect this is my new standard. No more payment disputes — and the fee is a nice bonus.</p>
+        <div class="t-author"><div class="t-av av-a">SV</div><div><div class="t-name">Sophie Vermeersch</div><div class="t-role nl">Architect · Brussel</div><div class="t-role fr" style="display: none;">Architecte · Bruxelles</div><div class="t-role en-text" style="display: none;">Architect · Brussels</div><span class="t-badge tb-a">📐 <span class="nl">Architect</span><span class="fr" style="display: none;">Architecte</span><span class="en-text" style="display: none;">Architect</span></span></div></div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- PRICING -->
-<section class="pricing-section" id="prijzen">
+<section class="pricing" id="prijzen">
   <div class="pricing-inner">
-    <div class="p-header fade-up">
-      <div class="tag tag-blue" data-nl="">Transparante prijzen</div>
-      <div class="tag tag-blue" data-en="">Transparent pricing</div>
-      <h2 data-nl="">Betaal enkel wanneer je project loopt</h2>
-      <h2 data-en="">Only pay when your project runs</h2>
-      <p style="font-size:0.9rem;color:var(--slate);margin-top:0.75rem;" data-nl="">Geen verborgen kosten. Geen maandabonnement. Enkel een commissie per vrijgegeven betaling.</p>
-      <p style="font-size:0.9rem;color:var(--slate);margin-top:0.75rem;" data-en="">No hidden costs. No monthly subscription. Just a commission per released payment.</p>
+    <div class="p-header">
+      <span class="section-tag tag-blue nl" style="margin-bottom: 0.5rem;">Transparante prijzen</span>
+      <span class="section-tag tag-blue fr" style="display: none; margin-bottom: 0.5rem;">Tarifs transparents</span>
+      <span class="section-tag tag-blue en-text" style="display: none; margin-bottom: 0.5rem;">Transparent pricing</span>
+      <h2 class="nl">Betaal enkel wanneer je project loopt</h2>
+      <h2 class="fr" style="display: none;">Payez uniquement quand votre projet tourne</h2>
+      <h2 class="en-text" style="display: none;">Only pay when your project runs</h2>
+      <p class="nl">Geen verborgen kosten. Geen maandabonnement. Enkel commissie per vrijgegeven betaling.</p>
+      <p class="fr" style="display: none;">Pas de frais cachés. Pas d'abonnement mensuel. Seulement une commission par paiement libéré.</p>
+      <p class="en-text" style="display: none;">No hidden costs. No monthly subscription. Just a commission per released payment.</p>
     </div>
-    <div class="p-grid fade-up">
+    <div class="p-grid">
       <div class="p-card">
-        <div class="p-role pr-b">🏠 <span data-nl="">Klant</span><span data-en="">Client</span></div>
-        <div class="p-amount" data-nl="">Gratis</div>
-        <div class="p-amount" data-en="">Free</div>
-        <div class="p-period" data-nl="">Altijd en volledig gratis</div>
-        <div class="p-period" data-en="">Always and completely free</div>
+        <div class="p-role pr-b">🏠 <span class="nl">Klant</span><span class="fr" style="display: none;">Client</span><span class="en-text" style="display: none;">Client</span></div>
+        <div class="p-amount nl">Gratis</div><div class="p-amount fr" style="display: none;">Gratuit</div><div class="p-amount en-text" style="display: none;">Free</div>
+        <div class="p-period nl">Altijd en volledig gratis</div><div class="p-period fr" style="display: none;">Toujours et entièrement gratuit</div><div class="p-period en-text" style="display: none;">Always and completely free</div>
         <ul class="p-list">
-          <li data-nl="">Onbeperkte projecten aanmaken</li><li data-en="">Create unlimited projects</li>
-          <li data-nl="">Escrow storten &amp; beheren</li><li data-en="">Deposit &amp; manage escrow</li>
-          <li data-nl="">Milestones goedkeuren</li><li data-en="">Approve milestones</li>
-          <li data-nl="">Documenten &amp; chat</li><li data-en="">Documents &amp; chat</li>
-          <li data-nl="">Buildpay expert bij geschil (€299)</li><li data-en="">Buildpay expert in dispute (€299)</li>
+          <li class="nl">Onbeperkte projecten aanmaken</li><li class="fr" style="display: none;">Créer des projets illimités</li><li class="en-text" style="display: none;">Create unlimited projects</li>
+          <li class="nl">Escrow storten &amp; beheren</li><li class="fr" style="display: none;">Déposer et gérer l'escrow</li><li class="en-text" style="display: none;">Deposit &amp; manage escrow</li>
+          <li class="nl">Milestones goedkeuren</li><li class="fr" style="display: none;">Approuver les jalons</li><li class="en-text" style="display: none;">Approve milestones</li>
+          <li class="nl">Buildpay expert bij geschil (€299)</li><li class="fr" style="display: none;">Expert Buildpay en cas de litige (€299)</li><li class="en-text" style="display: none;">Buildpay expert in dispute (€299)</li>
         </ul>
-        <button class="p-btn navy" onclick="location=&#39;buildpay-login.html&#39;" data-nl="">Gratis starten</button>
-        <button class="p-btn navy" onclick="location=&#39;buildpay-login.html&#39;" data-en="">Get started free</button>
+        <a href="file:///Users/wim/Downloads/buildpay-login.html" class="p-btn p-btn-navy nl">Gratis starten</a>
+        <a href="file:///Users/wim/Downloads/buildpay-login.html" class="p-btn p-btn-navy fr" style="display: none;">Commencer gratuitement</a>
+        <a href="file:///Users/wim/Downloads/buildpay-login.html" class="p-btn p-btn-navy en-text" style="display: none;">Get started free</a>
       </div>
       <div class="p-card featured">
-        <div class="p-badge" data-nl="">Meest gekozen</div>
-        <div class="p-badge" data-en="">Most popular</div>
-        <div class="p-role pr-t">🔨 <span data-nl="">Aannemer</span><span data-en="">Contractor</span></div>
+        <div class="p-badge nl">Meest gekozen</div><div class="p-badge fr" style="display: none;">Le plus populaire</div><div class="p-badge en-text" style="display: none;">Most popular</div>
+        <div class="p-role pr-t">🔨 <span class="nl">Aannemer</span><span class="fr" style="display: none;">Entrepreneur</span><span class="en-text" style="display: none;">Contractor</span></div>
         <div class="p-amount">1.5%</div>
-        <div class="p-period" data-nl="">per vrijgegeven milestone · geen vaste kosten</div>
-        <div class="p-period" data-en="">per released milestone · no fixed costs</div>
+        <div class="p-period nl">per vrijgegeven milestone · geen vaste kosten</div>
+        <div class="p-period fr" style="display: none;">par jalon libéré · sans frais fixes</div>
+        <div class="p-period en-text" style="display: none;">per released milestone · no fixed costs</div>
         <ul class="p-list">
-          <li data-nl="">AI Contract Wizard (offerte → contract)</li><li data-en="">AI Contract Wizard (quote → contract)</li>
-          <li data-nl="">Bouwsoft &amp; Vertuoza integratie</li><li data-en="">Bouwsoft &amp; Vertuoza integration</li>
-          <li data-nl="">Milestone indienen met bewijs</li><li data-en="">Submit milestones with proof</li>
-          <li data-nl="">Uitbetaling binnen 24 uur</li><li data-en="">Payout within 24 hours</li>
-          <li data-nl="">Professioneel digitaal dossier</li><li data-en="">Professional digital file</li>
+          <li class="nl">AI Contract Wizard (offerte → contract)</li><li class="fr" style="display: none;">Assistant IA (devis → contrat)</li><li class="en-text" style="display: none;">AI Contract Wizard (quote → contract)</li>
+          <li class="nl">Bouwsoft &amp; Vertuoza integratie</li><li class="fr" style="display: none;">Intégration Bouwsoft &amp; Vertuoza</li><li class="en-text" style="display: none;">Bouwsoft &amp; Vertuoza integration</li>
+          <li class="nl">Uitbetaling binnen 24 uur</li><li class="fr" style="display: none;">Paiement en 24 heures</li><li class="en-text" style="display: none;">Payout within 24 hours</li>
+          <li class="nl">Professioneel digitaal dossier</li><li class="fr" style="display: none;">Dossier numérique professionnel</li><li class="en-text" style="display: none;">Professional digital file</li>
         </ul>
-        <button class="p-btn feat" onclick="location=&#39;buildpay-login.html&#39;" data-nl="">Start als aannemer</button>
-        <button class="p-btn feat" onclick="location=&#39;buildpay-login.html&#39;" data-en="">Start as contractor</button>
+        <a href="file:///Users/wim/Downloads/buildpay-login.html" class="p-btn p-btn-feat nl">Start als aannemer</a>
+        <a href="file:///Users/wim/Downloads/buildpay-login.html" class="p-btn p-btn-feat fr" style="display: none;">Commencer comme entrepreneur</a>
+        <a href="file:///Users/wim/Downloads/buildpay-login.html" class="p-btn p-btn-feat en-text" style="display: none;">Start as contractor</a>
       </div>
       <div class="p-card">
-        <div class="p-role pr-a">📐 <span data-nl="">Architect</span><span data-en="">Architect</span></div>
-        <div class="p-amount" style="color:var(--amber);">+0.25%</div>
-        <div class="p-period" data-nl="">vergoeding per vrijgegeven bedrag</div>
-        <div class="p-period" data-en="">fee per released amount</div>
+        <div class="p-role pr-a">📐 <span class="nl">Architect</span><span class="fr" style="display: none;">Architecte</span><span class="en-text" style="display: none;">Architect</span></div>
+        <div class="p-amount" style="color:#D97706;">+0.25%</div>
+        <div class="p-period nl">vergoeding per vrijgegeven bedrag</div>
+        <div class="p-period fr" style="display: none;">commission par montant libéré</div>
+        <div class="p-period en-text" style="display: none;">fee per released amount</div>
         <ul class="p-list">
-          <li data-nl="">Gratis platform toegang</li><li data-en="">Free platform access</li>
-          <li data-nl="">Multi-project dashboard</li><li data-en="">Multi-project dashboard</li>
-          <li data-nl="">Milestone validatie tools</li><li data-en="">Milestone validation tools</li>
-          <li data-nl="">Gescheiden chats per partij</li><li data-en="">Separate chats per party</li>
-          <li data-nl="">Conflictbeheer &amp; escalatie</li><li data-en="">Conflict management &amp; escalation</li>
+          <li class="nl">Gratis platform toegang</li><li class="fr" style="display: none;">Accès gratuit à la plateforme</li><li class="en-text" style="display: none;">Free platform access</li>
+          <li class="nl">Multi-project dashboard</li><li class="fr" style="display: none;">Dashboard multi-projets</li><li class="en-text" style="display: none;">Multi-project dashboard</li>
+          <li class="nl">Milestone validatie tools</li><li class="fr" style="display: none;">Outils de validation des jalons</li><li class="en-text" style="display: none;">Milestone validation tools</li>
+          <li class="nl">Conflictbeheer &amp; escalatie</li><li class="fr" style="display: none;">Gestion des litiges &amp; escalade</li><li class="en-text" style="display: none;">Conflict management &amp; escalation</li>
         </ul>
-        <button class="p-btn amberb" onclick="location=&#39;buildpay-login.html&#39;" data-nl="">Start als architect</button>
-        <button class="p-btn amberb" onclick="location=&#39;buildpay-login.html&#39;" data-en="">Start as architect</button>
+        <a href="file:///Users/wim/Downloads/buildpay-login.html" class="p-btn p-btn-amber nl">Start als architect</a>
+        <a href="file:///Users/wim/Downloads/buildpay-login.html" class="p-btn p-btn-amber fr" style="display: none;">Commencer comme architecte</a>
+        <a href="file:///Users/wim/Downloads/buildpay-login.html" class="p-btn p-btn-amber en-text" style="display: none;">Start as architect</a>
       </div>
     </div>
   </div>
 </section>
 
 <!-- CTA -->
-<section class="cta-section fade-up">
-  <h2 data-nl="">Klaar om te starten?</h2>
-  <h2 data-en="">Ready to get started?</h2>
-  <p data-nl="">Kies je rol en maak gratis een account aan. Geen creditcard, geen maandkosten — enkel betalen als je project loopt.</p>
-  <p data-en="">Choose your role and create a free account. No credit card, no monthly fees — only pay when your project runs.</p>
+<section class="cta-section">
+  <h2 class="nl">Klaar om te starten?</h2>
+  <h2 class="fr" style="display: none;">Prêt à commencer?</h2>
+  <h2 class="en-text" style="display: none;">Ready to get started?</h2>
+  <p class="nl">Kies je rol en maak gratis een account aan. Geen creditcard, geen maandkosten.</p>
+  <p class="fr" style="display: none;">Choisissez votre rôle et créez un compte gratuitement. Sans carte de crédit.</p>
+  <p class="en-text" style="display: none;">Choose your role and create a free account. No credit card, no monthly fees.</p>
   <div class="cta-btns">
-    <a href="file:///Users/wim/Downloads/buildpay-login.html" class="cta-btn cb">🏠 <span data-nl="">Ik ben klant</span><span data-en="">I'm a client</span></a>
-    <a href="file:///Users/wim/Downloads/buildpay-login.html" class="cta-btn ct">🔨 <span data-nl="">Ik ben aannemer</span><span data-en="">I'm a contractor</span></a>
-    <a href="file:///Users/wim/Downloads/buildpay-login.html" class="cta-btn ca">📐 <span data-nl="">Ik ben architect</span><span data-en="">I'm an architect</span></a>
+    <a href="file:///Users/wim/Downloads/buildpay-login.html" class="cta-btn cb">🏠 <span class="nl">Ik ben klant</span><span class="fr" style="display: none;">Je suis client</span><span class="en-text" style="display: none;">I'm a client</span></a>
+    <a href="file:///Users/wim/Downloads/buildpay-login.html" class="cta-btn ct">🔨 <span class="nl">Ik ben aannemer</span><span class="fr" style="display: none;">Je suis entrepreneur</span><span class="en-text" style="display: none;">I'm a contractor</span></a>
+    <a href="file:///Users/wim/Downloads/buildpay-login.html" class="cta-btn ca">📐 <span class="nl">Ik ben architect</span><span class="fr" style="display: none;">Je suis architecte</span><span class="en-text" style="display: none;">I'm an architect</span></a>
   </div>
 </section>
 
@@ -631,81 +558,86 @@ body.lang-nl [data-en]{display:none;}
 <footer>
   <div class="footer-grid">
     <div>
-      <div class="footer-logo-f">Build<span>pay</span></div>
-      <div class="footer-tagline" data-nl="">Veilig samenwerken aan bouwprojecten. Escrow, contracten en AI voor klanten, aannemers en architecten.</div>
-      <div class="footer-tagline" data-en="">Safe collaboration on construction projects. Escrow, contracts and AI for clients, contractors and architects.</div>
+      <div class="footer-logo">Build<span>pay</span></div>
+      <p class="footer-tagline nl">Veilig samenwerken aan bouwprojecten. Escrow, contracten en AI voor klanten, aannemers en architecten.</p>
+      <p class="footer-tagline fr" style="display: none;">Collaboration sécurisée sur les projets de construction. Escrow, contrats et IA.</p>
+      <p class="footer-tagline en-text" style="display: none;">Safe collaboration on construction projects. Escrow, contracts and AI.</p>
     </div>
     <div>
-      <div class="f-col-title" data-nl="">Platform</div>
-      <div class="f-col-title" data-en="">Platform</div>
+      <div class="f-col-title nl">Platform</div>
+      <div class="f-col-title fr" style="display: none;">Plateforme</div>
+      <div class="f-col-title en-text" style="display: none;">Platform</div>
       <div class="f-links">
-        <a href="file:///Users/wim/Downloads/index_2.html#hoe-het-werkt" data-nl="">Hoe het werkt</a><a href="file:///Users/wim/Downloads/index_2.html#hoe-het-werkt" data-en="">How it works</a>
-        <a href="file:///Users/wim/Downloads/index_2.html#voor-wie" data-nl="">Voor wie</a><a href="file:///Users/wim/Downloads/index_2.html#voor-wie" data-en="">For who</a>
-        <a href="file:///Users/wim/Downloads/index_2.html#prijzen" data-nl="">Prijzen</a><a href="file:///Users/wim/Downloads/index_2.html#prijzen" data-en="">Pricing</a>
-        <a href="file:///Users/wim/Downloads/buildpay-login.html" data-nl="">Inloggen</a><a href="file:///Users/wim/Downloads/buildpay-login.html" data-en="">Log in</a>
+        <a href="file:///Users/wim/Downloads/index_3.html#voor-wie" class="nl">Voor wie</a><a href="file:///Users/wim/Downloads/index_3.html#voor-wie" class="fr" style="display: none;">Pour qui</a><a href="file:///Users/wim/Downloads/index_3.html#voor-wie" class="en-text" style="display: none;">For who</a>
+        <a href="file:///Users/wim/Downloads/index_3.html#hoe-het-werkt" class="nl">Hoe het werkt</a><a href="file:///Users/wim/Downloads/index_3.html#hoe-het-werkt" class="fr" style="display: none;">Comment ça marche</a><a href="file:///Users/wim/Downloads/index_3.html#hoe-het-werkt" class="en-text" style="display: none;">How it works</a>
+        <a href="file:///Users/wim/Downloads/index_3.html#prijzen" class="nl">Prijzen</a><a href="file:///Users/wim/Downloads/index_3.html#prijzen" class="fr" style="display: none;">Tarifs</a><a href="file:///Users/wim/Downloads/index_3.html#prijzen" class="en-text" style="display: none;">Pricing</a>
+        <a href="file:///Users/wim/Downloads/buildpay-login.html" class="nl">Inloggen</a><a href="file:///Users/wim/Downloads/buildpay-login.html" class="fr" style="display: none;">Se connecter</a><a href="file:///Users/wim/Downloads/buildpay-login.html" class="en-text" style="display: none;">Log in</a>
       </div>
     </div>
     <div>
-      <div class="f-col-title" data-nl="">Voor wie</div>
-      <div class="f-col-title" data-en="">For who</div>
+      <div class="f-col-title nl">Dashboards</div>
+      <div class="f-col-title fr" style="display: none;">Dashboards</div>
+      <div class="f-col-title en-text" style="display: none;">Dashboards</div>
       <div class="f-links">
-        <a href="file:///Users/wim/Downloads/buildpay-dashboard-client.html" data-nl="">Klanten</a><a href="file:///Users/wim/Downloads/buildpay-dashboard-client.html" data-en="">Clients</a>
-        <a href="file:///Users/wim/Downloads/buildpay-dashboard-contractor.html" data-nl="">Aannemers</a><a href="file:///Users/wim/Downloads/buildpay-dashboard-contractor.html" data-en="">Contractors</a>
-        <a href="file:///Users/wim/Downloads/buildpay-dashboard-architect.html" data-nl="">Architecten</a><a href="file:///Users/wim/Downloads/buildpay-dashboard-architect.html" data-en="">Architects</a>
-        <a href="file:///Users/wim/Downloads/buildpay-offerte-flow.html" data-nl="">AI Contract Wizard</a><a href="file:///Users/wim/Downloads/buildpay-offerte-flow.html" data-en="">AI Contract Wizard</a>
+        <a href="file:///Users/wim/Downloads/buildpay-dashboard-client.html" class="nl">Klanten</a><a href="file:///Users/wim/Downloads/buildpay-dashboard-client.html" class="fr" style="display: none;">Clients</a><a href="file:///Users/wim/Downloads/buildpay-dashboard-client.html" class="en-text" style="display: none;">Clients</a>
+        <a href="file:///Users/wim/Downloads/buildpay-dashboard-contractor.html" class="nl">Aannemers</a><a href="file:///Users/wim/Downloads/buildpay-dashboard-contractor.html" class="fr" style="display: none;">Entrepreneurs</a><a href="file:///Users/wim/Downloads/buildpay-dashboard-contractor.html" class="en-text" style="display: none;">Contractors</a>
+        <a href="file:///Users/wim/Downloads/buildpay-dashboard-architect.html" class="nl">Architecten</a><a href="file:///Users/wim/Downloads/buildpay-dashboard-architect.html" class="fr" style="display: none;">Architectes</a><a href="file:///Users/wim/Downloads/buildpay-dashboard-architect.html" class="en-text" style="display: none;">Architects</a>
+        <a href="file:///Users/wim/Downloads/buildpay-offerte-flow.html" class="nl">AI Contract Wizard</a><a href="file:///Users/wim/Downloads/buildpay-offerte-flow.html" class="fr" style="display: none;">Assistant IA</a><a href="file:///Users/wim/Downloads/buildpay-offerte-flow.html" class="en-text" style="display: none;">AI Contract Wizard</a>
       </div>
     </div>
     <div>
-      <div class="f-col-title" data-nl="">Bedrijf</div>
-      <div class="f-col-title" data-en="">Company</div>
+      <div class="f-col-title nl">Bedrijf</div>
+      <div class="f-col-title fr" style="display: none;">Entreprise</div>
+      <div class="f-col-title en-text" style="display: none;">Company</div>
       <div class="f-links">
-        <a href="file:///Users/wim/Downloads/index_2.html#" data-nl="">Over Buildpay</a><a href="file:///Users/wim/Downloads/index_2.html#" data-en="">About Buildpay</a>
-        <a href="file:///Users/wim/Downloads/index_2.html#" data-nl="">Contact</a><a href="file:///Users/wim/Downloads/index_2.html#" data-en="">Contact</a>
-        <a href="file:///Users/wim/Downloads/index_2.html#" data-nl="">Partners</a><a href="file:///Users/wim/Downloads/index_2.html#" data-en="">Partners</a>
-        <a href="file:///Users/wim/Downloads/index_2.html#"><span class="__cf_email__" data-cfemail="20494e464f604255494c445041590e4e4c">[email&nbsp;protected]</span></a>
+        <a href="file:///Users/wim/Downloads/index_3.html#">info@buildpay.be</a>
+        <a href="file:///Users/wim/Downloads/index_3.html#">buildpay.be</a>
+        <a href="file:///Users/wim/Downloads/index_3.html#">buildpay.nl</a>
       </div>
     </div>
   </div>
   <div class="footer-bottom">
-    <div class="f-copy">© 2025 Buildpay · buildpay.nl · buildpay.be</div>
+    <div class="f-copy">© 2025 Buildpay · buildpay.be · buildpay.nl</div>
     <div class="f-legal">
-      <a href="file:///Users/wim/Downloads/index_2.html#" data-nl="">Privacy</a><a href="file:///Users/wim/Downloads/index_2.html#" data-en="">Privacy</a>
-      <a href="file:///Users/wim/Downloads/index_2.html#" data-nl="">Voorwaarden</a><a href="file:///Users/wim/Downloads/index_2.html#" data-en="">Terms</a>
-      <a href="file:///Users/wim/Downloads/index_2.html#" data-nl="">Cookies</a><a href="file:///Users/wim/Downloads/index_2.html#" data-en="">Cookies</a>
+      <a href="file:///Users/wim/Downloads/index_3.html#" class="nl">Privacy</a><a href="file:///Users/wim/Downloads/index_3.html#" class="fr" style="display: none;">Confidentialité</a><a href="file:///Users/wim/Downloads/index_3.html#" class="en-text" style="display: none;">Privacy</a>
+      <a href="file:///Users/wim/Downloads/index_3.html#" class="nl">Voorwaarden</a><a href="file:///Users/wim/Downloads/index_3.html#" class="fr" style="display: none;">Conditions</a><a href="file:///Users/wim/Downloads/index_3.html#" class="en-text" style="display: none;">Terms</a>
     </div>
   </div>
 </footer>
 
-<script data-cfasync="false" src="file:///cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-function setLang(l){
-  document.body.className='lang-'+l;
-  document.getElementById('btn-nl').classList.toggle('active',l==='nl');
-  document.getElementById('btn-en').classList.toggle('active',l==='en');
+<script>
+function setLang(l) {
+  document.body.className = 'lang-' + l;
+  document.querySelectorAll('.nl').forEach(e => e.style.display = l === 'nl' ? '' : 'none');
+  document.querySelectorAll('.fr').forEach(e => e.style.display = l === 'fr' ? '' : 'none');
+  document.querySelectorAll('.en-text').forEach(e => e.style.display = l === 'en' ? '' : 'none');
+  document.getElementById('btn-nl').classList.toggle('active', l === 'nl');
+  document.getElementById('btn-fr').classList.toggle('active', l === 'fr');
+  document.getElementById('btn-en').classList.toggle('active', l === 'en');
 }
 
-function setAud(a){
-  ['client','contractor','architect'].forEach(x=>{
-    document.getElementById('at-'+x[0]).className='aud-tab';
-    document.getElementById('hc-'+x).classList.remove('active');
+function setAud(a) {
+  ['client', 'contractor', 'architect'].forEach(x => {
+    document.getElementById('hc-' + x).classList.remove('active');
+    document.getElementById('at-' + x).className = 'aud-tab';
   });
-  const cols={client:'sel-client',contractor:'sel-contractor',architect:'sel-architect'};
-  document.getElementById('at-'+a[0]).className='aud-tab '+cols[a];
-  document.getElementById('hc-'+a).classList.add('active');
+  document.getElementById('hc-' + a).classList.add('active');
+  const cls = { client: 'active-client', contractor: 'active-contractor', architect: 'active-architect' };
+  document.getElementById('at-' + a).className = 'aud-tab ' + cls[a];
 }
 
-function setHow(h){
-  ['client','contractor','architect'].forEach(x=>{
-    document.getElementById('hs-'+x).classList.remove('active');
+function setHow(h) {
+  ['client', 'contractor', 'architect'].forEach(x => {
+    document.getElementById('hs-' + x).classList.remove('active');
+    document.getElementById('ht-' + x).classList.remove('active');
   });
-  document.getElementById('hs-'+h).classList.add('active');
-  const cls={client:'sb',contractor:'st',architect:'sa'};
-  document.querySelectorAll('.hiw-tab').forEach(t=>t.className='hiw-tab');
-  ['ht-c','ht-c-en','ht-k','ht-k-en','ht-a','ht-a-en'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el&&id.includes(h==='client'?'c':h==='contractor'?'k':'a'))el.className='hiw-tab '+cls[h];
-  });
+  document.getElementById('hs-' + h).classList.add('active');
+  document.getElementById('ht-' + h).classList.add('active');
 }
 
-// Scroll fade
-const obs=new IntersectionObserver(entries=>{
-  entrie</script></body></html>
+// Init
+setLang('nl');
+</script>
+
+
+</body></html>

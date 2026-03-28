@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="nl">
-<head>
-<meta charset="UTF-8">
+<!-- saved from url=(0038)file:///Users/wim/Downloads/index.html -->
+<html lang="nl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Buildpay — Your money, held until it's earned</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link href="./index_files/css2" rel="stylesheet">
 <style>
 :root{
   --navy:#0A1628;--navy-deep:#060E1A;
@@ -44,12 +44,12 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.96);backdrop
 .hero::before{content:'';position:absolute;top:-200px;right:-150px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,0.15),transparent);pointer-events:none;}
 .hero::after{content:'';position:absolute;bottom:-100px;left:-100px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(13,148,136,0.12),transparent);pointer-events:none;}
 
-.hero-eyebrow{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:100px;padding:0.35rem 1rem;font-size:0.72rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-bottom:1.75rem;animation:fadeUp 0.6s 0.1s ease both;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:100px;padding:0.35rem 1rem;font-size:0.72rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-bottom:1.75rem;}
 .eyebrow-dot{width:5px;height:5px;border-radius:50%;background:var(--success);animation:blink 2s infinite;}
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
 
 /* AUDIENCE TABS */
-.aud-tabs{display:inline-flex;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:100px;padding:0.3rem;gap:0.2rem;margin-bottom:2.5rem;animation:fadeUp 0.6s 0.25s ease both;}
+.aud-tabs{display:inline-flex;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:100px;padding:0.3rem;gap:0.2rem;margin-bottom:2.5rem;}
 .aud-tab{padding:0.5rem 1.4rem;border-radius:100px;font-size:0.82rem;font-weight:600;cursor:pointer;border:none;background:none;color:rgba(255,255,255,0.45);font-family:'DM Sans',sans-serif;transition:all 0.25s;}
 .aud-tab:hover{color:var(--white);}
 .aud-tab.sel-client{background:var(--blue-mid);color:var(--white);}
@@ -58,7 +58,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.96);backdrop
 
 /* HERO CONTENT */
 .hero-content{display:none;}
-.hero-content.active{display:block;animation:fadeUp 0.3s ease both;}
+.hero-content.active{display:block;}
 h1{font-family:'Syne',sans-serif;font-size:clamp(3rem,6vw,5.25rem);font-weight:900;line-height:1.05;letter-spacing:-0.03em;color:var(--white);max-width:780px;margin-bottom:1.5rem;}
 .hl-b{color:#60A5FA;}.hl-t{color:#2DD4BF;}.hl-a{color:#FCD34D;}
 .hero-sub{font-size:clamp(1rem,1.5vw,1.15rem);font-weight:300;color:rgba(255,255,255,0.55);max-width:560px;line-height:1.75;margin-bottom:2.75rem;}
@@ -73,10 +73,10 @@ h1{font-family:'Syne',sans-serif;font-size:clamp(3rem,6vw,5.25rem);font-weight:9
 .btn-hghost{padding:0.9rem 1.75rem;border-radius:8px;font-size:0.95rem;font-weight:600;text-decoration:none;background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.65);border:1px solid rgba(255,255,255,0.15);transition:all 0.2s;font-family:'DM Sans',sans-serif;}
 .btn-hghost:hover{background:rgba(255,255,255,0.13);color:var(--white);}
 
-.hero-trust{display:flex;gap:2rem;flex-wrap:wrap;margin-top:2.75rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.07);animation:fadeUp 0.6s 0.5s ease both;}
+.hero-trust{display:flex;gap:2rem;flex-wrap:wrap;margin-top:2.75rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.07);}
 .trust-i{display:flex;align-items:center;gap:0.4rem;font-size:0.75rem;color:rgba(255,255,255,0.35);}
 
-@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeUp{from{opacity:1;transform:translateY(0);}to{opacity:1;transform:translateY(0);}}
 
 /* STATS */
 .stats{background:var(--off-white);border-bottom:1px solid var(--border);padding:2.5rem 5vw;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;}
@@ -131,7 +131,7 @@ h1{font-family:'Syne',sans-serif;font-size:clamp(3rem,6vw,5.25rem);font-weight:9
 .hiw-tab.st{background:var(--teal);color:var(--white);}
 .hiw-tab.sa{background:var(--amber);color:var(--white);}
 .hiw-steps{display:none;}
-.hiw-steps.active{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;position:relative;animation:fadeUp 0.3s ease;}
+.hiw-steps.active{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;position:relative;}
 .hiw-steps.active::before{content:'';position:absolute;top:1.9rem;left:8%;right:8%;height:1px;background:var(--border);}
 .hiw-step{text-align:center;padding:1.5rem 1rem;position:relative;z-index:1;}
 .hiw-num{width:2.75rem;height:2.75rem;border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--white);margin:0 auto 1.25rem;background:var(--off-white);border:2px solid var(--border);}
@@ -235,7 +235,7 @@ footer{background:var(--navy-deep);border-top:1px solid rgba(255,255,255,0.05);p
 .f-legal a:hover{color:rgba(255,255,255,0.5);}
 
 /* FADE */
-.fade-up{opacity:0;transform:translateY(20px);transition:opacity 0.65s ease,transform 0.65s ease;}
+.fade-up{opacity:1;transform:translateY(0);transition:none;}
 .fade-up.vis{opacity:1;transform:translateY(0);}
 
 /* LANG */
@@ -264,28 +264,28 @@ body.lang-nl [data-en]{display:none;}
 
 <!-- TOPBAR -->
 <div class="topbar">
-  <span class="topbar-msg" data-nl>🔒 Veilig escrow via erkende betaalinstelling</span>
-  <span class="topbar-msg" data-en>🔒 Secure escrow via licensed payment institution</span>
+  <span class="topbar-msg" data-nl="">🔒 Veilig escrow via erkende betaalinstelling</span>
+  <span class="topbar-msg" data-en="">🔒 Secure escrow via licensed payment institution</span>
   <div class="lang-wrap">
-    <button class="lang-btn active" onclick="setLang('nl')" id="btn-nl">NL</button>
+    <button class="lang-btn active" onclick="setLang(&#39;nl&#39;)" id="btn-nl">NL</button>
     <span class="lang-sep">|</span>
-    <button class="lang-btn" onclick="setLang('en')" id="btn-en">EN</button>
+    <button class="lang-btn" onclick="setLang(&#39;en&#39;)" id="btn-en">EN</button>
   </div>
 </div>
 
 <!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo">Build<span>pay</span></a>
+  <a href="file:///Users/wim/Downloads/index.html#" class="nav-logo">Build<span>pay</span></a>
   <ul class="nav-links">
-    <li><a href="#voor-wie" data-nl>Voor wie</a><a href="#voor-wie" data-en>For who</a></li>
-    <li><a href="#hoe-het-werkt" data-nl>Hoe het werkt</a><a href="#hoe-het-werkt" data-en>How it works</a></li>
-    <li><a href="#prijzen" data-nl>Prijzen</a><a href="#prijzen" data-en>Pricing</a></li>
+    <li><a href="file:///Users/wim/Downloads/index.html#voor-wie" data-nl="">Voor wie</a><a href="file:///Users/wim/Downloads/index.html#voor-wie" data-en="">For who</a></li>
+    <li><a href="file:///Users/wim/Downloads/index.html#hoe-het-werkt" data-nl="">Hoe het werkt</a><a href="file:///Users/wim/Downloads/index.html#hoe-het-werkt" data-en="">How it works</a></li>
+    <li><a href="file:///Users/wim/Downloads/index.html#prijzen" data-nl="">Prijzen</a><a href="file:///Users/wim/Downloads/index.html#prijzen" data-en="">Pricing</a></li>
   </ul>
   <div class="nav-cta">
-    <a href="buildpay-login.html" class="btn-ghost-nav" data-nl>Inloggen</a>
-    <a href="buildpay-login.html" class="btn-ghost-nav" data-en>Log in</a>
-    <a href="buildpay-login.html" class="btn-cta" data-nl>Gratis starten</a>
-    <a href="buildpay-login.html" class="btn-cta" data-en>Get started free</a>
+    <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-ghost-nav" data-nl="">Inloggen</a>
+    <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-ghost-nav" data-en="">Log in</a>
+    <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-cta" data-nl="">Gratis starten</a>
+    <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-cta" data-en="">Get started free</a>
   </div>
 </nav>
 
@@ -294,140 +294,140 @@ body.lang-nl [data-en]{display:none;}
   <!-- AUDIENCE TABS -->
   <div class="hero-eyebrow">
     <div class="eyebrow-dot"></div>
-    <span data-nl>Escrow platform voor de bouwsector</span>
-    <span data-en>Escrow platform for the construction sector</span>
+    <span data-nl="">Escrow platform voor de bouwsector</span>
+    <span data-en="">Escrow platform for the construction sector</span>
   </div>
 
   <div class="aud-tabs">
-    <button class="aud-tab sel-client" onclick="setAud('client')" id="at-c">🏠 <span data-nl>Klant</span><span data-en>Client</span></button>
-    <button class="aud-tab" onclick="setAud('contractor')" id="at-k">🔨 <span data-nl>Aannemer</span><span data-en>Contractor</span></button>
-    <button class="aud-tab" onclick="setAud('architect')" id="at-a">📐 <span data-nl>Architect</span><span data-en>Architect</span></button>
+    <button class="aud-tab sel-client" onclick="setAud(&#39;client&#39;)" id="at-c">🏠 <span data-nl="">Klant</span><span data-en="">Client</span></button>
+    <button class="aud-tab" onclick="setAud(&#39;contractor&#39;)" id="at-k">🔨 <span data-nl="">Aannemer</span><span data-en="">Contractor</span></button>
+    <button class="aud-tab" onclick="setAud(&#39;architect&#39;)" id="at-a">📐 <span data-nl="">Architect</span><span data-en="">Architect</span></button>
   </div>
 
   <!-- CLIENT -->
   <div class="hero-content active" id="hc-client">
-    <h1 data-nl>Verbouw zonder<br>financieel <span class="hl-b">risico</span></h1>
-    <h1 data-en>Renovate without<br>financial <span class="hl-b">risk</span></h1>
-    <p class="hero-sub" data-nl>Jouw geld staat veilig in escrow. De aannemer krijgt pas betaald wanneer jij het werk goedkeurt — milestone per milestone. Nooit meer verdwenen voorschotten.</p>
-    <p class="hero-sub" data-en>Your money sits safely in escrow. The contractor only gets paid when you approve the work — milestone by milestone. No more disappearing deposits.</p>
+    <h1 data-nl="">Verbouw zonder<br>financieel <span class="hl-b">risico</span></h1>
+    <h1 data-en="">Renovate without<br>financial <span class="hl-b">risk</span></h1>
+    <p class="hero-sub" data-nl="">Jouw geld staat veilig in escrow. De aannemer krijgt pas betaald wanneer jij het werk goedkeurt — milestone per milestone. Nooit meer verdwenen voorschotten.</p>
+    <p class="hero-sub" data-en="">Your money sits safely in escrow. The contractor only gets paid when you approve the work — milestone by milestone. No more disappearing deposits.</p>
     <div class="hero-btns">
-      <a href="buildpay-login.html" class="btn-hprimary blue" data-nl>Bescherm mijn verbouwing →</a>
-      <a href="buildpay-login.html" class="btn-hprimary blue" data-en>Protect my renovation →</a>
-      <a href="#hoe-het-werkt" class="btn-hghost" data-nl>Hoe werkt het?</a>
-      <a href="#hoe-het-werkt" class="btn-hghost" data-en>How does it work?</a>
+      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-hprimary blue" data-nl="">Bescherm mijn verbouwing →</a>
+      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-hprimary blue" data-en="">Protect my renovation →</a>
+      <a href="file:///Users/wim/Downloads/index.html#hoe-het-werkt" class="btn-hghost" data-nl="">Hoe werkt het?</a>
+      <a href="file:///Users/wim/Downloads/index.html#hoe-het-werkt" class="btn-hghost" data-en="">How does it work?</a>
     </div>
   </div>
 
   <!-- CONTRACTOR -->
   <div class="hero-content" id="hc-contractor">
-    <h1 data-nl>Gegarandeerde betaling<br>voor <span class="hl-t">goed werk</span></h1>
-    <h1 data-en>Guaranteed payment<br>for <span class="hl-t">good work</span></h1>
-    <p class="hero-sub" data-nl>Het geld staat klaar in escrow nog vóór je begint. Lever goed werk, dien je milestone in en ontvang je betaling binnen 24 uur. Nooit meer achterstallige facturen.</p>
-    <p class="hero-sub" data-en>The money is ready in escrow before you even start. Deliver good work, submit your milestone and receive payment within 24 hours. No more overdue invoices.</p>
+    <h1 data-nl="">Gegarandeerde betaling<br>voor <span class="hl-t">goed werk</span></h1>
+    <h1 data-en="">Guaranteed payment<br>for <span class="hl-t">good work</span></h1>
+    <p class="hero-sub" data-nl="">Het geld staat klaar in escrow nog vóór je begint. Lever goed werk, dien je milestone in en ontvang je betaling binnen 24 uur. Nooit meer achterstallige facturen.</p>
+    <p class="hero-sub" data-en="">The money is ready in escrow before you even start. Deliver good work, submit your milestone and receive payment within 24 hours. No more overdue invoices.</p>
     <div class="hero-btns">
-      <a href="buildpay-login.html" class="btn-hprimary teal" data-nl>Garandeer mijn betaling →</a>
-      <a href="buildpay-login.html" class="btn-hprimary teal" data-en>Guarantee my payment →</a>
-      <a href="buildpay-offerte-flow.html" class="btn-hghost" data-nl>Offerte importeren</a>
-      <a href="buildpay-offerte-flow.html" class="btn-hghost" data-en>Import quote</a>
+      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-hprimary teal" data-nl="">Garandeer mijn betaling →</a>
+      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-hprimary teal" data-en="">Guarantee my payment →</a>
+      <a href="file:///Users/wim/Downloads/buildpay-offerte-flow.html" class="btn-hghost" data-nl="">Offerte importeren</a>
+      <a href="file:///Users/wim/Downloads/buildpay-offerte-flow.html" class="btn-hghost" data-en="">Import quote</a>
     </div>
   </div>
 
   <!-- ARCHITECT -->
   <div class="hero-content" id="hc-architect">
-    <h1 data-nl>Begeleid projecten<br>als <span class="hl-a">neutrale expert</span></h1>
-    <h1 data-en>Guide projects<br>as <span class="hl-a">neutral expert</span></h1>
-    <p class="hero-sub" data-nl>Valideer milestones technisch, bewaar de vrede tussen klant en aannemer, en verdien een vergoeding voor elk project dat je begeleidt. Jouw expertise beloond.</p>
-    <p class="hero-sub" data-en>Technically validate milestones, keep the peace between client and contractor, and earn a fee for every project you guide. Your expertise rewarded.</p>
+    <h1 data-nl="">Begeleid projecten<br>als <span class="hl-a">neutrale expert</span></h1>
+    <h1 data-en="">Guide projects<br>as <span class="hl-a">neutral expert</span></h1>
+    <p class="hero-sub" data-nl="">Valideer milestones technisch, bewaar de vrede tussen klant en aannemer, en verdien een vergoeding voor elk project dat je begeleidt. Jouw expertise beloond.</p>
+    <p class="hero-sub" data-en="">Technically validate milestones, keep the peace between client and contractor, and earn a fee for every project you guide. Your expertise rewarded.</p>
     <div class="hero-btns">
-      <a href="buildpay-login.html" class="btn-hprimary amber" data-nl>Start als architect →</a>
-      <a href="buildpay-login.html" class="btn-hprimary amber" data-en>Start as architect →</a>
-      <a href="buildpay-dashboard-architect.html" class="btn-hghost" data-nl>Dashboard bekijken</a>
-      <a href="buildpay-dashboard-architect.html" class="btn-hghost" data-en>View dashboard</a>
+      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-hprimary amber" data-nl="">Start als architect →</a>
+      <a href="file:///Users/wim/Downloads/buildpay-login.html" class="btn-hprimary amber" data-en="">Start as architect →</a>
+      <a href="file:///Users/wim/Downloads/buildpay-dashboard-architect.html" class="btn-hghost" data-nl="">Dashboard bekijken</a>
+      <a href="file:///Users/wim/Downloads/buildpay-dashboard-architect.html" class="btn-hghost" data-en="">View dashboard</a>
     </div>
   </div>
 
   <div class="hero-trust">
-    <div class="trust-i">🔒 <span data-nl>Erkende betaalinstelling</span><span data-en>Licensed payment institution</span></div>
-    <div class="trust-i">⚡ <span data-nl>Uitbetaling binnen 24u</span><span data-en>Payout within 24h</span></div>
-    <div class="trust-i">📐 <span data-nl>Architect validatie</span><span data-en>Architect validation</span></div>
-    <div class="trust-i">✅ <span data-nl>Geen maandkosten</span><span data-en>No monthly fees</span></div>
+    <div class="trust-i">🔒 <span data-nl="">Erkende betaalinstelling</span><span data-en="">Licensed payment institution</span></div>
+    <div class="trust-i">⚡ <span data-nl="">Uitbetaling binnen 24u</span><span data-en="">Payout within 24h</span></div>
+    <div class="trust-i">📐 <span data-nl="">Architect validatie</span><span data-en="">Architect validation</span></div>
+    <div class="trust-i">✅ <span data-nl="">Geen maandkosten</span><span data-en="">No monthly fees</span></div>
   </div>
 </section>
 
 <!-- STATS -->
 <div class="stats fade-up">
-  <div class="stat"><div class="stat-n">€ 2.4M</div><div class="stat-l" data-nl>Veilig beheerd</div><div class="stat-l" data-en>Securely managed</div></div>
-  <div class="stat"><div class="stat-n">340+</div><div class="stat-l" data-nl>Projecten afgerond</div><div class="stat-l" data-en>Projects completed</div></div>
-  <div class="stat"><div class="stat-n">100%</div><div class="stat-l" data-nl>Conflicten opgelost</div><div class="stat-l" data-en>Disputes resolved</div></div>
-  <div class="stat"><div class="stat-n">4.9 ★</div><div class="stat-l" data-nl>Gemiddelde score</div><div class="stat-l" data-en>Average rating</div></div>
+  <div class="stat"><div class="stat-n">€ 2.4M</div><div class="stat-l" data-nl="">Veilig beheerd</div><div class="stat-l" data-en="">Securely managed</div></div>
+  <div class="stat"><div class="stat-n">340+</div><div class="stat-l" data-nl="">Projecten afgerond</div><div class="stat-l" data-en="">Projects completed</div></div>
+  <div class="stat"><div class="stat-n">100%</div><div class="stat-l" data-nl="">Conflicten opgelost</div><div class="stat-l" data-en="">Disputes resolved</div></div>
+  <div class="stat"><div class="stat-n">4.9 ★</div><div class="stat-l" data-nl="">Gemiddelde score</div><div class="stat-l" data-en="">Average rating</div></div>
 </div>
 
 <!-- FOR WHO -->
 <section class="for-who" id="voor-wie">
   <div class="fw-inner">
     <div class="fw-header fade-up">
-      <div class="tag tag-blue" data-nl>Voor iedereen in het bouwproces</div>
-      <div class="tag tag-blue" data-en>For everyone in the construction process</div>
-      <h2 data-nl>Eén platform. Drie rollen.<br>Samen sterker.</h2>
-      <h2 data-en>One platform. Three roles.<br>Stronger together.</h2>
+      <div class="tag tag-blue" data-nl="">Voor iedereen in het bouwproces</div>
+      <div class="tag tag-blue" data-en="">For everyone in the construction process</div>
+      <h2 data-nl="">Eén platform. Drie rollen.<br>Samen sterker.</h2>
+      <h2 data-en="">One platform. Three roles.<br>Stronger together.</h2>
     </div>
     <div class="fw-grid fade-up">
 
       <!-- CLIENT CARD -->
       <div class="fw-card c1">
-        <div class="fw-role" data-nl>Voor de klant</div>
-        <div class="fw-role" data-en>For the client</div>
+        <div class="fw-role" data-nl="">Voor de klant</div>
+        <div class="fw-role" data-en="">For the client</div>
         <div class="fw-icon">🏠</div>
-        <h3 data-nl>Verbouw met volledige zekerheid</h3>
-        <h3 data-en>Renovate with complete certainty</h3>
-        <p data-nl>Jij bepaalt wanneer de aannemer betaald wordt. Niet andersom. Jouw geld blijft van jou totdat het werk klopt.</p>
-        <p data-en>You decide when the contractor gets paid. Not the other way around. Your money stays yours until the work is right.</p>
+        <h3 data-nl="">Verbouw met volledige zekerheid</h3>
+        <h3 data-en="">Renovate with complete certainty</h3>
+        <p data-nl="">Jij bepaalt wanneer de aannemer betaald wordt. Niet andersom. Jouw geld blijft van jou totdat het werk klopt.</p>
+        <p data-en="">You decide when the contractor gets paid. Not the other way around. Your money stays yours until the work is right.</p>
         <ul class="fw-list">
-          <li><span class="ck">✓</span><span data-nl>Geld veilig in escrow — nooit rechtstreeks</span><span data-en>Money safe in escrow — never directly</span></li>
-          <li><span class="ck">✓</span><span data-nl>Milestone per milestone goedkeuren</span><span data-en>Approve milestone by milestone</span></li>
-          <li><span class="ck">✓</span><span data-nl>Onafhankelijke expert bij conflict (€299)</span><span data-en>Independent expert in dispute (€299)</span></li>
-          <li><span class="ck">✓</span><span data-nl>Volledig gratis platform gebruik</span><span data-en>Completely free platform use</span></li>
+          <li><span class="ck">✓</span><span data-nl="">Geld veilig in escrow — nooit rechtstreeks</span><span data-en="">Money safe in escrow — never directly</span></li>
+          <li><span class="ck">✓</span><span data-nl="">Milestone per milestone goedkeuren</span><span data-en="">Approve milestone by milestone</span></li>
+          <li><span class="ck">✓</span><span data-nl="">Onafhankelijke expert bij conflict (€299)</span><span data-en="">Independent expert in dispute (€299)</span></li>
+          <li><span class="ck">✓</span><span data-nl="">Volledig gratis platform gebruik</span><span data-en="">Completely free platform use</span></li>
         </ul>
-        <a href="buildpay-login.html" class="fw-cta cb" data-nl>Start als klant →</a>
-        <a href="buildpay-login.html" class="fw-cta cb" data-en>Start as client →</a>
+        <a href="file:///Users/wim/Downloads/buildpay-login.html" class="fw-cta cb" data-nl="">Start als klant →</a>
+        <a href="file:///Users/wim/Downloads/buildpay-login.html" class="fw-cta cb" data-en="">Start as client →</a>
       </div>
 
       <!-- CONTRACTOR CARD -->
       <div class="fw-card c2">
-        <div class="fw-role" data-nl>Voor de aannemer</div>
-        <div class="fw-role" data-en>For the contractor</div>
+        <div class="fw-role" data-nl="">Voor de aannemer</div>
+        <div class="fw-role" data-en="">For the contractor</div>
         <div class="fw-icon">🔨</div>
-        <h3 data-nl>Werk gerust, word zeker betaald</h3>
-        <h3 data-en>Work assured, get paid guaranteed</h3>
-        <p data-nl>Het budget staat klaar vóór je begint. Lever goed werk, dien in en ontvang je betaling binnen 24 uur.</p>
-        <p data-en>Budget is ready before you start. Deliver good work, submit and receive payment within 24 hours.</p>
+        <h3 data-nl="">Werk gerust, word zeker betaald</h3>
+        <h3 data-en="">Work assured, get paid guaranteed</h3>
+        <p data-nl="">Het budget staat klaar vóór je begint. Lever goed werk, dien in en ontvang je betaling binnen 24 uur.</p>
+        <p data-en="">Budget is ready before you start. Deliver good work, submit and receive payment within 24 hours.</p>
         <ul class="fw-list">
-          <li><span class="ck">✓</span><span data-nl>Budget gegarandeerd in escrow</span><span data-en>Budget guaranteed in escrow</span></li>
-          <li><span class="ck">✓</span><span data-nl>AI contract vanuit jouw offerte</span><span data-en>AI contract from your quote</span></li>
-          <li><span class="ck">✓</span><span data-nl>Uitbetaling binnen 24u na goedkeuring</span><span data-en>Payout within 24h after approval</span></li>
-          <li><span class="ck">✓</span><span data-nl>Bouwsoft & Vertuoza integratie</span><span data-en>Bouwsoft & Vertuoza integration</span></li>
+          <li><span class="ck">✓</span><span data-nl="">Budget gegarandeerd in escrow</span><span data-en="">Budget guaranteed in escrow</span></li>
+          <li><span class="ck">✓</span><span data-nl="">AI contract vanuit jouw offerte</span><span data-en="">AI contract from your quote</span></li>
+          <li><span class="ck">✓</span><span data-nl="">Uitbetaling binnen 24u na goedkeuring</span><span data-en="">Payout within 24h after approval</span></li>
+          <li><span class="ck">✓</span><span data-nl="">Bouwsoft &amp; Vertuoza integratie</span><span data-en="">Bouwsoft &amp; Vertuoza integration</span></li>
         </ul>
-        <a href="buildpay-login.html" class="fw-cta ct" data-nl>Start als aannemer →</a>
-        <a href="buildpay-login.html" class="fw-cta ct" data-en>Start as contractor →</a>
+        <a href="file:///Users/wim/Downloads/buildpay-login.html" class="fw-cta ct" data-nl="">Start als aannemer →</a>
+        <a href="file:///Users/wim/Downloads/buildpay-login.html" class="fw-cta ct" data-en="">Start as contractor →</a>
       </div>
 
       <!-- ARCHITECT CARD -->
       <div class="fw-card c3">
-        <div class="fw-role" data-nl>Voor de architect</div>
-        <div class="fw-role" data-en>For the architect</div>
+        <div class="fw-role" data-nl="">Voor de architect</div>
+        <div class="fw-role" data-en="">For the architect</div>
         <div class="fw-icon">📐</div>
-        <h3 data-nl>Begeleid. Valideer. Verdien.</h3>
-        <h3 data-en>Guide. Validate. Earn.</h3>
-        <p data-nl>Jij bent de neutrale expert die beide partijen vertrouwen. Buildpay geeft jou de tools en beloont je expertise.</p>
-        <p data-en>You are the neutral expert both parties trust. Buildpay gives you the tools and rewards your expertise.</p>
+        <h3 data-nl="">Begeleid. Valideer. Verdien.</h3>
+        <h3 data-en="">Guide. Validate. Earn.</h3>
+        <p data-nl="">Jij bent de neutrale expert die beide partijen vertrouwen. Buildpay geeft jou de tools en beloont je expertise.</p>
+        <p data-en="">You are the neutral expert both parties trust. Buildpay gives you the tools and rewards your expertise.</p>
         <ul class="fw-list">
-          <li><span class="ck">✓</span><span data-nl>Alle projecten in één dashboard</span><span data-en>All projects in one dashboard</span></li>
-          <li><span class="ck">✓</span><span data-nl>Technische milestone validatie</span><span data-en>Technical milestone validation</span></li>
-          <li><span class="ck">✓</span><span data-nl>0.25% vergoeding per vrijgegeven bedrag</span><span data-en>0.25% fee per released amount</span></li>
-          <li><span class="ck">✓</span><span data-nl>Conflictbeheer & escalatie tools</span><span data-en>Conflict management & escalation tools</span></li>
+          <li><span class="ck">✓</span><span data-nl="">Alle projecten in één dashboard</span><span data-en="">All projects in one dashboard</span></li>
+          <li><span class="ck">✓</span><span data-nl="">Technische milestone validatie</span><span data-en="">Technical milestone validation</span></li>
+          <li><span class="ck">✓</span><span data-nl="">0.25% vergoeding per vrijgegeven bedrag</span><span data-en="">0.25% fee per released amount</span></li>
+          <li><span class="ck">✓</span><span data-nl="">Conflictbeheer &amp; escalatie tools</span><span data-en="">Conflict management &amp; escalation tools</span></li>
         </ul>
-        <a href="buildpay-login.html" class="fw-cta ca" data-nl>Start als architect →</a>
-        <a href="buildpay-login.html" class="fw-cta ca" data-en>Start as architect →</a>
+        <a href="file:///Users/wim/Downloads/buildpay-login.html" class="fw-cta ca" data-nl="">Start als architect →</a>
+        <a href="file:///Users/wim/Downloads/buildpay-login.html" class="fw-cta ca" data-en="">Start as architect →</a>
       </div>
 
     </div>
@@ -438,39 +438,39 @@ body.lang-nl [data-en]{display:none;}
 <section class="hiw" id="hoe-het-werkt">
   <div class="hiw-inner">
     <div class="hiw-header fade-up">
-      <div class="tag tag-blue" data-nl>Hoe het werkt</div>
-      <div class="tag tag-blue" data-en>How it works</div>
-      <h2 data-nl>Van offerte tot oplevering — voor iedereen duidelijk</h2>
-      <h2 data-en>From quote to completion — clear for everyone</h2>
+      <div class="tag tag-blue" data-nl="">Hoe het werkt</div>
+      <div class="tag tag-blue" data-en="">How it works</div>
+      <h2 data-nl="">Van offerte tot oplevering — voor iedereen duidelijk</h2>
+      <h2 data-en="">From quote to completion — clear for everyone</h2>
       <div class="hiw-tabs">
-        <button class="hiw-tab sb" onclick="setHow('client')" id="ht-c" data-nl>🏠 Klant</button>
-        <button class="hiw-tab sb" onclick="setHow('client')" id="ht-c-en" data-en>🏠 Client</button>
-        <button class="hiw-tab" onclick="setHow('contractor')" id="ht-k" data-nl>🔨 Aannemer</button>
-        <button class="hiw-tab" onclick="setHow('contractor')" id="ht-k-en" data-en>🔨 Contractor</button>
-        <button class="hiw-tab" onclick="setHow('architect')" id="ht-a" data-nl>📐 Architect</button>
-        <button class="hiw-tab" onclick="setHow('architect')" id="ht-a-en" data-en>📐 Architect</button>
+        <button class="hiw-tab sb" onclick="setHow(&#39;client&#39;)" id="ht-c" data-nl="">🏠 Klant</button>
+        <button class="hiw-tab sb" onclick="setHow(&#39;client&#39;)" id="ht-c-en" data-en="">🏠 Client</button>
+        <button class="hiw-tab" onclick="setHow(&#39;contractor&#39;)" id="ht-k" data-nl="">🔨 Aannemer</button>
+        <button class="hiw-tab" onclick="setHow(&#39;contractor&#39;)" id="ht-k-en" data-en="">🔨 Contractor</button>
+        <button class="hiw-tab" onclick="setHow(&#39;architect&#39;)" id="ht-a" data-nl="">📐 Architect</button>
+        <button class="hiw-tab" onclick="setHow(&#39;architect&#39;)" id="ht-a-en" data-en="">📐 Architect</button>
       </div>
     </div>
 
     <div class="hiw-steps active" id="hs-client">
-      <div class="hiw-step"><div class="hiw-num nb">1</div><h3 data-nl>Project aanmaken</h3><h3 data-en>Create project</h3><p data-nl>Maak een project aan en nodig je aannemer en eventueel architect uit via e-mail.</p><p data-en>Create a project and invite your contractor and optional architect by email.</p></div>
-      <div class="hiw-step"><div class="hiw-num nb">2</div><h3 data-nl>Escrow storten</h3><h3 data-en>Deposit escrow</h3><p data-nl>Je stort het volledige bedrag veilig in escrow. Het blijft jouw geld totdat jij goedkeurt.</p><p data-en>You deposit the full amount safely in escrow. It remains your money until you approve.</p></div>
-      <div class="hiw-step"><div class="hiw-num nb">3</div><h3 data-nl>Werk opvolgen</h3><h3 data-en>Follow the work</h3><p data-nl>Volg voortgang per milestone. Aannemer uploadt bewijs. Architect valideert technisch.</p><p data-en>Track progress per milestone. Contractor uploads proof. Architect validates technically.</p></div>
-      <div class="hiw-step"><div class="hiw-num nb">4</div><h3 data-nl>Goedkeuren & betalen</h3><h3 data-en>Approve & pay</h3><p data-nl>Keur jij goed? Geld wordt automatisch vrijgegeven binnen 24 uur.</p><p data-en>Do you approve? Money is automatically released within 24 hours.</p></div>
+      <div class="hiw-step"><div class="hiw-num nb">1</div><h3 data-nl="">Project aanmaken</h3><h3 data-en="">Create project</h3><p data-nl="">Maak een project aan en nodig je aannemer en eventueel architect uit via e-mail.</p><p data-en="">Create a project and invite your contractor and optional architect by email.</p></div>
+      <div class="hiw-step"><div class="hiw-num nb">2</div><h3 data-nl="">Escrow storten</h3><h3 data-en="">Deposit escrow</h3><p data-nl="">Je stort het volledige bedrag veilig in escrow. Het blijft jouw geld totdat jij goedkeurt.</p><p data-en="">You deposit the full amount safely in escrow. It remains your money until you approve.</p></div>
+      <div class="hiw-step"><div class="hiw-num nb">3</div><h3 data-nl="">Werk opvolgen</h3><h3 data-en="">Follow the work</h3><p data-nl="">Volg voortgang per milestone. Aannemer uploadt bewijs. Architect valideert technisch.</p><p data-en="">Track progress per milestone. Contractor uploads proof. Architect validates technically.</p></div>
+      <div class="hiw-step"><div class="hiw-num nb">4</div><h3 data-nl="">Goedkeuren &amp; betalen</h3><h3 data-en="">Approve &amp; pay</h3><p data-nl="">Keur jij goed? Geld wordt automatisch vrijgegeven binnen 24 uur.</p><p data-en="">Do you approve? Money is automatically released within 24 hours.</p></div>
     </div>
 
     <div class="hiw-steps" id="hs-contractor">
-      <div class="hiw-step"><div class="hiw-num nt">1</div><h3 data-nl>Offerte importeren</h3><h3 data-en>Import quote</h3><p data-nl>Upload via PDF, Bouwsoft of Vertuoza API. AI extraheert alle posten automatisch.</p><p data-en>Upload via PDF, Bouwsoft or Vertuoza API. AI extracts all line items automatically.</p></div>
-      <div class="hiw-step"><div class="hiw-num nt">2</div><h3 data-nl>AI contract</h3><h3 data-en>AI contract</h3><p data-nl>AI stelt milestones voor op basis van je offerte. Pas aan, keur goed, stuur ter ondertekening.</p><p data-en>AI proposes milestones based on your quote. Adjust, approve, send for signing.</p></div>
-      <div class="hiw-step"><div class="hiw-num nt">3</div><h3 data-nl>Werk uitvoeren</h3><h3 data-en>Execute work</h3><p data-nl>Budget staat klaar in escrow. Upload bewijs per milestone via het platform.</p><p data-en>Budget is ready in escrow. Upload proof per milestone via the platform.</p></div>
-      <div class="hiw-step"><div class="hiw-num nt">4</div><h3 data-nl>Indienen & ontvangen</h3><h3 data-en>Submit & receive</h3><p data-nl>Na goedkeuring door architect en klant staat het geld binnen 24u op je rekening.</p><p data-en>After approval by architect and client, money is in your account within 24h.</p></div>
+      <div class="hiw-step"><div class="hiw-num nt">1</div><h3 data-nl="">Offerte importeren</h3><h3 data-en="">Import quote</h3><p data-nl="">Upload via PDF, Bouwsoft of Vertuoza API. AI extraheert alle posten automatisch.</p><p data-en="">Upload via PDF, Bouwsoft or Vertuoza API. AI extracts all line items automatically.</p></div>
+      <div class="hiw-step"><div class="hiw-num nt">2</div><h3 data-nl="">AI contract</h3><h3 data-en="">AI contract</h3><p data-nl="">AI stelt milestones voor op basis van je offerte. Pas aan, keur goed, stuur ter ondertekening.</p><p data-en="">AI proposes milestones based on your quote. Adjust, approve, send for signing.</p></div>
+      <div class="hiw-step"><div class="hiw-num nt">3</div><h3 data-nl="">Werk uitvoeren</h3><h3 data-en="">Execute work</h3><p data-nl="">Budget staat klaar in escrow. Upload bewijs per milestone via het platform.</p><p data-en="">Budget is ready in escrow. Upload proof per milestone via the platform.</p></div>
+      <div class="hiw-step"><div class="hiw-num nt">4</div><h3 data-nl="">Indienen &amp; ontvangen</h3><h3 data-en="">Submit &amp; receive</h3><p data-nl="">Na goedkeuring door architect en klant staat het geld binnen 24u op je rekening.</p><p data-en="">After approval by architect and client, money is in your account within 24h.</p></div>
     </div>
 
     <div class="hiw-steps" id="hs-architect">
-      <div class="hiw-step"><div class="hiw-num na">1</div><h3 data-nl>Uitgenodigd worden</h3><h3 data-en>Get invited</h3><p data-nl>Klant of aannemer nodigt jou uit als begeleider, of je start zelf een dossier.</p><p data-en>Client or contractor invites you as supervisor, or you start a file yourself.</p></div>
-      <div class="hiw-step"><div class="hiw-num na">2</div><h3 data-nl>Plannen uploaden</h3><h3 data-en>Upload plans</h3><p data-nl>Upload technische plannen, bestekken en referentiedocumenten voor alle partijen.</p><p data-en>Upload technical plans, specifications and reference documents for all parties.</p></div>
-      <div class="hiw-step"><div class="hiw-num na">3</div><h3 data-nl>Milestones valideren</h3><h3 data-en>Validate milestones</h3><p data-nl>Beoordeel ingediend bewijs technisch t.o.v. je plannen. Keur goed of blokkeer.</p><p data-en>Technically assess submitted proof against your plans. Approve or block.</p></div>
-      <div class="hiw-step"><div class="hiw-num na">4</div><h3 data-nl>Vergoeding ontvangen</h3><h3 data-en>Receive compensation</h3><p data-nl>0.25% per goedgekeurd milestone bedrag. Automatisch uitbetaald op je rekening.</p><p data-en>0.25% per approved milestone amount. Automatically paid to your account.</p></div>
+      <div class="hiw-step"><div class="hiw-num na">1</div><h3 data-nl="">Uitgenodigd worden</h3><h3 data-en="">Get invited</h3><p data-nl="">Klant of aannemer nodigt jou uit als begeleider, of je start zelf een dossier.</p><p data-en="">Client or contractor invites you as supervisor, or you start a file yourself.</p></div>
+      <div class="hiw-step"><div class="hiw-num na">2</div><h3 data-nl="">Plannen uploaden</h3><h3 data-en="">Upload plans</h3><p data-nl="">Upload technische plannen, bestekken en referentiedocumenten voor alle partijen.</p><p data-en="">Upload technical plans, specifications and reference documents for all parties.</p></div>
+      <div class="hiw-step"><div class="hiw-num na">3</div><h3 data-nl="">Milestones valideren</h3><h3 data-en="">Validate milestones</h3><p data-nl="">Beoordeel ingediend bewijs technisch t.o.v. je plannen. Keur goed of blokkeer.</p><p data-en="">Technically assess submitted proof against your plans. Approve or block.</p></div>
+      <div class="hiw-step"><div class="hiw-num na">4</div><h3 data-nl="">Vergoeding ontvangen</h3><h3 data-en="">Receive compensation</h3><p data-nl="">0.25% per goedgekeurd milestone bedrag. Automatisch uitbetaald op je rekening.</p><p data-en="">0.25% per approved milestone amount. Automatically paid to your account.</p></div>
     </div>
   </div>
 </section>
@@ -479,20 +479,20 @@ body.lang-nl [data-en]{display:none;}
 <section class="features-section">
   <div class="features-inner fade-up">
     <div>
-      <div class="tag tag-blue" data-nl>Platform functies</div>
-      <div class="tag tag-blue" data-en>Platform features</div>
-      <h2 style="font-family:'Syne',sans-serif;font-size:clamp(1.8rem,3vw,2.75rem);font-weight:800;letter-spacing:-0.02em;color:var(--navy);margin:0.75rem 0 1rem;" data-nl>Alles wat je nodig hebt, voor iedereen</h2>
-      <h2 style="font-family:'Syne',sans-serif;font-size:clamp(1.8rem,3vw,2.75rem);font-weight:800;letter-spacing:-0.02em;color:var(--navy);margin:0.75rem 0 1rem;" data-en>Everything you need, for everyone</h2>
-      <p style="font-size:0.95rem;color:var(--slate);line-height:1.75;max-width:400px;" data-nl>Buildpay bundelt escrow, AI contracten, milestone beheer, architect validatie en documenten in één platform.</p>
-      <p style="font-size:0.95rem;color:var(--slate);line-height:1.75;max-width:400px;" data-en>Buildpay bundles escrow, AI contracts, milestone management, architect validation and documents in one platform.</p>
+      <div class="tag tag-blue" data-nl="">Platform functies</div>
+      <div class="tag tag-blue" data-en="">Platform features</div>
+      <h2 style="font-family:&#39;Syne&#39;,sans-serif;font-size:clamp(1.8rem,3vw,2.75rem);font-weight:800;letter-spacing:-0.02em;color:var(--navy);margin:0.75rem 0 1rem;" data-nl="">Alles wat je nodig hebt, voor iedereen</h2>
+      <h2 style="font-family:&#39;Syne&#39;,sans-serif;font-size:clamp(1.8rem,3vw,2.75rem);font-weight:800;letter-spacing:-0.02em;color:var(--navy);margin:0.75rem 0 1rem;" data-en="">Everything you need, for everyone</h2>
+      <p style="font-size:0.95rem;color:var(--slate);line-height:1.75;max-width:400px;" data-nl="">Buildpay bundelt escrow, AI contracten, milestone beheer, architect validatie en documenten in één platform.</p>
+      <p style="font-size:0.95rem;color:var(--slate);line-height:1.75;max-width:400px;" data-en="">Buildpay bundles escrow, AI contracts, milestone management, architect validation and documents in one platform.</p>
     </div>
     <div class="features-grid">
-      <div class="feat-card"><div class="feat-icon fi-b">🔒</div><h3 data-nl>Escrow betalingen</h3><h3 data-en>Escrow payments</h3><p data-nl>Geld geblokkeerd bij erkende instelling. Vrijgave enkel bij wederzijdse goedkeuring.</p><p data-en>Money held at licensed institution. Release only upon mutual approval.</p></div>
-      <div class="feat-card"><div class="feat-icon fi-t">🤖</div><h3 data-nl>AI Contract Wizard</h3><h3 data-en>AI Contract Wizard</h3><p data-nl>Importeer offerte via PDF of API. AI genereert milestones en contract in minuten.</p><p data-en>Import quote via PDF or API. AI generates milestones and contract in minutes.</p></div>
-      <div class="feat-card"><div class="feat-icon fi-t">📋</div><h3 data-nl>Milestone beheer</h3><h3 data-en>Milestone management</h3><p data-nl>Duidelijke stappen met bewijs, validatie en automatische vrijgave bij akkoord.</p><p data-en>Clear steps with proof, validation and automatic release upon agreement.</p></div>
-      <div class="feat-card"><div class="feat-icon fi-a">📐</div><h3 data-nl>Architect validatie</h3><h3 data-en>Architect validation</h3><p data-nl>Technische goedkeuringslaag door architect vóór de klant betaalt.</p><p data-en>Technical approval layer by architect before the client pays.</p></div>
-      <div class="feat-card"><div class="feat-icon fi-b">💬</div><h3 data-nl>Gescheiden chats</h3><h3 data-en>Separate chats</h3><p data-nl>Architect communiceert apart met klant en aannemer. Neutraal en traceerbaar.</p><p data-en>Architect communicates separately with client and contractor. Neutral and traceable.</p></div>
-      <div class="feat-card"><div class="feat-icon fi-b">📁</div><h3 data-nl>Digitaal dossier</h3><h3 data-en>Digital file</h3><p data-nl>Alle documenten, plannen en attesten op één plek. Volledig traceerbaar bij geschil.</p><p data-en>All documents, plans and certificates in one place. Fully traceable in dispute.</p></div>
+      <div class="feat-card"><div class="feat-icon fi-b">🔒</div><h3 data-nl="">Escrow betalingen</h3><h3 data-en="">Escrow payments</h3><p data-nl="">Geld geblokkeerd bij erkende instelling. Vrijgave enkel bij wederzijdse goedkeuring.</p><p data-en="">Money held at licensed institution. Release only upon mutual approval.</p></div>
+      <div class="feat-card"><div class="feat-icon fi-t">🤖</div><h3 data-nl="">AI Contract Wizard</h3><h3 data-en="">AI Contract Wizard</h3><p data-nl="">Importeer offerte via PDF of API. AI genereert milestones en contract in minuten.</p><p data-en="">Import quote via PDF or API. AI generates milestones and contract in minutes.</p></div>
+      <div class="feat-card"><div class="feat-icon fi-t">📋</div><h3 data-nl="">Milestone beheer</h3><h3 data-en="">Milestone management</h3><p data-nl="">Duidelijke stappen met bewijs, validatie en automatische vrijgave bij akkoord.</p><p data-en="">Clear steps with proof, validation and automatic release upon agreement.</p></div>
+      <div class="feat-card"><div class="feat-icon fi-a">📐</div><h3 data-nl="">Architect validatie</h3><h3 data-en="">Architect validation</h3><p data-nl="">Technische goedkeuringslaag door architect vóór de klant betaalt.</p><p data-en="">Technical approval layer by architect before the client pays.</p></div>
+      <div class="feat-card"><div class="feat-icon fi-b">💬</div><h3 data-nl="">Gescheiden chats</h3><h3 data-en="">Separate chats</h3><p data-nl="">Architect communiceert apart met klant en aannemer. Neutraal en traceerbaar.</p><p data-en="">Architect communicates separately with client and contractor. Neutral and traceable.</p></div>
+      <div class="feat-card"><div class="feat-icon fi-b">📁</div><h3 data-nl="">Digitaal dossier</h3><h3 data-en="">Digital file</h3><p data-nl="">Alle documenten, plannen en attesten op één plek. Volledig traceerbaar bij geschil.</p><p data-en="">All documents, plans and certificates in one place. Fully traceable in dispute.</p></div>
     </div>
   </div>
 </section>
@@ -501,48 +501,48 @@ body.lang-nl [data-en]{display:none;}
 <section class="testimonials-section">
   <div class="testimonials-inner">
     <div class="t-header fade-up">
-      <div class="tag tag-blue" data-nl>Ervaringen</div>
-      <div class="tag tag-blue" data-en>Testimonials</div>
-      <h2 data-nl>Wat zij zeggen over Buildpay</h2>
-      <h2 data-en>What they say about Buildpay</h2>
+      <div class="tag tag-blue" data-nl="">Ervaringen</div>
+      <div class="tag tag-blue" data-en="">Testimonials</div>
+      <h2 data-nl="">Wat zij zeggen over Buildpay</h2>
+      <h2 data-en="">What they say about Buildpay</h2>
     </div>
     <div class="t-grid fade-up">
       <div class="t-card">
-        <p class="t-quote" data-nl>Eindelijk geen stress meer over mijn voorschot. Ik heb altijd controle over mijn eigen geld. De aannemer werkt ook veel professioneler omdat alles vastgelegd is.</p>
-        <p class="t-quote" data-en>Finally no more stress about my deposit. I always have control over my own money. The contractor also works much more professionally because everything is documented.</p>
+        <p class="t-quote" data-nl="">Eindelijk geen stress meer over mijn voorschot. Ik heb altijd controle over mijn eigen geld. De aannemer werkt ook veel professioneler omdat alles vastgelegd is.</p>
+        <p class="t-quote" data-en="">Finally no more stress about my deposit. I always have control over my own money. The contractor also works much more professionally because everything is documented.</p>
         <div class="t-author">
           <div class="t-av av-b">MV</div>
           <div>
             <div class="t-name">Marie Van Damme</div>
-            <div class="t-role" data-nl>Keuken renovatie · Gent</div>
-            <div class="t-role" data-en>Kitchen renovation · Ghent</div>
-            <span class="t-badge tb-b">🏠 <span data-nl>Klant</span><span data-en>Client</span></span>
+            <div class="t-role" data-nl="">Keuken renovatie · Gent</div>
+            <div class="t-role" data-en="">Kitchen renovation · Ghent</div>
+            <span class="t-badge tb-b">🏠 <span data-nl="">Klant</span><span data-en="">Client</span></span>
           </div>
         </div>
       </div>
       <div class="t-card">
-        <p class="t-quote" data-nl>Mijn klanten vertrouwen me meer depuis ik met Buildpay werk. Het geld staat klaar voor ik begin — ik verlies geen tijd meer met achtervolgen van facturen.</p>
-        <p class="t-quote" data-en>My clients trust me more since I started using Buildpay. The money is ready before I start — I no longer waste time chasing invoices.</p>
+        <p class="t-quote" data-nl="">Mijn klanten vertrouwen me meer depuis ik met Buildpay werk. Het geld staat klaar voor ik begin — ik verlies geen tijd meer met achtervolgen van facturen.</p>
+        <p class="t-quote" data-en="">My clients trust me more since I started using Buildpay. The money is ready before I start — I no longer waste time chasing invoices.</p>
         <div class="t-author">
           <div class="t-av av-t">PV</div>
           <div>
             <div class="t-name">Pieter Vandebroeck</div>
-            <div class="t-role" data-nl>Aannemer · Antwerpen</div>
-            <div class="t-role" data-en>Contractor · Antwerp</div>
-            <span class="t-badge tb-t">🔨 <span data-nl>Aannemer</span><span data-en>Contractor</span></span>
+            <div class="t-role" data-nl="">Aannemer · Antwerpen</div>
+            <div class="t-role" data-en="">Contractor · Antwerp</div>
+            <span class="t-badge tb-t">🔨 <span data-nl="">Aannemer</span><span data-en="">Contractor</span></span>
           </div>
         </div>
       </div>
       <div class="t-card">
-        <p class="t-quote" data-nl>Als architect is dit mijn nieuwe standaard voor elk project. Geen conflicten meer over betalingen — en de vergoeding is mooi meegenomen.</p>
-        <p class="t-quote" data-en>As an architect this is my new standard for every project. No more payment disputes — and the fee is a nice bonus.</p>
+        <p class="t-quote" data-nl="">Als architect is dit mijn nieuwe standaard voor elk project. Geen conflicten meer over betalingen — en de vergoeding is mooi meegenomen.</p>
+        <p class="t-quote" data-en="">As an architect this is my new standard for every project. No more payment disputes — and the fee is a nice bonus.</p>
         <div class="t-author">
           <div class="t-av av-a">SV</div>
           <div>
             <div class="t-name">Sophie Vermeersch</div>
-            <div class="t-role" data-nl>Architect · Brussel</div>
-            <div class="t-role" data-en>Architect · Brussels</div>
-            <span class="t-badge tb-a">📐 <span data-nl>Architect</span><span data-en>Architect</span></span>
+            <div class="t-role" data-nl="">Architect · Brussel</div>
+            <div class="t-role" data-en="">Architect · Brussels</div>
+            <span class="t-badge tb-a">📐 <span data-nl="">Architect</span><span data-en="">Architect</span></span>
           </div>
         </div>
       </div>
@@ -554,61 +554,61 @@ body.lang-nl [data-en]{display:none;}
 <section class="pricing-section" id="prijzen">
   <div class="pricing-inner">
     <div class="p-header fade-up">
-      <div class="tag tag-blue" data-nl>Transparante prijzen</div>
-      <div class="tag tag-blue" data-en>Transparent pricing</div>
-      <h2 data-nl>Betaal enkel wanneer je project loopt</h2>
-      <h2 data-en>Only pay when your project runs</h2>
-      <p style="font-size:0.9rem;color:var(--slate);margin-top:0.75rem;" data-nl>Geen verborgen kosten. Geen maandabonnement. Enkel een commissie per vrijgegeven betaling.</p>
-      <p style="font-size:0.9rem;color:var(--slate);margin-top:0.75rem;" data-en>No hidden costs. No monthly subscription. Just a commission per released payment.</p>
+      <div class="tag tag-blue" data-nl="">Transparante prijzen</div>
+      <div class="tag tag-blue" data-en="">Transparent pricing</div>
+      <h2 data-nl="">Betaal enkel wanneer je project loopt</h2>
+      <h2 data-en="">Only pay when your project runs</h2>
+      <p style="font-size:0.9rem;color:var(--slate);margin-top:0.75rem;" data-nl="">Geen verborgen kosten. Geen maandabonnement. Enkel een commissie per vrijgegeven betaling.</p>
+      <p style="font-size:0.9rem;color:var(--slate);margin-top:0.75rem;" data-en="">No hidden costs. No monthly subscription. Just a commission per released payment.</p>
     </div>
     <div class="p-grid fade-up">
       <div class="p-card">
-        <div class="p-role pr-b">🏠 <span data-nl>Klant</span><span data-en>Client</span></div>
-        <div class="p-amount" data-nl>Gratis</div>
-        <div class="p-amount" data-en>Free</div>
-        <div class="p-period" data-nl>Altijd en volledig gratis</div>
-        <div class="p-period" data-en>Always and completely free</div>
+        <div class="p-role pr-b">🏠 <span data-nl="">Klant</span><span data-en="">Client</span></div>
+        <div class="p-amount" data-nl="">Gratis</div>
+        <div class="p-amount" data-en="">Free</div>
+        <div class="p-period" data-nl="">Altijd en volledig gratis</div>
+        <div class="p-period" data-en="">Always and completely free</div>
         <ul class="p-list">
-          <li data-nl>Onbeperkte projecten aanmaken</li><li data-en>Create unlimited projects</li>
-          <li data-nl>Escrow storten & beheren</li><li data-en>Deposit & manage escrow</li>
-          <li data-nl>Milestones goedkeuren</li><li data-en>Approve milestones</li>
-          <li data-nl>Documenten & chat</li><li data-en>Documents & chat</li>
-          <li data-nl>Buildpay expert bij geschil (€299)</li><li data-en>Buildpay expert in dispute (€299)</li>
+          <li data-nl="">Onbeperkte projecten aanmaken</li><li data-en="">Create unlimited projects</li>
+          <li data-nl="">Escrow storten &amp; beheren</li><li data-en="">Deposit &amp; manage escrow</li>
+          <li data-nl="">Milestones goedkeuren</li><li data-en="">Approve milestones</li>
+          <li data-nl="">Documenten &amp; chat</li><li data-en="">Documents &amp; chat</li>
+          <li data-nl="">Buildpay expert bij geschil (€299)</li><li data-en="">Buildpay expert in dispute (€299)</li>
         </ul>
-        <button class="p-btn navy" onclick="location='buildpay-login.html'" data-nl>Gratis starten</button>
-        <button class="p-btn navy" onclick="location='buildpay-login.html'" data-en>Get started free</button>
+        <button class="p-btn navy" onclick="location=&#39;buildpay-login.html&#39;" data-nl="">Gratis starten</button>
+        <button class="p-btn navy" onclick="location=&#39;buildpay-login.html&#39;" data-en="">Get started free</button>
       </div>
       <div class="p-card featured">
-        <div class="p-badge" data-nl>Meest gekozen</div>
-        <div class="p-badge" data-en>Most popular</div>
-        <div class="p-role pr-t">🔨 <span data-nl>Aannemer</span><span data-en>Contractor</span></div>
+        <div class="p-badge" data-nl="">Meest gekozen</div>
+        <div class="p-badge" data-en="">Most popular</div>
+        <div class="p-role pr-t">🔨 <span data-nl="">Aannemer</span><span data-en="">Contractor</span></div>
         <div class="p-amount">1.5%</div>
-        <div class="p-period" data-nl>per vrijgegeven milestone · geen vaste kosten</div>
-        <div class="p-period" data-en>per released milestone · no fixed costs</div>
+        <div class="p-period" data-nl="">per vrijgegeven milestone · geen vaste kosten</div>
+        <div class="p-period" data-en="">per released milestone · no fixed costs</div>
         <ul class="p-list">
-          <li data-nl>AI Contract Wizard (offerte → contract)</li><li data-en>AI Contract Wizard (quote → contract)</li>
-          <li data-nl>Bouwsoft & Vertuoza integratie</li><li data-en>Bouwsoft & Vertuoza integration</li>
-          <li data-nl>Milestone indienen met bewijs</li><li data-en>Submit milestones with proof</li>
-          <li data-nl>Uitbetaling binnen 24 uur</li><li data-en>Payout within 24 hours</li>
-          <li data-nl>Professioneel digitaal dossier</li><li data-en>Professional digital file</li>
+          <li data-nl="">AI Contract Wizard (offerte → contract)</li><li data-en="">AI Contract Wizard (quote → contract)</li>
+          <li data-nl="">Bouwsoft &amp; Vertuoza integratie</li><li data-en="">Bouwsoft &amp; Vertuoza integration</li>
+          <li data-nl="">Milestone indienen met bewijs</li><li data-en="">Submit milestones with proof</li>
+          <li data-nl="">Uitbetaling binnen 24 uur</li><li data-en="">Payout within 24 hours</li>
+          <li data-nl="">Professioneel digitaal dossier</li><li data-en="">Professional digital file</li>
         </ul>
-        <button class="p-btn feat" onclick="location='buildpay-login.html'" data-nl>Start als aannemer</button>
-        <button class="p-btn feat" onclick="location='buildpay-login.html'" data-en>Start as contractor</button>
+        <button class="p-btn feat" onclick="location=&#39;buildpay-login.html&#39;" data-nl="">Start als aannemer</button>
+        <button class="p-btn feat" onclick="location=&#39;buildpay-login.html&#39;" data-en="">Start as contractor</button>
       </div>
       <div class="p-card">
-        <div class="p-role pr-a">📐 <span data-nl>Architect</span><span data-en>Architect</span></div>
+        <div class="p-role pr-a">📐 <span data-nl="">Architect</span><span data-en="">Architect</span></div>
         <div class="p-amount" style="color:var(--amber);">+0.25%</div>
-        <div class="p-period" data-nl>vergoeding per vrijgegeven bedrag</div>
-        <div class="p-period" data-en>fee per released amount</div>
+        <div class="p-period" data-nl="">vergoeding per vrijgegeven bedrag</div>
+        <div class="p-period" data-en="">fee per released amount</div>
         <ul class="p-list">
-          <li data-nl>Gratis platform toegang</li><li data-en>Free platform access</li>
-          <li data-nl>Multi-project dashboard</li><li data-en>Multi-project dashboard</li>
-          <li data-nl>Milestone validatie tools</li><li data-en>Milestone validation tools</li>
-          <li data-nl>Gescheiden chats per partij</li><li data-en>Separate chats per party</li>
-          <li data-nl>Conflictbeheer & escalatie</li><li data-en>Conflict management & escalation</li>
+          <li data-nl="">Gratis platform toegang</li><li data-en="">Free platform access</li>
+          <li data-nl="">Multi-project dashboard</li><li data-en="">Multi-project dashboard</li>
+          <li data-nl="">Milestone validatie tools</li><li data-en="">Milestone validation tools</li>
+          <li data-nl="">Gescheiden chats per partij</li><li data-en="">Separate chats per party</li>
+          <li data-nl="">Conflictbeheer &amp; escalatie</li><li data-en="">Conflict management &amp; escalation</li>
         </ul>
-        <button class="p-btn amberb" onclick="location='buildpay-login.html'" data-nl>Start als architect</button>
-        <button class="p-btn amberb" onclick="location='buildpay-login.html'" data-en>Start as architect</button>
+        <button class="p-btn amberb" onclick="location=&#39;buildpay-login.html&#39;" data-nl="">Start als architect</button>
+        <button class="p-btn amberb" onclick="location=&#39;buildpay-login.html&#39;" data-en="">Start as architect</button>
       </div>
     </div>
   </div>
@@ -616,14 +616,14 @@ body.lang-nl [data-en]{display:none;}
 
 <!-- CTA -->
 <section class="cta-section fade-up">
-  <h2 data-nl>Klaar om te starten?</h2>
-  <h2 data-en>Ready to get started?</h2>
-  <p data-nl>Kies je rol en maak gratis een account aan. Geen creditcard, geen maandkosten — enkel betalen als je project loopt.</p>
-  <p data-en>Choose your role and create a free account. No credit card, no monthly fees — only pay when your project runs.</p>
+  <h2 data-nl="">Klaar om te starten?</h2>
+  <h2 data-en="">Ready to get started?</h2>
+  <p data-nl="">Kies je rol en maak gratis een account aan. Geen creditcard, geen maandkosten — enkel betalen als je project loopt.</p>
+  <p data-en="">Choose your role and create a free account. No credit card, no monthly fees — only pay when your project runs.</p>
   <div class="cta-btns">
-    <a href="buildpay-login.html" class="cta-btn cb">🏠 <span data-nl>Ik ben klant</span><span data-en>I'm a client</span></a>
-    <a href="buildpay-login.html" class="cta-btn ct">🔨 <span data-nl>Ik ben aannemer</span><span data-en>I'm a contractor</span></a>
-    <a href="buildpay-login.html" class="cta-btn ca">📐 <span data-nl>Ik ben architect</span><span data-en>I'm an architect</span></a>
+    <a href="file:///Users/wim/Downloads/buildpay-login.html" class="cta-btn cb">🏠 <span data-nl="">Ik ben klant</span><span data-en="">I'm a client</span></a>
+    <a href="file:///Users/wim/Downloads/buildpay-login.html" class="cta-btn ct">🔨 <span data-nl="">Ik ben aannemer</span><span data-en="">I'm a contractor</span></a>
+    <a href="file:///Users/wim/Downloads/buildpay-login.html" class="cta-btn ca">📐 <span data-nl="">Ik ben architect</span><span data-en="">I'm an architect</span></a>
   </div>
 </section>
 
@@ -632,51 +632,51 @@ body.lang-nl [data-en]{display:none;}
   <div class="footer-grid">
     <div>
       <div class="footer-logo-f">Build<span>pay</span></div>
-      <div class="footer-tagline" data-nl>Veilig samenwerken aan bouwprojecten. Escrow, contracten en AI voor klanten, aannemers en architecten.</div>
-      <div class="footer-tagline" data-en>Safe collaboration on construction projects. Escrow, contracts and AI for clients, contractors and architects.</div>
+      <div class="footer-tagline" data-nl="">Veilig samenwerken aan bouwprojecten. Escrow, contracten en AI voor klanten, aannemers en architecten.</div>
+      <div class="footer-tagline" data-en="">Safe collaboration on construction projects. Escrow, contracts and AI for clients, contractors and architects.</div>
     </div>
     <div>
-      <div class="f-col-title" data-nl>Platform</div>
-      <div class="f-col-title" data-en>Platform</div>
+      <div class="f-col-title" data-nl="">Platform</div>
+      <div class="f-col-title" data-en="">Platform</div>
       <div class="f-links">
-        <a href="#hoe-het-werkt" data-nl>Hoe het werkt</a><a href="#hoe-het-werkt" data-en>How it works</a>
-        <a href="#voor-wie" data-nl>Voor wie</a><a href="#voor-wie" data-en>For who</a>
-        <a href="#prijzen" data-nl>Prijzen</a><a href="#prijzen" data-en>Pricing</a>
-        <a href="buildpay-login.html" data-nl>Inloggen</a><a href="buildpay-login.html" data-en>Log in</a>
+        <a href="file:///Users/wim/Downloads/index.html#hoe-het-werkt" data-nl="">Hoe het werkt</a><a href="file:///Users/wim/Downloads/index.html#hoe-het-werkt" data-en="">How it works</a>
+        <a href="file:///Users/wim/Downloads/index.html#voor-wie" data-nl="">Voor wie</a><a href="file:///Users/wim/Downloads/index.html#voor-wie" data-en="">For who</a>
+        <a href="file:///Users/wim/Downloads/index.html#prijzen" data-nl="">Prijzen</a><a href="file:///Users/wim/Downloads/index.html#prijzen" data-en="">Pricing</a>
+        <a href="file:///Users/wim/Downloads/buildpay-login.html" data-nl="">Inloggen</a><a href="file:///Users/wim/Downloads/buildpay-login.html" data-en="">Log in</a>
       </div>
     </div>
     <div>
-      <div class="f-col-title" data-nl>Voor wie</div>
-      <div class="f-col-title" data-en>For who</div>
+      <div class="f-col-title" data-nl="">Voor wie</div>
+      <div class="f-col-title" data-en="">For who</div>
       <div class="f-links">
-        <a href="buildpay-dashboard-client.html" data-nl>Klanten</a><a href="buildpay-dashboard-client.html" data-en>Clients</a>
-        <a href="buildpay-dashboard-contractor.html" data-nl>Aannemers</a><a href="buildpay-dashboard-contractor.html" data-en>Contractors</a>
-        <a href="buildpay-dashboard-architect.html" data-nl>Architecten</a><a href="buildpay-dashboard-architect.html" data-en>Architects</a>
-        <a href="buildpay-offerte-flow.html" data-nl>AI Contract Wizard</a><a href="buildpay-offerte-flow.html" data-en>AI Contract Wizard</a>
+        <a href="file:///Users/wim/Downloads/buildpay-dashboard-client.html" data-nl="">Klanten</a><a href="file:///Users/wim/Downloads/buildpay-dashboard-client.html" data-en="">Clients</a>
+        <a href="file:///Users/wim/Downloads/buildpay-dashboard-contractor.html" data-nl="">Aannemers</a><a href="file:///Users/wim/Downloads/buildpay-dashboard-contractor.html" data-en="">Contractors</a>
+        <a href="file:///Users/wim/Downloads/buildpay-dashboard-architect.html" data-nl="">Architecten</a><a href="file:///Users/wim/Downloads/buildpay-dashboard-architect.html" data-en="">Architects</a>
+        <a href="file:///Users/wim/Downloads/buildpay-offerte-flow.html" data-nl="">AI Contract Wizard</a><a href="file:///Users/wim/Downloads/buildpay-offerte-flow.html" data-en="">AI Contract Wizard</a>
       </div>
     </div>
     <div>
-      <div class="f-col-title" data-nl>Bedrijf</div>
-      <div class="f-col-title" data-en>Company</div>
+      <div class="f-col-title" data-nl="">Bedrijf</div>
+      <div class="f-col-title" data-en="">Company</div>
       <div class="f-links">
-        <a href="#" data-nl>Over Buildpay</a><a href="#" data-en>About Buildpay</a>
-        <a href="#" data-nl>Contact</a><a href="#" data-en>Contact</a>
-        <a href="#" data-nl>Partners</a><a href="#" data-en>Partners</a>
-        <a href="#"><span class="__cf_email__" data-cfemail="20494e464f604255494c445041590e4e4c">[email&#160;protected]</span></a>
+        <a href="file:///Users/wim/Downloads/index.html#" data-nl="">Over Buildpay</a><a href="file:///Users/wim/Downloads/index.html#" data-en="">About Buildpay</a>
+        <a href="file:///Users/wim/Downloads/index.html#" data-nl="">Contact</a><a href="file:///Users/wim/Downloads/index.html#" data-en="">Contact</a>
+        <a href="file:///Users/wim/Downloads/index.html#" data-nl="">Partners</a><a href="file:///Users/wim/Downloads/index.html#" data-en="">Partners</a>
+        <a href="file:///Users/wim/Downloads/index.html#"><span class="__cf_email__" data-cfemail="20494e464f604255494c445041590e4e4c">[email&nbsp;protected]</span></a>
       </div>
     </div>
   </div>
   <div class="footer-bottom">
     <div class="f-copy">© 2025 Buildpay · buildpay.nl · buildpay.be</div>
     <div class="f-legal">
-      <a href="#" data-nl>Privacy</a><a href="#" data-en>Privacy</a>
-      <a href="#" data-nl>Voorwaarden</a><a href="#" data-en>Terms</a>
-      <a href="#" data-nl>Cookies</a><a href="#" data-en>Cookies</a>
+      <a href="file:///Users/wim/Downloads/index.html#" data-nl="">Privacy</a><a href="file:///Users/wim/Downloads/index.html#" data-en="">Privacy</a>
+      <a href="file:///Users/wim/Downloads/index.html#" data-nl="">Voorwaarden</a><a href="file:///Users/wim/Downloads/index.html#" data-en="">Terms</a>
+      <a href="file:///Users/wim/Downloads/index.html#" data-nl="">Cookies</a><a href="file:///Users/wim/Downloads/index.html#" data-en="">Cookies</a>
     </div>
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="file:///cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 function setLang(l){
   document.body.className='lang-'+l;
   document.getElementById('btn-nl').classList.toggle('active',l==='nl');
@@ -708,4 +708,4 @@ function setHow(h){
 
 // Scroll fade
 const obs=new IntersectionObserver(entries=>{
-  entrie
+  entrie</script></body></html>

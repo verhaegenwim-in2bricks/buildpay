@@ -8,44 +8,60 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 body{font-family:Arial,Helvetica,sans-serif;background:#fff;color:#0A1628;}
+
 .topbar{background:#0A1628;padding:.5rem 5%;display:flex;justify-content:space-between;align-items:center;}
 .topbar span{font-size:.75rem;color:rgba(255,255,255,.5);}
 .lang-wrap{display:flex;gap:.5rem;}
 .lang-btn{font-size:.75rem;font-weight:700;color:rgba(255,255,255,.4);background:none;border:none;cursor:pointer;padding:.2rem .4rem;}
 .lang-btn.active{color:#fff;}
+
 nav{background:#fff;border-bottom:1px solid #E2E8F0;padding:0 5%;height:65px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
 .logo{font-size:1.5rem;font-weight:900;color:#0A1628;text-decoration:none;}
 .logo span{color:#2563EB;}
 .nav-links{display:flex;gap:2rem;list-style:none;}
 .nav-links a{text-decoration:none;color:#64748B;font-size:.9rem;}
+.nav-links a:hover{color:#0A1628;}
 .nav-right{display:flex;gap:.75rem;align-items:center;}
 .btn-login{font-size:.85rem;color:#0A1628;text-decoration:none;font-weight:500;}
 .btn-start{background:#0A1628;color:#fff;padding:.6rem 1.25rem;border-radius:6px;font-size:.85rem;font-weight:600;text-decoration:none;}
+.btn-start:hover{background:#2563EB;}
+
 .hero{background:#0A1628;padding:5rem 5%;min-height:85vh;display:flex;flex-direction:column;justify-content:center;}
 .eyebrow{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:100px;padding:.35rem 1rem;font-size:.75rem;font-weight:600;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1.5rem;width:fit-content;}
 .dot{width:6px;height:6px;border-radius:50%;background:#10B981;display:inline-block;}
+
 .aud-tabs{display:flex;gap:.25rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:100px;padding:.3rem;margin-bottom:2rem;width:fit-content;}
 .aud-tab{padding:.5rem 1.25rem;border-radius:100px;font-size:.85rem;font-weight:600;cursor:pointer;border:none;background:none;color:rgba(255,255,255,.5);}
 .aud-tab.ac{background:#2563EB;color:#fff;}
 .aud-tab.ak{background:#0D9488;color:#fff;}
 .aud-tab.aa{background:#D97706;color:#fff;}
+
 .hero-content{display:none;}
 .hero-content.show{display:block;}
 h1{font-size:3.5rem;font-weight:900;line-height:1.1;color:#fff;max-width:750px;margin-bottom:1.25rem;}
-.blue{color:#60A5FA;}.teal{color:#2DD4BF;}.amber{color:#FCD34D;}
+.blue{color:#60A5FA;}
+.teal{color:#2DD4BF;}
+.amber{color:#FCD34D;}
 .sub{font-size:1.1rem;color:rgba(255,255,255,.6);max-width:550px;line-height:1.75;margin-bottom:2.5rem;}
 .btns{display:flex;gap:1rem;flex-wrap:wrap;}
 .btn{padding:.9rem 1.75rem;border-radius:8px;font-size:.95rem;font-weight:700;text-decoration:none;display:inline-block;}
 .btn-b{background:#2563EB;color:#fff;}
+.btn-b:hover{background:#1D4ED8;}
 .btn-t{background:#0D9488;color:#fff;}
+.btn-t:hover{background:#0F766E;}
 .btn-a{background:#D97706;color:#fff;}
+.btn-a:hover{background:#B45309;}
 .btn-g{background:rgba(255,255,255,.1);color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.2);}
+.btn-g:hover{background:rgba(255,255,255,.18);color:#fff;}
+
 .trust{display:flex;gap:2rem;flex-wrap:wrap;margin-top:2.5rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,.1);}
 .trust span{font-size:.78rem;color:rgba(255,255,255,.4);}
+
 .stats{background:#F8FAFC;border-bottom:1px solid #E2E8F0;padding:2.5rem 5%;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;}
 .stat{text-align:center;}
 .stat-n{font-size:2.25rem;font-weight:900;color:#0A1628;}
 .stat-l{font-size:.8rem;color:#64748B;margin-top:.25rem;}
+
 .for-who{background:#0A1628;padding:6rem 5%;}
 .sh{text-align:center;margin-bottom:3rem;}
 .tag{font-size:.72rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#60A5FA;display:block;margin-bottom:.75rem;}
@@ -61,16 +77,23 @@ h1{font-size:3.5rem;font-weight:900;line-height:1.1;color:#fff;max-width:750px;m
 .fw-card p{font-size:.875rem;color:rgba(255,255,255,.55);line-height:1.7;margin-bottom:1.25rem;}
 .fw-list{list-style:none;display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.75rem;}
 .fw-list li{font-size:.82rem;color:rgba(255,255,255,.7);display:flex;gap:.5rem;}
-.ck1{color:#60A5FA;font-weight:700;}.ck2{color:#2DD4BF;font-weight:700;}.ck3{color:#FCD34D;font-weight:700;}
+.ck1{color:#60A5FA;font-weight:700;}
+.ck2{color:#2DD4BF;font-weight:700;}
+.ck3{color:#FCD34D;font-weight:700;}
 .fw-btn{display:inline-block;padding:.65rem 1.25rem;border-radius:7px;font-size:.82rem;font-weight:700;text-decoration:none;}
 .fb1{background:rgba(37,99,235,.25);color:#93C5FD;}
+.fb1:hover{background:#2563EB;color:#fff;}
 .fb2{background:rgba(13,148,136,.25);color:#5EEAD4;}
+.fb2:hover{background:#0D9488;color:#fff;}
 .fb3{background:rgba(217,119,6,.25);color:#FCD34D;}
+.fb3:hover{background:#D97706;color:#fff;}
+
 .hiw{padding:6rem 5%;background:#fff;}
 .hiw-inner{max-width:1200px;margin:0 auto;}
 .hiw h2{font-size:2.25rem;font-weight:800;color:#0A1628;margin-bottom:1.5rem;}
 .hiw-tabs{display:flex;border:1.5px solid #E2E8F0;border-radius:8px;overflow:hidden;width:fit-content;margin-bottom:2.5rem;}
 .hiw-tab{padding:.6rem 1.25rem;font-size:.82rem;font-weight:600;cursor:pointer;border:none;background:none;color:#64748B;border-right:1px solid #E2E8F0;}
+.hiw-tab:last-child{border-right:none;}
 .hiw-tab.active{background:#0A1628;color:#fff;}
 .hiw-steps{display:none;grid-template-columns:repeat(4,1fr);gap:1.5rem;}
 .hiw-steps.show{display:grid;}
@@ -79,6 +102,7 @@ h1{font-size:3.5rem;font-weight:900;line-height:1.1;color:#fff;max-width:750px;m
 .nb{background:#0A1628;}.nt{background:#0D9488;}.na{background:#D97706;}
 .hiw-step h3{font-size:.95rem;font-weight:700;color:#0A1628;margin-bottom:.5rem;}
 .hiw-step p{font-size:.82rem;color:#64748B;line-height:1.65;}
+
 .testimonials{padding:6rem 5%;background:#F8FAFC;}
 .t-inner{max-width:1200px;margin:0 auto;}
 .t-head{text-align:center;margin-bottom:3rem;}
@@ -93,6 +117,7 @@ h1{font-size:3.5rem;font-weight:900;line-height:1.1;color:#fff;max-width:750px;m
 .t-role{font-size:.72rem;color:#64748B;}
 .t-badge{display:inline-block;font-size:.65rem;font-weight:600;padding:.2rem .5rem;border-radius:4px;margin-top:.25rem;}
 .tbb{background:#EFF6FF;color:#2563EB;}.tbt{background:#F0FDFA;color:#0D9488;}.tba{background:#FFFBEB;color:#D97706;}
+
 .pricing{padding:6rem 5%;background:#fff;}
 .p-inner{max-width:1200px;margin:0 auto;}
 .p-head{text-align:center;margin-bottom:3rem;}
@@ -116,8 +141,12 @@ h1{font-size:3.5rem;font-weight:900;line-height:1.1;color:#fff;max-width:750px;m
 .p-card.feat .p-list li::before{color:#2DD4BF;}
 .p-btn{width:100%;padding:.75rem;border-radius:8px;font-size:.875rem;font-weight:700;cursor:pointer;border:none;text-align:center;text-decoration:none;display:block;font-family:Arial,sans-serif;}
 .pb-navy{background:#0A1628;color:#fff;}
+.pb-navy:hover{background:#2563EB;}
 .pb-feat{background:#2563EB;color:#fff;}
+.pb-feat:hover{background:#1D4ED8;}
 .pb-amber{background:#D97706;color:#fff;}
+.pb-amber:hover{background:#B45309;}
+
 .cta{background:#0A1628;padding:6rem 5%;text-align:center;}
 .cta h2{font-size:3rem;font-weight:900;color:#fff;margin-bottom:1rem;}
 .cta p{font-size:1rem;color:rgba(255,255,255,.5);max-width:460px;margin:0 auto 2.5rem;line-height:1.7;}
@@ -126,6 +155,8 @@ h1{font-size:3.5rem;font-weight:900;line-height:1.1;color:#fff;max-width:750px;m
 .cb{background:#2563EB;color:#fff;}
 .ct{background:#0D9488;color:#fff;}
 .ca{background:rgba(255,255,255,.1);color:rgba(255,255,255,.75);border:2px solid rgba(255,255,255,.2);}
+.ca:hover{background:#D97706;border-color:#D97706;color:#fff;}
+
 footer{background:#060E1A;padding:4rem 5% 2rem;}
 .f-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem;}
 .f-logo{font-size:1.4rem;font-weight:900;color:#fff;margin-bottom:.75rem;}
@@ -139,25 +170,318 @@ footer{background:#060E1A;padding:4rem 5% 2rem;}
 .f-copy{font-size:.72rem;color:rgba(255,255,255,.2);}
 .f-legal{display:flex;gap:1.5rem;}
 .f-legal a{font-size:.72rem;color:rgba(255,255,255,.2);text-decoration:none;}
-@media(max-width:900px){nav .nav-links{display:none;}.stats,.fw-grid,.t-grid,.p-grid{grid-template-columns:1fr;}.f-grid{grid-template-columns:1fr 1fr;}.hiw-steps.show{grid-template-columns:1fr 1fr;}h1{font-size:2.25rem;}}
-@media(max-width:600px){h1{font-size:1.9rem;}.hiw-steps.show{grid-template-columns:1fr;}.btns,.cta-btns{flex-direction:column;align-items:flex-start;}}
+
+@media(max-width:900px){
+  nav .nav-links{display:none;}
+  .stats,.fw-grid,.t-grid,.p-grid{grid-template-columns:1fr;}
+  .f-grid{grid-template-columns:1fr 1fr;}
+  .hiw-steps.show{grid-template-columns:1fr 1fr;}
+  h1{font-size:2.25rem;}
+}
+@media(max-width:600px){
+  h1{font-size:1.9rem;}
+  .hiw-steps.show{grid-template-columns:1fr;}
+  .btns,.cta-btns{flex-direction:column;align-items:flex-start;}
+}
 </style>
 </head>
 <body>
-<div class="topbar"><span>🔒 Veilig escrow via erkende betaalinstelling</span><div class="lang-wrap"><button class="lang-btn active" id="btn-nl" onclick="setLang('nl')">NL</button><button class="lang-btn" id="btn-fr" onclick="setLang('fr')">FR</button><button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button></div></div>
-<nav><a href="index.html" class="logo">Build<span>pay</span></a><ul class="nav-links"><li><a href="#voor-wie">Voor wie</a></li><li><a href="#hoe-het-werkt">Hoe het werkt</a></li><li><a href="#prijzen">Prijzen</a></li></ul><div class="nav-right"><a href="buildpay-login.html" class="btn-login">Inloggen</a><a href="buildpay-login.html" class="btn-start">Gratis starten</a></div></nav>
-<section class="hero"><div class="eyebrow"><span class="dot"></span> Escrow platform voor de bouwsector</div><div class="aud-tabs"><button class="aud-tab ac" id="at-c" onclick="setAud('c')">🏠 Klant</button><button class="aud-tab" id="at-k" onclick="setAud('k')">🔨 Aannemer</button><button class="aud-tab" id="at-a" onclick="setAud('a')">📐 Architect</button></div><div class="hero-content show" id="hcc"><h1>Verbouw zonder<br>financieel <span class="blue">risico</span></h1><p class="sub">Jouw geld staat veilig in escrow. De aannemer krijgt pas betaald wanneer jij het werk goedkeurt — milestone per milestone.</p><div class="btns"><a href="buildpay-login.html" class="btn btn-b">Bescherm mijn verbouwing →</a><a href="#hoe-het-werkt" class="btn btn-g">Hoe werkt het?</a></div></div><div class="hero-content" id="hck"><h1>Gegarandeerde betaling<br>voor <span class="teal">goed werk</span></h1><p class="sub">Het geld staat klaar vóór je begint. Lever goed werk en ontvang betaling binnen 24 uur.</p><div class="btns"><a href="buildpay-login.html" class="btn btn-t">Garandeer mijn betaling →</a><a href="buildpay-offerte-flow.html" class="btn btn-g">Offerte importeren</a></div></div><div class="hero-content" id="hca"><h1>Begeleid projecten<br>als <span class="amber">neutrale expert</span></h1><p class="sub">Valideer milestones technisch en verdien een vergoeding voor elk project dat je begeleidt.</p><div class="btns"><a href="buildpay-login.html" class="btn btn-a">Start als architect →</a><a href="buildpay-dashboard-architect.html" class="btn btn-g">Dashboard bekijken</a></div></div><div class="trust"><span>🔒 Erkende betaalinstelling</span><span>⚡ Uitbetaling binnen 24u</span><span>📐 Architect validatie</span><span>✅ Geen maandkosten</span></div></section>
-<div class="stats"><div class="stat"><div class="stat-n">€ 2.4M</div><div class="stat-l">Veilig beheerd</div></div><div class="stat"><div class="stat-n">340+</div><div class="stat-l">Projecten afgerond</div></div><div class="stat"><div class="stat-n">100%</div><div class="stat-l">Conflicten opgelost</div></div><div class="stat"><div class="stat-n">4.9 ★</div><div class="stat-l">Gemiddelde score</div></div></div>
-<section class="for-who" id="voor-wie"><div class="sh"><span class="tag">Voor iedereen in het bouwproces</span><h2>Één platform. Drie rollen. Samen sterker.</h2></div><div class="fw-grid"><div class="fw-card fc1"><div class="fw-role">Voor de klant</div><span class="fw-icon">🏠</span><h3>Verbouw met zekerheid</h3><p>Jij bepaalt wanneer de aannemer betaald wordt. Jouw geld blijft van jou totdat het werk klopt.</p><ul class="fw-list"><li><span class="ck1">✓</span> Geld veilig in escrow</li><li><span class="ck1">✓</span> Milestone per milestone vrijgeven</li><li><span class="ck1">✓</span> Expert bij conflict (€299)</li><li><span class="ck1">✓</span> Volledig gratis</li></ul><a href="buildpay-login.html" class="fw-btn fb1">Start als klant →</a></div><div class="fw-card fc2"><div class="fw-role">Voor de aannemer</div><span class="fw-icon">🔨</span><h3>Werk gerust, word betaald</h3><p>Het budget staat klaar vóór je begint. Lever goed werk en ontvang betaling binnen 24 uur.</p><ul class="fw-list"><li><span class="ck2">✓</span> Budget gegarandeerd in escrow</li><li><span class="ck2">✓</span> AI contract vanuit offerte</li><li><span class="ck2">✓</span> Uitbetaling binnen 24u</li><li><span class="ck2">✓</span> Bouwsoft &amp; Vertuoza integratie</li></ul><a href="buildpay-login.html" class="fw-btn fb2">Start als aannemer →</a></div><div class="fw-card fc3"><div class="fw-role">Voor de architect</div><span class="fw-icon">📐</span><h3>Begeleid. Valideer. Verdien.</h3><p>Jij bent de neutrale expert. Buildpay geeft jou de tools en beloont je expertise.</p><ul class="fw-list"><li><span class="ck3">✓</span> Alle projecten in één dashboard</li><li><span class="ck3">✓</span> Technische milestone validatie</li><li><span class="ck3">✓</span> 0.25% vergoeding per vrijgave</li><li><span class="ck3">✓</span> Conflictbeheer tools</li></ul><a href="buildpay-login.html" class="fw-btn fb3">Start als architect →</a></div></div></section>
-<section class="hiw" id="hoe-het-werkt"><div class="hiw-inner"><span class="tag" style="color:#2563EB;">Hoe het werkt</span><h2>Van offerte tot oplevering</h2><div class="hiw-tabs"><button class="hiw-tab active" onclick="setHow('c')" id="htc">🏠 Klant</button><button class="hiw-tab" onclick="setHow('k')" id="htk">🔨 Aannemer</button><button class="hiw-tab" onclick="setHow('a')" id="hta">📐 Architect</button></div><div class="hiw-steps show" id="hsc"><div class="hiw-step"><div class="snum nb">1</div><h3>Project aanmaken</h3><p>Maak een project aan en nodig je aannemer en architect uit.</p></div><div class="hiw-step"><div class="snum nb">2</div><h3>Escrow storten</h3><p>Stort het volledige bedrag veilig in escrow. Het blijft jouw geld.</p></div><div class="hiw-step"><div class="snum nb">3</div><h3>Werk opvolgen</h3><p>Volg voortgang per milestone. Architect valideert technisch.</p></div><div class="hiw-step"><div class="snum nb">4</div><h3>Goedkeuren &amp; betalen</h3><p>Keur jij goed? Geld vrijgegeven binnen 24 uur.</p></div></div><div class="hiw-steps" id="hsk"><div class="hiw-step"><div class="snum nt">1</div><h3>Offerte importeren</h3><p>Upload via PDF, Bouwsoft of Vertuoza. AI extraheert alles automatisch.</p></div><div class="hiw-step"><div class="snum nt">2</div><h3>AI contract</h3><p>AI stelt milestones voor. Pas aan en stuur ter ondertekening.</p></div><div class="hiw-step"><div class="snum nt">3</div><h3>Werk uitvoeren</h3><p>Budget staat klaar in escrow. Upload bewijs per milestone.</p></div><div class="hiw-step"><div class="snum nt">4</div><h3>Betaling ontvangen</h3><p>Na goedkeuring staat het geld binnen 24u op je rekening.</p></div></div><div class="hiw-steps" id="hsa"><div class="hiw-step"><div class="snum na">1</div><h3>Uitgenodigd worden</h3><p>Klant of aannemer nodigt jou uit als begeleider.</p></div><div class="hiw-step"><div class="snum na">2</div><h3>Plannen uploaden</h3><p>Upload technische plannen voor alle partijen.</p></div><div class="hiw-step"><div class="snum na">3</div><h3>Milestones valideren</h3><p>Beoordeel bewijs technisch. Keur goed of blokkeer.</p></div><div class="hiw-step"><div class="snum na">4</div><h3>Vergoeding ontvangen</h3><p>0.25% per goedgekeurd bedrag. Automatisch uitbetaald.</p></div></div></div></section>
-<section class="testimonials"><div class="t-inner"><div class="t-head"><span class="tag" style="color:#2563EB;">Ervaringen</span><h2>Wat zij zeggen over Buildpay</h2></div><div class="t-grid"><div class="t-card"><p class="t-quote">Eindelijk geen stress meer over mijn voorschot. Ik heb altijd controle over mijn eigen geld.</p><div class="t-author"><div class="t-av avb">MV</div><div><div class="t-name">Marie Van Damme</div><div class="t-role">Keuken renovatie · Gent</div><span class="t-badge tbb">🏠 Klant</span></div></div></div><div class="t-card"><p class="t-quote">Mijn klanten vertrouwen me meer. Het geld staat klaar voor ik begin — geen achterstallige facturen meer.</p><div class="t-author"><div class="t-av avt">PV</div><div><div class="t-name">Pieter Vandebroeck</div><div class="t-role">Aannemer · Antwerpen</div><span class="t-badge tbt">🔨 Aannemer</span></div></div></div><div class="t-card"><p class="t-quote">Als architect is dit mijn nieuwe standaard. Geen conflicten meer over betalingen.</p><div class="t-author"><div class="t-av ava">SV</div><div><div class="t-name">Sophie Vermeersch</div><div class="t-role">Architect · Brussel</div><span class="t-badge tba">📐 Architect</span></div></div></div></div></div></section>
-<section class="pricing" id="prijzen"><div class="p-inner"><div class="p-head"><span class="tag" style="color:#2563EB;">Transparante prijzen</span><h2>Betaal enkel wanneer je project loopt</h2><p>Geen verborgen kosten. Geen maandabonnement.</p></div><div class="p-grid"><div class="p-card"><div class="p-role prb">🏠 Klant</div><div class="p-amount">Gratis</div><div class="p-period">Altijd en volledig gratis</div><ul class="p-list"><li>Onbeperkte projecten aanmaken</li><li>Escrow storten &amp; beheren</li><li>Milestones goedkeuren</li><li>Buildpay expert bij geschil (€299)</li></ul><a href="buildpay-login.html" class="p-btn pb-navy">Gratis starten</a></div><div class="p-card feat"><div class="p-badge">Meest gekozen</div><div class="p-role prt">🔨 Aannemer</div><div class="p-amount">1.5%</div><div class="p-period">per vrijgegeven milestone</div><ul class="p-list"><li>AI Contract Wizard</li><li>Bouwsoft &amp; Vertuoza integratie</li><li>Uitbetaling binnen 24 uur</li><li>Professioneel digitaal dossier</li></ul><a href="buildpay-login.html" class="p-btn pb-feat">Start als aannemer</a></div><div class="p-card"><div class="p-role pra">📐 Architect</div><div class="p-amount" style="color:#D97706;">+0.25%</div><div class="p-period">vergoeding per vrijgegeven bedrag</div><ul class="p-list"><li>Gratis platform toegang</li><li>Multi-project dashboard</li><li>Milestone validatie tools</li><li>Conflictbeheer &amp; escalatie</li></ul><a href="buildpay-login.html" class="p-btn pb-amber">Start als architect</a></div></div></div></section>
-<section class="cta"><h2>Klaar om te starten?</h2><p>Kies je rol en maak gratis een account aan. Geen creditcard, geen maandkosten.</p><div class="cta-btns"><a href="buildpay-login.html" class="cta-btn cb">🏠 Ik ben klant</a><a href="buildpay-login.html" class="cta-btn ct">🔨 Ik ben aannemer</a><a href="buildpay-login.html" class="cta-btn ca">📐 Ik ben architect</a></div></section>
-<footer><div class="f-grid"><div><div class="f-logo">Build<span>pay</span></div><p class="f-tag">Veilig samenwerken aan bouwprojecten. Escrow, contracten en AI voor klanten, aannemers en architecten.</p></div><div><div class="f-title">Platform</div><div class="f-links"><a href="#voor-wie">Voor wie</a><a href="#hoe-het-werkt">Hoe het werkt</a><a href="#prijzen">Prijzen</a><a href="buildpay-login.html">Inloggen</a></div></div><div><div class="f-title">Dashboards</div><div class="f-links"><a href="buildpay-dashboard-client.html">Klanten</a><a href="buildpay-dashboard-contractor.html">Aannemers</a><a href="buildpay-dashboard-architect.html">Architecten</a><a href="buildpay-offerte-flow.html">AI Contract Wizard</a></div></div><div><div class="f-title">Contact</div><div class="f-links"><a href="#">info@buildpay.be</a><a href="#">buildpay.be</a><a href="#">buildpay.nl</a></div></div></div><div class="f-bottom"><div class="f-copy">© 2025 Buildpay · buildpay.be · buildpay.nl</div><div class="f-legal"><a href="#">Privacy</a><a href="#">Voorwaarden</a></div></div></footer>
-<script>
-function setLang(l){document.getElementById('btn-nl').classList.toggle('active',l==='nl');document.getElementById('btn-fr').classList.toggle('active',l==='fr');document.getElementById('btn-en').classList.toggle('active',l==='en');}
-function setAud(a){['c','k','a'].forEach(x=>{document.getElementById('hc'+x).classList.remove('show');document.getElementById('at-'+x).className='aud-tab';});document.getElementById('hc'+a).classList.add('show');const cls={c:'ac',k:'ak',a:'aa'};document.getElementById('at-'+a).className='aud-tab '+cls[a];}
-function setHow(h){['c','k','a'].forEach(x=>{document.getElementById('hs'+x).classList.remove('show');document.getElementById('ht'+x).classList.remove('active');});document.getElementById('hs'+h).classList.add('show');document.getElementById('ht'+h).classList.add('active');}
-</script>
-</body>
-</html>
+
+<div class="topbar">
+  <span>🔒 Veilig escrow via erkende betaalinstelling</span>
+  <div class="lang-wrap">
+    <button class="lang-btn active" id="btn-nl" onclick="setLang('nl')">NL</button>
+    <button class="lang-btn" id="btn-fr" onclick="setLang('fr')">FR</button>
+    <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+  </div>
+</div>
+
+<nav>
+  <a href="index.html" class="logo">Build<span>pay</span></a>
+  <ul class="nav-links">
+    <li><a href="#voor-wie">Voor wie</a></li>
+    <li><a href="#hoe-het-werkt">Hoe het werkt</a></li>
+    <li><a href="#prijzen">Prijzen</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="buildpay-login.html" class="btn-login">Inloggen</a>
+    <a href="buildpay-login.html" class="btn-start">Gratis starten</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="eyebrow"><span class="dot"></span> Escrow platform voor de bouwsector</div>
+
+  <div class="aud-tabs">
+    <button class="aud-tab ac" id="at-c" onclick="setAud('c')">🏠 Klant</button>
+    <button class="aud-tab" id="at-k" onclick="setAud('k')">🔨 Aannemer</button>
+    <button class="aud-tab" id="at-a" onclick="setAud('a')">📐 Architect</button>
+  </div>
+
+  <div class="hero-content show" id="hcc">
+    <h1>Verbouw zonder<br>financieel <span class="blue">risico</span></h1>
+    <p class="sub">Jouw geld staat veilig in escrow. De aannemer krijgt pas betaald wanneer jij het werk goedkeurt — milestone per milestone. Nooit meer verdwenen voorschotten.</p>
+    <div class="btns">
+      <a href="buildpay-login.html" class="btn btn-b">Bescherm mijn verbouwing →</a>
+      <a href="#hoe-het-werkt" class="btn btn-g">Hoe werkt het?</a>
+    </div>
+  </div>
+
+  <div class="hero-content" id="hck">
+    <h1>Gegarandeerde betaling<br>voor <span class="teal">goed werk</span></h1>
+    <p class="sub">Het geld staat klaar in escrow vóór je begint. Lever goed werk, dien je milestone in en ontvang betaling binnen 24 uur. Nooit meer achterstallige facturen.</p>
+    <div class="btns">
+      <a href="buildpay-login.html" class="btn btn-t">Garandeer mijn betaling →</a>
+      <a href="buildpay-offerte-flow.html" class="btn btn-g">Offerte importeren</a>
+    </div>
+  </div>
+
+  <div class="hero-content" id="hca">
+    <h1>Begeleid projecten<br>als <span class="amber">neutrale expert</span></h1>
+    <p class="sub">Valideer milestones technisch, bewaar de vrede tussen klant en aannemer, en verdien een vergoeding voor elk project dat je begeleidt.</p>
+    <div class="btns">
+      <a href="buildpay-login.html" class="btn btn-a">Start als architect →</a>
+      <a href="buildpay-dashboard-architect.html" class="btn btn-g">Dashboard bekijken</a>
+    </div>
+  </div>
+
+  <div class="trust">
+    <span>🔒 Erkende betaalinstelling</span>
+    <span>⚡ Uitbetaling binnen 24u</span>
+    <span>📐 Architect validatie</span>
+    <span>📸 Live werfopvolging</span>
+    <span>✅ Transparante kosten</span>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="stat"><div class="stat-n">€ 2.4M</div><div class="stat-l">Veilig beheerd</div></div>
+  <div class="stat"><div class="stat-n">340+</div><div class="stat-l">Projecten afgerond</div></div>
+  <div class="stat"><div class="stat-n">100%</div><div class="stat-l">Conflicten opgelost</div></div><div class="stat"><div class="stat-n">📸</div><div class="stat-l">Live werfopvolging</div>
+  <div class="stat"><div class="stat-n">4.9 ★</div><div class="stat-l">Gemiddelde score</div></div>
+</div>
+
+<section class="for-who" id="voor-wie">
+  <div class="sh">
+    <span class="tag">Voor iedereen in het bouwproces</span>
+    <h2>Één platform. Drie rollen. Samen sterker.</h2>
+  </div>
+  <div class="fw-grid">
+    <div class="fw-card fc1">
+      <div class="fw-role">Voor de klant</div>
+      <span class="fw-icon">🏠</span>
+      <h3>Verbouw met zekerheid</h3>
+      <p>Jij bepaalt wanneer de aannemer betaald wordt. Jouw geld blijft van jou totdat het werk klopt.</p>
+      <ul class="fw-list">
+        <li><span class="ck1">✓</span> Geld veilig in escrow</li>
+        <li><span class="ck1">✓</span> Live werfopvolging via foto's</li>
+        <li><span class="ck1">✓</span> To-do lijsten per milestone</li>
+        <li><span class="ck1">✓</span> Architect of Buildpay expert bij geschil</li>
+        <li><span class="ck1">✓</span> 1.5% platformkost — transparant</li>
+      </ul>
+      <a href="buildpay-login.html" class="fw-btn fb1">Start als klant →</a>
+    </div>
+    <div class="fw-card fc2">
+      <div class="fw-role">Voor de aannemer</div>
+      <span class="fw-icon">🔨</span>
+      <h3>Werk gerust, word betaald</h3>
+      <p>Het budget staat klaar vóór je begint. Lever goed werk en ontvang betaling binnen 24 uur.</p>
+      <ul class="fw-list">
+        <li><span class="ck2">✓</span> Budget gegarandeerd in escrow</li>
+        <li><span class="ck2">✓</span> AI contract vanuit offerte</li>
+        <li><span class="ck2">✓</span> Uitbetaling binnen 24u</li>
+        <li><span class="ck2">✓</span> Bouwsoft & Vertuoza integratie</li>
+      </ul>
+      <a href="buildpay-login.html" class="fw-btn fb2">Start als aannemer →</a>
+    </div>
+    <div class="fw-card fc3">
+      <div class="fw-role">Voor de architect</div>
+      <span class="fw-icon">📐</span>
+      <h3>Begeleid. Valideer. Verdien.</h3>
+      <p>Jij bent de neutrale expert die beide partijen vertrouwen. Buildpay beloont jouw expertise.</p>
+      <ul class="fw-list">
+        <li><span class="ck3">✓</span> Alle projecten in één dashboard</li>
+        <li><span class="ck3">✓</span> Technische milestone validatie</li>
+        <li><span class="ck3">✓</span> Digitaal werfboek & foto's</li>
+        <li><span class="ck3">✓</span> 0.25% vergoeding per vrijgave</li>
+      </ul>
+      <a href="buildpay-login.html" class="fw-btn fb3">Start als architect →</a>
+    </div>
+  </div>
+</section>
+
+<section class="hiw" id="hoe-het-werkt">
+  <div class="hiw-inner">
+    <span class="tag" style="color:#2563EB;">Hoe het werkt</span>
+    <h2>Van offerte tot oplevering</h2>
+    <div class="hiw-tabs">
+      <button class="hiw-tab active" onclick="setHow('c')" id="htc">🏠 Klant</button>
+      <button class="hiw-tab" onclick="setHow('k')" id="htk">🔨 Aannemer</button>
+      <button class="hiw-tab" onclick="setHow('a')" id="hta">📐 Architect</button>
+    </div>
+    <div class="hiw-steps show" id="hsc">
+      <div class="hiw-step"><div class="snum nb">1</div><h3>Project aanmaken</h3><p>Maak een project aan en nodig je aannemer en architect uit via e-mail.</p></div>
+      <div class="hiw-step"><div class="snum nb">2</div><h3>Escrow storten</h3><p>Stort het volledige bedrag veilig in escrow. Het blijft jouw geld totdat jij goedkeurt.</p></div>
+      <div class="hiw-step"><div class="snum nb">3</div><h3>Werk opvolgen</h3><p>Volg voortgang per milestone. Architect valideert technisch vóór jij betaalt.</p></div>
+      <div class="hiw-step"><div class="snum nb">4</div><h3>Goedkeuren & betalen</h3><p>Keur jij goed? Geld automatisch vrijgegeven binnen 24 uur.</p></div>
+    </div>
+    <div class="hiw-steps" id="hsk">
+      <div class="hiw-step"><div class="snum nt">1</div><h3>Offerte importeren</h3><p>Upload via PDF, Bouwsoft of Vertuoza. AI extraheert alle posten automatisch.</p></div>
+      <div class="hiw-step"><div class="snum nt">2</div><h3>AI contract</h3><p>AI stelt milestones voor. Pas aan en stuur ter ondertekening aan de klant.</p></div>
+      <div class="hiw-step"><div class="snum nt">3</div><h3>Werk uitvoeren</h3><p>Budget staat klaar in escrow. Upload bewijs per milestone via het platform.</p></div>
+      <div class="hiw-step"><div class="snum nt">4</div><h3>Betaling ontvangen</h3><p>Na goedkeuring staat het geld binnen 24u op je bankrekening.</p></div>
+    </div>
+    <div class="hiw-steps" id="hsa">
+      <div class="hiw-step"><div class="snum na">1</div><h3>Uitgenodigd worden</h3><p>Klant of aannemer nodigt jou uit als begeleider voor het project.</p></div>
+      <div class="hiw-step"><div class="snum na">2</div><h3>Plannen uploaden</h3><p>Upload technische plannen en bestekken voor alle partijen zichtbaar.</p></div>
+      <div class="hiw-step"><div class="snum na">3</div><h3>Milestones valideren</h3><p>Beoordeel ingediend bewijs technisch. Keur goed of blokkeer indien niet conform.</p></div>
+      <div class="hiw-step"><div class="snum na">4</div><h3>Vergoeding ontvangen</h3><p>0.25% per goedgekeurd milestone bedrag. Automatisch uitbetaald op je rekening.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="testimonials">
+  <div class="t-inner">
+    <div class="t-head">
+      <span class="tag" style="color:#2563EB;">Ervaringen</span>
+      <h2>Wat zij zeggen over Buildpay</h2>
+    </div>
+    <div class="t-grid">
+      <div class="t-card">
+        <p class="t-quote">Eindelijk geen stress meer over mijn voorschot. Ik heb altijd controle over mijn eigen geld. De aannemer werkt ook veel professioneler omdat alles vastgelegd is.</p>
+        <div class="t-author"><div class="t-av avb">MV</div><div><div class="t-name">Marie Van Damme</div><div class="t-role">Keuken renovatie · Gent</div><span class="t-badge tbb">🏠 Klant</span></div></div>
+      </div>
+      <div class="t-card">
+        <p class="t-quote">Mijn klanten vertrouwen me meer. Het geld staat klaar voor ik begin — ik verlies geen tijd meer met achtervolgen van facturen.</p>
+        <div class="t-author"><div class="t-av avt">PV</div><div><div class="t-name">Pieter Vandebroeck</div><div class="t-role">Aannemer · Antwerpen</div><span class="t-badge tbt">🔨 Aannemer</span></div></div>
+      </div>
+      <div class="t-card">
+        <p class="t-quote">Als architect is dit mijn nieuwe standaard voor elk project. Geen conflicten meer over betalingen — en de vergoeding is mooi meegenomen.</p>
+        <div class="t-author"><div class="t-av ava">SV</div><div><div class="t-name">Sophie Vermeersch</div><div class="t-role">Architect · Brussel</div><span class="t-badge tba">📐 Architect</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing" id="prijzen">
+  <div class="p-inner">
+    <div class="p-head">
+      <span class="tag" style="color:#2563EB;">Transparante prijzen</span>
+      <h2>Betaal enkel wanneer je project loopt</h2>
+      <p>Geen verborgen kosten. Geen maandabonnement. Enkel commissie per vrijgegeven betaling.</p>
+    </div>
+    <div class="p-grid">
+      <div class="p-card">
+        <div class="p-role prb">🏠 Klant</div>
+        <div class="p-amount">1.5%</div>
+        <div class="p-period">op het projectbedrag — eenmalig bij storting</div>
+        <ul class="p-list">
+          <li>Onbeperkte projecten aanmaken</li>
+          <li>Escrow storten & beheren</li>
+          <li>Milestones goedkeuren</li>
+          <li>Buildpay expert bij geschil (€299)</li>
+        </ul>
+        <a href="buildpay-login.html" class="p-btn pb-navy">Start als klant</a>
+      </div>
+      <div class="p-card feat">
+        <div class="p-badge">Meest gekozen</div>
+        <div class="p-role prt">🔨 Aannemer</div>
+        <div class="p-amount">1.5%</div>
+        <div class="p-period">per vrijgegeven milestone · geen vaste kosten</div>
+        <ul class="p-list">
+          <li>AI Contract Wizard (offerte → contract)</li>
+          <li>Bouwsoft & Vertuoza integratie</li>
+          <li>Uitbetaling binnen 24 uur</li>
+          <li>Professioneel digitaal dossier</li>
+        </ul>
+        <a href="buildpay-login.html" class="p-btn pb-feat">Start als aannemer</a>
+      </div>
+      <div class="p-card">
+        <div class="p-role pra">📐 Architect</div>
+        <div class="p-amount" style="color:#D97706;">+0.25%</div>
+        <div class="p-period">vergoeding per vrijgegeven bedrag</div>
+        <ul class="p-list">
+          <li>Gratis platform toegang</li>
+          <li>Multi-project dashboard</li>
+          <li>Milestone validatie tools</li>
+          <li>Conflictbeheer & escalatie</li>
+        </ul>
+        <a href="buildpay-login.html" class="p-btn pb-amber">Start als architect</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <h2>Klaar om te starten?</h2>
+  <p>Kies je rol en maak gratis een account aan. Geen creditcard, geen maandkosten.</p>
+  <div class="cta-btns">
+    <a href="buildpay-login.html" class="cta-btn cb">🏠 Ik ben klant</a>
+    <a href="buildpay-login.html" class="cta-btn ct">🔨 Ik ben aannemer</a>
+    <a href="buildpay-login.html" class="cta-btn ca">📐 Ik ben architect</a>
+  </div>
+</section>
+
+<footer>
+  <div class="f-grid">
+    <div>
+      <div class="f-logo">Build<span>pay</span></div>
+      <p class="f-tag">Veilig samenwerken aan bouwprojecten. Escrow, contracten en AI voor klanten, aannemers en architecten.</p>
+    </div>
+    <div>
+      <div class="f-title">Platform</div>
+      <div class="f-links">
+        <a href="#voor-wie">Voor wie</a>
+        <a href="#hoe-het-werkt">Hoe het werkt</a>
+        <a href="#prijzen">Prijzen</a>
+        <a href="buildpay-login.html">Inloggen</a>
+      </div>
+    </div>
+    <div>
+      <div class="f-title">Dashboards</div>
+      <div class="f-links">
+        <a href="buildpay-dashboard-client.html">Klanten</a>
+        <a href="buildpay-dashboard-contractor.html">Aannemers</a>
+        <a href="buildpay-dashboard-architect.html">Architecten</a>
+        <a href="buildpay-offerte-flow.html">AI Contract Wizard</a>
+      </div>
+    </div>
+    <div>
+      <div class="f-title">Contact</div>
+      <div class="f-links">
+        <a href="#"><span class="__cf_email__" data-cfemail="dbb2b5bdb49bb9aeb2b7bfabbaa2f5b9be">[email&#160;protected]</span></a>
+        <a href="#">buildpay.be</a>
+        <a href="#">buildpay.nl</a>
+      </div>
+    </div>
+  </div>
+  <div class="f-bottom">
+    <div class="f-copy">© 2025 Buildpay · buildpay.be · buildpay.nl</div>
+    <div class="f-legal">
+      <a href="#">Privacy</a>
+      <a href="#">Voorwaarden</a>
+    </div>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+function setLang(l){
+  document.getElementById('btn-nl').classList.toggle('active',l==='nl');
+  document.getElementById('btn-fr').classList.toggle('active',l==='fr');
+  document.getElementById('btn-en').classList.toggle('active',l==='en');
+}
+
+function setAud(a){
+  ['c','k','a'].forEach(x=>{
+    document.getElementById('hc'+x).classList.remove('show');
+    document.getElementById('at-'+x).className='aud-tab';
+  });
+  document.getElementById('hc'+a).classList.add('show');
+  const cls={c:'ac',k:'ak',a:'aa'};
+  document.getElementById('at-'+a).className='aud-tab '+cls[a];
+}
+
+function setHow(h){
+  ['c','k','a'].forEach(x=>{
+    document.getElementById('hs'+x).classList.remove('show');
+    document.get

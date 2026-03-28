@@ -222,6 +222,7 @@
   <a class="nav-item" onclick="showPage('milestones')" href="#"><span class="nav-icon">📋</span><span data-nl>Milestones</span><span data-en>Milestones</span><span class="nav-badge warn">1</span></a>
   <a class="nav-item" onclick="showPage('escrow')" href="#"><span class="nav-icon">🔒</span><span data-nl>Escrow</span><span data-en>Escrow</span></a>
   <a class="nav-item" onclick="showPage('chat')" href="#"><span class="nav-icon">💬</span><span data-nl>Chat</span><span data-en>Chat</span><span class="nav-badge">3</span></a>
+  <a class="nav-item" onclick="showPage('werf')" href="#"><span class="nav-icon">📸</span><span data-nl>Werfopvolging</span><span data-en>Site monitoring</span></a>
   <a class="nav-item" onclick="showPage('documents')" href="#"><span class="nav-icon">📁</span><span data-nl>Documenten</span><span data-en>Documents</span></a>
   <a class="nav-item" onclick="showPage('payments')" href="#"><span class="nav-icon">💳</span><span data-nl>Betalingen</span><span data-en>Payments</span></a>
   <div class="sidebar-bottom">
@@ -530,7 +531,7 @@
 
 <script>
   const pageTitles={overview:{nl:'Overzicht',en:'Overview'},milestones:{nl:'Milestones',en:'Milestones'},escrow:{nl:'Escrow',en:'Escrow'},chat:{nl:'Berichten',en:'Messages'},documents:{nl:'Documenten',en:'Documents'},payments:{nl:'Betalingshistoriek',en:'Payment history'}};
-  const pageOrder=['overview','milestones','escrow','chat','documents','payments'];
+  const pageOrder=['overview','milestones','escrow','chat','werf','documents','payments'];
 
   function showPage(id){
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));

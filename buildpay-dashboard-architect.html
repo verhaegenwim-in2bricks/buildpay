@@ -246,6 +246,7 @@
   <div class="sidebar-section-label"><span data-nl>Navigatie</span><span data-en>Navigation</span></div>
   <a class="nav-item active" onclick="showPage('overview')" href="#"><span class="nav-icon">📐</span><span data-nl>Overzicht</span><span data-en>Overview</span></a>
   <a class="nav-item" onclick="showPage('milestones')" href="#"><span class="nav-icon">✅</span><span data-nl>Milestone validatie</span><span data-en>Milestone validation</span><span class="nav-badge warn">2</span></a>
+  <a class="nav-item" onclick="showPage('werf')" href="#"><span class="nav-icon">📸</span><span data-nl>Werfopvolging</span><span data-en>Site monitoring</span></a>
   <a class="nav-item" onclick="showPage('documents')" href="#"><span class="nav-icon">📁</span><span data-nl>Plannen & documenten</span><span data-en>Plans & documents</span></a>
   <a class="nav-item" onclick="showPage('chat')" href="#"><span class="nav-icon">💬</span><span data-nl>Berichten</span><span data-en>Messages</span><span class="nav-badge">4</span></a>
   <a class="nav-item" onclick="showPage('conflicts')" href="#"><span class="nav-icon">⚠️</span><span data-nl>Conflictbeheer</span><span data-en>Conflict management</span><span class="nav-badge err">1</span></a>
@@ -737,6 +738,104 @@
     </div>
   </div>
 
+
+  <!-- ===== WERF OPVOLGING ARCHITECT ===== -->
+  <div class="page" id="page-werf">
+    <div style="margin-bottom:1.5rem;">
+      <h2 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--navy);">📸 Werfopvolging</h2>
+      <p style="font-size:0.85rem;color:var(--slate);margin-top:0.25rem;" data-nl>Volg alle werven live — foto's en taken per milestone</p>
+    </div>
+
+    <!-- PROJECT SELECTOR -->
+    <div style="display:flex;gap:0.75rem;margin-bottom:1.5rem;flex-wrap:wrap;">
+      <button style="padding:0.5rem 1rem;border-radius:7px;font-size:0.8rem;font-weight:600;border:2px solid var(--arch);background:var(--arch);color:var(--white);cursor:pointer;font-family:'DM Sans',sans-serif;">🍳 Keuken Van Damme</button>
+      <button style="padding:0.5rem 1rem;border-radius:7px;font-size:0.8rem;font-weight:600;border:2px solid var(--border);background:none;color:var(--slate);cursor:pointer;font-family:'DM Sans',sans-serif;">🏢 Kantoor Pieters</button>
+      <button style="padding:0.5rem 1rem;border-radius:7px;font-size:0.8rem;font-weight:600;border:2px solid var(--border);background:none;color:var(--slate);cursor:pointer;font-family:'DM Sans',sans-serif;">🚿 Badkamer Janssen</button>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+
+      <!-- FOTO TIJDLIJN -->
+      <div>
+        <div style="font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;color:var(--navy);margin-bottom:0.85rem;">📅 Foto updates aannemer</div>
+        <div style="display:flex;flex-direction:column;gap:1rem;">
+          <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+            <div style="background:var(--off-white);padding:0.6rem 1rem;font-size:0.75rem;font-weight:700;color:var(--slate);display:flex;justify-content:space-between;">
+              <span>Vandaag — 28 maart 2025</span>
+              <span style="color:var(--success);">● Nieuw</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;padding:0.75rem;">
+              <div style="aspect-ratio:1;background:linear-gradient(135deg,#1E3A5F,#0A1628);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:2rem;">🏗️</div>
+              <div style="aspect-ratio:1;background:linear-gradient(135deg,#1E3A5F,#0A1628);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:2rem;">🧱</div>
+              <div style="aspect-ratio:1;background:linear-gradient(135deg,#1E3A5F,#0A1628);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:2rem;">🔧</div>
+            </div>
+            <div style="padding:0 0.75rem 0.5rem;">
+              <div style="display:flex;gap:0.5rem;">
+                <button style="flex:1;padding:0.4rem;background:var(--arch-light);color:var(--arch-mid);border:1px solid var(--arch-border);border-radius:6px;font-size:0.72rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">✓ Conform plannen</button>
+                <button style="flex:1;padding:0.4rem;background:var(--error-light);color:#991B1B;border:1px solid #FECACA;border-radius:6px;font-size:0.72rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">⛔ Niet conform</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notitie architect -->
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1.25rem;margin-top:1rem;">
+          <div style="font-size:0.78rem;font-weight:600;color:var(--slate);margin-bottom:0.5rem;">📐 Technische opmerkingen</div>
+          <textarea style="width:100%;padding:0.6rem 0.75rem;border:1.5px solid var(--border);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:0.8rem;color:var(--navy);resize:vertical;min-height:70px;outline:none;" placeholder="Technische opmerkingen bij de foto's..."></textarea>
+          <button style="margin-top:0.5rem;background:var(--arch);color:var(--white);border:none;border-radius:6px;padding:0.45rem 1rem;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Versturen aan aannemer</button>
+        </div>
+      </div>
+
+      <!-- TO-DO CHECKLIST ARCHITECT -->
+      <div>
+        <div style="font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;color:var(--navy);margin-bottom:0.85rem;">✅ Technische checklist MS 1</div>
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+          <div style="padding:0.85rem 1.25rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:0.78rem;font-weight:600;color:var(--slate);">Architect verificatie</span>
+            <span style="font-size:0.72rem;font-weight:700;background:var(--arch-light);color:var(--arch-mid);padding:0.2rem 0.5rem;border-radius:100px;">3/5 geverifieerd</span>
+          </div>
+          <div style="padding:0.75rem 1.25rem;display:flex;flex-direction:column;gap:0.5rem;">
+            <div style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:7px;background:var(--success-light);">
+              <input type="checkbox" checked style="width:1rem;height:1rem;accent-color:var(--success);">
+              <span style="font-size:0.82rem;color:#065F46;text-decoration:line-through;flex:1;">Sloopplan conform architectuurplan</span>
+              <span style="font-size:0.68rem;color:var(--success);">✓</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:7px;background:var(--success-light);">
+              <input type="checkbox" checked style="width:1rem;height:1rem;accent-color:var(--success);">
+              <span style="font-size:0.82rem;color:#065F46;text-decoration:line-through;flex:1;">Draagmuren intact</span>
+              <span style="font-size:0.68rem;color:var(--success);">✓</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:7px;background:var(--success-light);">
+              <input type="checkbox" checked style="width:1rem;height:1rem;accent-color:var(--success);">
+              <span style="font-size:0.82rem;color:#065F46;text-decoration:line-through;flex:1;">Elektrische leidingen vrijgelegd</span>
+              <span style="font-size:0.68rem;color:var(--success);">✓</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:7px;background:var(--warning-light);">
+              <input type="checkbox" style="width:1rem;height:1rem;accent-color:var(--warning);cursor:pointer;">
+              <span style="font-size:0.82rem;color:#92400E;flex:1;">Afvoerleidingen conform bestek</span>
+              <span style="font-size:0.68rem;color:var(--warning);">⏳</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:7px;background:var(--warning-light);">
+              <input type="checkbox" style="width:1rem;height:1rem;accent-color:var(--warning);cursor:pointer;">
+              <span style="font-size:0.82rem;color:#92400E;flex:1;">Puinruiming conform milieuplan</span>
+              <span style="font-size:0.68rem;color:var(--warning);">⏳</span>
+            </div>
+          </div>
+          <div style="padding:0.85rem 1.25rem;border-top:1px solid var(--border);">
+            <div style="height:6px;background:var(--border);border-radius:100px;overflow:hidden;margin-bottom:0.35rem;">
+              <div style="height:100%;width:60%;background:linear-gradient(to right,var(--arch),#2DD4BF);border-radius:100px;"></div>
+            </div>
+            <div style="font-size:0.72rem;color:var(--slate-light);">3 van 5 items geverifieerd</div>
+          </div>
+        </div>
+
+        <div style="background:var(--arch-light);border:1px solid var(--arch-border);border-radius:8px;padding:0.85rem 1.1rem;margin-top:1rem;font-size:0.78rem;color:var(--arch-mid);">
+          📐 <strong>Als alle items geverifieerd zijn</strong> kan jij de milestone technisch goedkeuren en wordt de klant gevraagd om de betaling vrij te geven.
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div><!-- end main -->
 
 <script>
@@ -748,7 +847,7 @@
     conflicts:{nl:'Conflictbeheer',en:'Conflict management'},
     escrow:{nl:'Escrow overzicht',en:'Escrow overview'}
   };
-  const pageOrder=['overview','milestones','documents','chat','conflicts','escrow'];
+  const pageOrder=['overview','milestones','werf','documents','chat','conflicts','escrow'];
 
   function showPage(id){
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
